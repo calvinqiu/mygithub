@@ -2,4 +2,5 @@ ARC/
 *.o
 *log_*.txt
 Project/DemoKit/DemoKit_Data/
+si/
 

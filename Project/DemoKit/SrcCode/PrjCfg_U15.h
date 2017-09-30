@@ -1,5 +1,5 @@
-#ifndef _PRJCFG_DEMO_H_
-#define _PRJCFG_DEMO_H_
+#ifndef _PRJCFG_U15_H_
+#define _PRJCFG_U15_H_
 #include "Type.h"
 #include "SysKer.h"
 
@@ -13,17 +13,37 @@
 #define FW_PARTIAL_LOAD                 DISABLE //< FW Partial load
 #endif
 
+
+
+#if defined(YQCONFIG_UVC_FUNCTION_OPTION)
+#define UVC_MULTIMEDIA_FUNC         	ENABLE
+
+#if defined(YQCONFIG_UVC_AUTO_OPTION)
+#define AUTO_UVC						ENABLE
+#else
+#define AUTO_UVC						DISABLE
+#endif
+
+#else 
+#define UVC_MULTIMEDIA_FUNC         	DISABLE
+#define AUTO_UVC						DISABLE
+#endif
 //..............................................................................
 // FW version and name
-#define FW_UPDATE_NAME                  "A:\\FW96663A.bin"
+#define FW_UPDATE_NAME                  "A:\\FW96660A.bin"
 #define FW_VERSION_RELEASE              DISABLE //ENABLE
 #define FW_VERSION_NUM                  "2016_02_22_V01" //"GSDEMO_0508_1153"
 
 //..............................................................................
 // Memory Partition
 #define MEM_DRAM_ADDR                   0x80000000  //cached region of MIPS
+#if defined(YQCONFIG_COMB_RAM_SIZE_2G)
+#define MEM_DRAM_SIZE                   ALIGN_CEIL_32(0x10000000) //DRAM size = 256MB (for EVB)
+#elif defined(YQCONFIG_COMB_RAM_SIZE_4G)
 #define MEM_DRAM_SIZE                   ALIGN_CEIL_32(0x20000000) //DRAM size = 256MB (for EVB)
-
+#else
+#define MEM_DRAM_SIZE                   ALIGN_CEIL_32(0x10000000) //DRAM size = 256MB (for EVB)
+#endif
 
 //..............................................................................
 // CPU2 Memory Partition (User MUST design own's memory to meet below addresses)
@@ -47,7 +67,7 @@
 #define COREMEM_LINUX_ADDR              0x90000000
 #define COREMEM_LINUX_SIZE              0x10000000
 //Sub-Address in address range of linux
-#define COREMEM_LINUX_SUBADDR_ROOTFS    0x91000000
+#define COREMEM_LINUX_SUBADDR_ROOTFS    DISABLE
 #define COREMEM_LINUX_SUBADDR_UIMAGE    0x96000000
 #define COREMEM_LINUX_SUBADDR_UBOOT     0x97000000
 #elif (_CPU2_TYPE_==_CPU2_LINUX_ && _DSP_TYPE_== _DSP_FREERTOS_)
@@ -73,8 +93,8 @@
 #define COREMEM_DSP_ADDR                0x8F800000
 #define COREMEM_DSP_SIZE                0x00800000
 #elif (_CPU2_TYPE_==_CPU2_LINUX_ && _DSP_TYPE_== _DSP_NONE_)
-#define COREMEM_LINUX_ADDR              0x8DC00000
-#define COREMEM_LINUX_SIZE              0x02400000
+#define COREMEM_LINUX_ADDR              0x8D000000
+#define COREMEM_LINUX_SIZE              0x03000000
 //Sub-Address in address range of linux
 #define COREMEM_LINUX_SUBADDR_ROOTFS    DISABLE
 #define COREMEM_LINUX_SUBADDR_UIMAGE    0x8F000000
@@ -99,7 +119,12 @@
 #elif (_CPU2_TYPE_==_CPU2_ECOS_ && _DSP_TYPE_== _DSP_FREERTOS_)
 #error "Not Support"
 #elif (_CPU2_TYPE_==_CPU2_LINUX_ && _DSP_TYPE_== _DSP_NONE_)
-#error "Not Support"
+#define COREMEM_LINUX_ADDR              0x85C00000
+#define COREMEM_LINUX_SIZE              0x02400000
+//Sub-Address in address range of linux
+#define COREMEM_LINUX_SUBADDR_ROOTFS    DISABLE
+#define COREMEM_LINUX_SUBADDR_UIMAGE    0x87000000
+#define COREMEM_LINUX_SUBADDR_UBOOT     0x87400000
 #elif (_CPU2_TYPE_==_CPU2_LINUX_ && _DSP_TYPE_== _DSP_FREERTOS_)
 #error "Not Support"
 #elif (_CPU2_TYPE_==_CPU2_NONE_ && _DSP_TYPE_== _DSP_FREERTOS_)
@@ -138,17 +163,29 @@
 #define POWERON_FAST_RECORD             DISABLE
 #define POWERON_FAST_WIFI               DISABLE //NOTE: need to enable POWERON_FAST_CPU2_BOOT too
 #define WAITPHOTO_FUNCTION              ENABLE
-#define POWERONLOGO_FUNCTION            ENABLE
-#define POWEROFFLOGO_FUNCTION           ENABLE //ENABLE
-#if (POWERON_FAST_RECORD == ENABLE)
-#define POWERONSOUND_FUNCTION           ENABLE
+#if defined(YQCONFIG_POWERLOGO_FUNCTION_SUPPORT)
+	#if (POWERON_FAST_RECORD == ENABLE)
+		#define POWERONLOGO_FUNCTION            ENABLE
+	#else
+		#define POWERONLOGO_FUNCTION            DISABLE
+	#endif
+	#define POWEROFFLOGO_FUNCTION           ENABLE //ENABLE
 #else
-#define POWERONSOUND_FUNCTION           ENABLE
+	#define POWERONLOGO_FUNCTION            DISABLE//ENABLE
+	#define POWEROFFLOGO_FUNCTION           DISABLE //ENABLE
 #endif
-#define POWEROFFSOUND_FUNCTION          ENABLE//ENABLE
+
+#if defined(YQCONFIG_POWERSOUND_FUNCTION_SUPPORT)
+	#define POWERONSOUND_FUNCTION           ENABLE
+	#define POWEROFFSOUND_FUNCTION          ENABLE//ENABLE
+#else
+	#define POWERONSOUND_FUNCTION           DISABLE
+	#define POWEROFFSOUND_FUNCTION          DISABLE
+#endif
+
 #define USER_LOGO_FUNCTION              ENABLE
 #define _LOGO_                          _LOGO_NOVATEK_
-#define LOGO_DISP_LAYER                 LAYER_VDO2
+#define LOGO_DISP_LAYER                 LAYER_VDO1 //bacsue VDO2 logo has no rotation
 #define LOGO_FREEZE                     ENABLE
 #define LENSERROFF_FUNCTION             DISABLE
 
@@ -164,6 +201,10 @@
 #define TM_BOOT_END(a,b)
 #endif
 
+//#NT#2016/07/12#Niven Cho -begin
+//#NT#LINUX_LOAD_BY_UBOOT
+#define LINUX_LOAD_BY_UBOOT             DISABLE
+//#NT#2016/07/12#Niven Cho -end
 //..............................................................................
 // Input Config
 //key
@@ -175,16 +216,25 @@
 //..............................................................................
 // Output Config
 //LED
+
+#if defined(YQCONFIG_LED_FUNCTION_SUPPORT)
 #define LED_FUNCTION                    ENABLE //Auto Detect
+#else
+#define LED_FUNCTION                    DISABLE //Auto Detect
+#endif
+
 
 //..............................................................................
 // Power-Saving Config
 //battery level
-#if((_MODEL_DSC_ == _MODEL_PWU01_)||(_MODEL_DSC_ == _MODEL_D6_))
+//#NT#2016/12/15#Niven Cho -begin
+//#NT#FIX DEMO1 with USB HOST, get low power
+#if defined(YQCONFIG_PWRLEVEL_FUNCTION_SUPPORT)&& defined(YQCONFIG_USB1_TYPE_SUPPORT_DEVICE)
 #define PWRLEVEL_FUNCTION               ENABLE //Auto Detect
 #else
 #define PWRLEVEL_FUNCTION               DISABLE //Auto Detect
 #endif
+//#NT#2016/12/15#Niven Cho -end
 //auto power-off when battery level = empty
 #define EMPTYPWROFF_FUNCTION            ENABLE
 //auto sleep
@@ -306,7 +356,14 @@
 #endif
 //#NT#2016/06/01#Jeah Yen -end
 
+//#NT#2016/06/15#Niven Cho -begin
+//#NT#linux-cardv default setting
+#if (_CPU2_TYPE_==_CPU2_LINUX_)
+#define DISPLAY_CAPS_COUNT              1 //1: only single display, 2: allow single display or dual display
+#else
 #define DISPLAY_CAPS_COUNT              2 //1: only single display, 2: allow single display or dual display
+#endif
+//#NT#2016/06/15#Niven Cho -end
 #define DISPLAY_CAPS_MASK               (LCD1_MASK|TV_MASK|HDMI_MASK|LCD2_MASK)
 #define DUALDISP_FUNC                   ((DISPLAY_CAPS_COUNT == 2)?ENABLE:DISABLE)
 
@@ -327,29 +384,36 @@
 // Display Config (for UI window, FD window)
 
 // OSD size and format
-#if 0
+#if defined(YQCONFIG_LCD_WIDTH_CUST)&&defined(YQCONFIG_LCD_HEIGHT_CUST)
+#define DISPLAY_OSD_W                   YQCONFIG_LCD_WIDTH_CUST//320//640
+#define DISPLAY_OSD_H                   YQCONFIG_LCD_HEIGHT_CUST//240
+#else
 #define DISPLAY_OSD_W                   864//320//640
 #define DISPLAY_OSD_H                   480//240
-#else
-#define DISPLAY_OSD_W                   800//640
-#define DISPLAY_OSD_H                   480
 #endif
+
 #define DISPLAY_OSD_FMT                 DISP_PXLFMT_INDEX8 // 256 colors
 #define DISPLAY_OSD_BPP                 8 // 8 for DISP_PXLFMT_INDEX8, 4 for DISP_PXLFMT_INDEX4
 //#define DISPLAY_OSD_FMT                 DISP_PXLFMT_RGBA5658_PK // 16bpp-colors
 //#define DISPLAY_OSD_BPP                 24 // 24 for DISP_PXLFMT_RGBA5658_PK
 
 //UI tool layout size setting
-#if 0
+#if defined(YQCONFIG_LCD_WIDTH_CUST)&&defined(YQCONFIG_LCD_HEIGHT_CUST)
+#define TOOL_LAYOUT_W                   YQCONFIG_LCD_WIDTH_CUST//320//640
+#define TOOL_LAYOUT_H                   YQCONFIG_LCD_HEIGHT_CUST//240
+#else
 #define TOOL_LAYOUT_W                   864//320//640
 #define TOOL_LAYOUT_H                   480//240//480
-#else
-#define TOOL_LAYOUT_W                   800//640
-#define TOOL_LAYOUT_H                   480//480
 #endif
 
 #define OSD_USE_DOUBLE_BUFFER           ENABLE //use double buffer
-#define OSD_USE_ROTATE_BUFFER           ENABLE//DISABLE //use rotate buffer (enable to support LCD with stripe-type subpixel)
+/* modify begin by ZMD, 2017-02-15 new version management*/
+#if defined(YQCONFIG_OSD_USE_ROTATE_BUFFER_SUPPORT)
+#define OSD_USE_ROTATE_BUFFER           ENABLE  //use rotate buffer (enable to support LCD with stripe-type subpixel)
+#else
+#define OSD_USE_ROTATE_BUFFER           DISABLE //use rotate buffer (enable to support LCD with stripe-type subpixel)
+#endif
+/* modify end by ZMD, 2017-02-15 */
 
 #define OSD2_USE_DOUBLE_BUFFER          ENABLE //use double buffer
 
@@ -357,38 +421,47 @@
 // Display Config (for UI background, App quickview, photo frame, ...)
 
 // VDO size and format
-#define DISPLAY_VDO_W                   800
+#if defined(YQCONFIG_LCD_WIDTH_CUST)&&defined(YQCONFIG_LCD_HEIGHT_CUST)
+#define DISPLAY_VDO_W                   YQCONFIG_LCD_WIDTH_CUST//320//640
+#define DISPLAY_VDO_H                   YQCONFIG_LCD_HEIGHT_CUST//240
+#else
+#define DISPLAY_VDO_W                   640
 #define DISPLAY_VDO_H                   480
+#endif
 #define DISPLAY_VDO_FMT                 DISP_PXLFMT_YUV422_PK
 #define DISPLAY_VDO_BPP                 16
 
 #define VDO_USE_DOUBLE_BUFFER           DISABLE //use double buffer
 #define VDO_USE_PHOTO_SOURCE            ENABLE  //display photo video streaming
+
+/* modify begin by ZMD, 2017-02-15 new version management*/
+#if defined(YQCONFIG_VDO_USE_ROTATE_BUFFER_SUPPORT)
 #define VDO_USE_ROTATE_BUFFER           ENABLE//DISABLE //use rotate buffer (enable to support LCD with stripe-type subpixel)
+#else
+#define VDO_USE_ROTATE_BUFFER           DISABLE //use rotate buffer (enable to support LCD with stripe-type subpixel)
+#endif
+/* modify end by ZMD, 2017-02-15 */
 
 #define VDO2_USE_DOUBLE_BUFFER          ENABLE //use double buffer
+
+#if defined(YQCONFIG_VDO2_USE_ROTATE_BUFFER_SUPPORT)
 #define VDO2_USE_ROTATE_BUFFER          ENABLE //use rotate buffer (enable to support LCD with stripe-type subpixel)
+#else
+#define VDO2_USE_ROTATE_BUFFER          DISABLE //use rotate buffer (enable to support LCD with stripe-type subpixel)
+#endif
 
 
 // Display Config (for DispSrv; Photo App, Movie App and Play App)
 // VDO1 size and format (for LCD device)
 //LCD1:
-#if 1//(_LCDTYPE_ == _LCDTYPE_OFF_)
+#if defined(YQCONFIG_COMB_LCDMODE_NONE)
+#define LCDMODE                         DISABLE
+#elif defined(YQCONFIG_COMB_LCDMODE_MIPI)
 #define LCDMODE                         DISP_LCDMODE_MIPI
-#elif (_LCDTYPE_ == _LCDTYPE_AUCN01_ || _LCDTYPE_ == _LCDTYPE_PW27P05_ILI8961_ )
-#define LCDMODE                         DISP_LCDMODE_RGBD320 //DISP_LCDMODE_YUV640
-#elif (_LCDTYPE_ == _LCDTYPE_PW35P00_HX8238D_)
-#define LCDMODE                         DISP_LCDMODE_RGB_SERIAL
-#elif (_LCDTYPE_ == _LCDTYPE_T15P00_OTA5182A_)
+#elif defined(YQCONFIG_COMB_LCDMODE_RGB)
 #define LCDMODE                         DISP_LCDMODE_RGBD320
-#elif (_LCDTYPE_ == _LCDTYPE_NT35510_DSI_)
-#define LCDMODE                         DISP_LCDMODE_MIPI
-#elif (_LCDTYPE_ == _LCDTYPE_ALT_025CSLN_J2_OTA5184A_)
-#define LCDMODE                         DISP_LCDMODE_RGBD320
-#elif (_LCDTYPE_ == _LCDTYPE_TWJ50IP008_ILI9806G_)
-#define LCDMODE                         DISP_LCDMODE_MIPI
-#elif (_LCDTYPE_ == _LCDTYPE_FD050FWV047_JD9161_)
-#define LCDMODE                         DISP_LCDMODE_MIPI
+#elif defined(YQCONFIG_COMB_LCDMODE_PARALLEL)
+
 #else
 #error "Unknown _LCDTYPE_"
 #endif
@@ -425,6 +498,15 @@
 #else
 #define SDINSERT_FUNCTION               DISABLE //Handled on Linux side
 #endif
+
+/* modify begin by ZMD, 2017-02-15 new version management*/
+#if defined(YQCONFIG_SDHOTPLUG_FUNCTION_SUPPORT)
+//#NT#2016/09/19#Niven Cho -begin
+//#NT#SD_HOTPLUG
+#define SDHOTPLUG_FUNCTION              ENABLE
+//#NT#2016/09/19#Niven Cho -end
+#endif
+/* modify end by ZMD, 2017-02-15 */
 //..............................................................................
 // File Config
 
@@ -459,8 +541,11 @@
 #define MOVAPP_COMP_NAME_STRING         "DEMO1"
 //..............................................................................
 // Usb Config
-
+#if (_USB1_TYPE_ == _USB1_HOST_)
+#define USBINSERT_FUNCTION              DISABLE //Auto Detect
+#else
 #define USBINSERT_FUNCTION              ENABLE //Auto Detect
+#endif
 
 #define USB_VID                         0x0603
 #define USB_PID_PCCAM                   0x8612 // not support pc cam
@@ -485,29 +570,38 @@
 
 //..............................................................................
 // Other Config
-#if((_MODEL_DSC_ == _MODEL_PWU01_)||(_MODEL_DSC_ == _MODEL_D6_))
+
+#if defined(YQCONFIG_GSENSOR_SUPPORT)
 #define GSENSOR_FUNCTION                ENABLE  //G-sensor
 #else
 #define GSENSOR_FUNCTION                DISABLE  //G-sensor
 #endif
 
-#if (_GPS_TYPE_ == _GPS_GENERAL_)
-#define GPS_FUNCTION                    ENABLE
+#if defined(YQCONFIG_GPS_SUPPORT)
+#define GPS_FUNCTION                   ENABLE
 #else
 #define GPS_FUNCTION                    DISABLE
 #endif
 
-#if 0
-// USRT_TO_MTK
-#if (_UART_TO_MTK_TYPE_ == _UART_TO_MTK_YES_)
-#define UART_TO_MTK_FUNCTION                    ENABLE
-#else
-#define UART_TO_MTK_FUNCTION                    DISABLE
-#endif
-#endif
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+#if defined(YQCONFIG_LONG_STARTUP_SUPPORT)
 #define LONG_STARTUP                    ENABLE  // Enable/Disable pressing power button to startup system
+#else
+#define LONG_STARTUP                    DISABLE  // Enable/Disable pressing power button to startup system
+#endif
 #define SHOW_ADC_ON_SCREEN              DISABLE
 #define CALIBRATION_FUNC                DISABLE  // Enable/Disable Calibration
 
@@ -548,8 +642,18 @@
 #define PIP_VIEW_FUNC                   ENABLE  // PipView (ENABLE: display 2 sensor by PipView, DISABLE: display user selected sensor)
 #define PIP_VIEW_FASTSWITCH             ENABLE  // display single sensor method (ENABLE: always display by Pipview, DISABLE: display by direct path)
 #define SBS_VIEW_FUNC                   DISABLE // SbsView (ENABLE: display 2 sensor by SbsView, DISABLE: display user selected sensor)
+/* modify begin by ZMD, 2017-02-15 new version management*/
+#if defined(YQCONFIG_PIP_VIEW_LR_SUPPORT)
+#define PIP_VIEW_LR                     ENABLE  // PipView (ENABLE: display 2 sensor by PipView in left, right view, side by side, DISABLE: normal pipview)
+#endif
+/* modify end by ZMD, 2017-02-15 */
 
-#if (_IPPLIB_ == _IPL_OV4689_EVB_FF_ || _IPPLIB_ == _IPL_OV4689_IMX322LQJ_EVB_FF_ || _IPPLIB_ == _IPL_IMX290LQR_EVB_FF_)
+#if (_IPPLIB_ == _IPL_AR0238CSP_IMX322LQJ_EVB_FF_ \
+    || _IPPLIB_ == _IPL_OV4689_EVB_FF_ \
+    || _IPPLIB_ == _IPL_OV4689_IMX322LQJ_EVB_FF_ \
+    || _IPPLIB_ == _IPL_IMX290LQR_EVB_FF_ \
+    || _IPPLIB_ == _IPL_IMX123LQT_EVB_FF_ \
+    || _IPPLIB_ == _IPL_AR0230CS_EVB_FF_)
 #define SHDR_FUNC                       DISABLE//ENABLE
 #else
 #define SHDR_FUNC                       DISABLE
@@ -573,7 +677,6 @@
 //==============================================================================
 //   MOVIE FUNCTIONS
 //==============================================================================
-#define MOVIE_DIS                       DISABLE
 #if (_GYRO_EXT_ != _GYRO_EXT_NONE_)
 #define MOVIE_RSC                       ENABLE
 #else
@@ -590,12 +693,53 @@
 #define MOVIE_UPDATE_UI                 DISABLE
 #define MOVIE_REC_YUVMERGE              DISABLE // slowly timelapse record mode, frame period >= 1S
 #define MOVIE_AUTOREC_CYCLICTIME        ENABLE
+#if defined(YQCONFIG_MOVIE_AUTOREC_ACPLUG_SUPPORT)
 #define MOVIE_AUTOREC_ACPLUG            ENABLE
+#else
+#define MOVIE_AUTOREC_ACPLUG            DISABLE
+#endif
 #define MOVIE_AUTOREC_MOTIONDET         DISABLE
 #define MOVIE_AUTOREC_MEDIASLOW         DISABLE
 #define MOVIE_AUTOREC_MEDIAFULL         DISABLE
+//#NT#2016/05/24#Charlie Chang -begin
+//#NT# for send data and save data only using stream 1
+#define MOVIE_NET_USE_STREAM_1          DISABLE
+//#NT#2016/05/24#Charlie CHang -end
+#define MOVIE_DIS                       DISABLE
 #define MOVIE_FD_FUNC_                  DISABLE
+#define MOVIE_FD_DRAW_VIDEO             DISABLE
+//#NT#2016/05/23#David Tsai -begin
+//#NT# Support tampering detection and background calculation function
+#define MOVIE_BC_FUNC                   DISABLE
+#define MOVIE_TD_FUNC                   DISABLE // Depend on MOVIE_BC_FUNC
+#define MOVIE_TD_DRAW_VIDEO             DISABLE
+//#NT#2016/05/23#David Tsai -end
+//#NT#2016/10/14#Yuzhe Bian -begin
+//#NT# Support trip-wire detection & trip-zone detection function
+#define MOVIE_TWD_FUNC                  DISABLE // Depend on MOVIE_BC_FUNC
+#define MOVIE_TWD_DRAW_VIDEO            DISABLE
+#define MOVIE_TZD_FUNC                  DISABLE // Depend on MOVIE_BC_FUNC
+#define MOVIE_TZD_DRAW_VIDEO            DISABLE
+//#NT#2016/10/14#Yuzhe Bian -end
 
+#define UCTRL_APP_MOVIE_FEATURE_SETGET  DISABLE
+#define IPCAM_FUNC                      DISABLE
+#define MEDIA_VASTREAM                  DISABLE
+//#NT#2016/03/04#Lincy Lin -begin
+//#NT#Porting media 4.0 flow
+#define MEDIA_4_0                       DISABLE
+//#NT#2016/03/04#Lincy Lin -end
+
+//#NT#2016/02/22#Niven Cho -begin
+//#NT#add IR_CUT_FUNC to enable IR CUT function.
+#define IR_CUT_FUNC                     DISABLE
+//#NT#2016/02/22#Niven Cho -end
+//#NT#2016/02/23#Lincy Lin -begin
+//#NT#Support logfile function
+#define LOGFILE_FUNC                    DISABLE//ENABLE//DISABLE
+//#NT#2016/02/23#Lincy Lin -end
+
+#if defined(YQCONFIG_ADAS_FUNC_SUPPORT)
 //#NT#2016/04/25#KCHong -begin
 //#NT#New ADAS
 // ADAS setting
@@ -605,11 +749,28 @@
 //..............................................................................
 // ADAS subsetting (The following sub-functions are available only if _ADAS_FUNC_ = ENABLE
 #define _AUTOVP_FUNC_                   ENABLE
+#define _SNG_FUNC_                      ENABLE
+#define _DRAW_LDFCINFO_ON_OSD_          ENABLE
+#define _DRAW_SNG_ROI_                  DISABLE
+#define _DRAW_LDWSINFO_ON_VIDEO_        DISABLE     // This function is only valid if data path is D2D!!
+//#NT#2016/04/25#KCHong -end
+#else
+//#NT#2016/04/25#KCHong -begin
+//#NT#New ADAS
+// ADAS setting
+#define _ADAS_FUNC_                     DISABLE
+#define _ADAS_DSP_FUNC_                 DISABLE //DISABLE// 
+
+//..............................................................................
+// ADAS subsetting (The following sub-functions are available only if _ADAS_FUNC_ = ENABLE
+#define _AUTOVP_FUNC_                   ENABLE
 #define _SNG_FUNC_                      DISABLE
 #define _DRAW_LDFCINFO_ON_OSD_          ENABLE
 #define _DRAW_SNG_ROI_                  DISABLE
 #define _DRAW_LDWSINFO_ON_VIDEO_        DISABLE     // This function is only valid if data path is D2D!!
 //#NT#2016/04/25#KCHong -end
+#endif
+
 
 //==============================================================================
 //   MOVIE PLAY FUNCTIONS
@@ -639,6 +800,8 @@
 //   USBMSDC FUNCTIONS
 //==============================================================================
 #define MSDCVENDOR_NVT                  ENABLE
+#define MSDCVENDOR_UPDFW                DISABLE //enable it will cause disalbing MSDC and MTP/PTP/UAVC Mode, MSDCVENDOR_NVT must enable
+#define MSDCVENDOR_IDENTITY_FILE		"A:\\MSDCNVT"
 
 //==============================================================================
 //   USBPRINT FUNCTIONS
@@ -659,7 +822,7 @@
 #define EXTRA_MENU                      DISABLE
 
 //..............................................................................
-#if (_INTERSTORAGE_ == _INTERSTORAGE_NONE_ || _CPU2_TYPE_==_CPU2_LINUX_)
+#if (_INTERSTORAGE_ == _INTERSTORAGE_NONE_)
 #define PST_FUNC                        DISABLE
 #else
 #define PST_FUNC                        ENABLE
@@ -674,7 +837,7 @@
 #define WIFI_APP_MANUFACTURER           "NVT"
 #define WIFI_APP_MODLE                  "CarDV_WiFi"
 #define ONVIF_PROFILE_S                 DISABLE  //Enable it to cause NO CARD DETECTED.
-#define ECOS_POWER_OFF_FLOW             ENABLE
+#define ECOS_POWER_OFF_FLOW             DISABLE
 
 #define HTTP_LIVEVIEW_FUNC              DISABLE
 #if (_NETWORK_ == _NETWORK_NONE_)
@@ -702,19 +865,19 @@
 //#NT#Support IOTP2P
 #define IOTP2P_LIVEVIEW                 4
 //#NT#2016/05/06#Jeah Yen -end
+#if defined(YQCONFIG_COMB_MOVIE_LIVEVIEW_RTSP_LIVEVIEW)
 #define MOVIE_LIVEVIEW                  RTSP_LIVEVIEW
+#elif defined(YQCONFIG_COMB_MOVIE_LIVEVIEW_HTTP_LIVEVIEW)
+#define MOVIE_LIVEVIEW                  HTTP_LIVEVIEW
+#else
+#define MOVIE_LIVEVIEW                  HTTP_LIVEVIEW
+#endif
 
 #if(WIFI_AP_FUNC==ENABLE)
 #undef HTTP_LIVEVIEW_FUNC
 #define HTTP_LIVEVIEW_FUNC              ENABLE
 
-#if(MOVIE_LIVEVIEW==HTTP_LIVEVIEW)
-#undef MOVIE_MULTI_RECORD_FUNC
 #define MOVIE_MULTI_RECORD_FUNC             ENABLE
-#else  //RTSP_LIVEVIEW and DUAL_REC_HTTP_LIVEVIEW
-#undef MOVIE_MULTI_RECORD_FUNC
-#define MOVIE_MULTI_RECORD_FUNC             ENABLE
-#endif
 
 
 #undef HTTP_MJPG_W_4
@@ -734,27 +897,84 @@
 
 #if(_CPU2_TYPE_==_CPU2_LINUX_)
 #define UCTRL_FUNC                      ENABLE
-#define ONVIF_FUNC                      ENABLE
 #else
 #define UCTRL_FUNC                      DISABLE
-#define ONVIF_FUNC                      DISABLE
 #endif
+#define ONVIF_FUNC                      DISABLE
+
 
 #define WIFI_FINALCAM_APP_STYLE         DISABLE
 #define WIFI_BG_COLOR                   14
 
 
-#define WATCH_DOG_FUNC             DISABLE//ENABLE
-#define ACC_DET_FUNC              DISABLE//ENABLE
+#define WIFI_STA_RECONNECT_MAX_COUNT 5
+//#NT#2016/12/14#YongChang Qui -begin
+//#NT#Extend wifi ap to station timeout to 6s
+#define WIFI_STA_RECONNECT_INTERVAL 300
+//#NT#2016/12/14#YongChang Qui -end
 
-#define CARDV_BAT_DET_FUNC              DISABLE//ENABLE
-#define CAR_PROTECT_DET_FUNC              DISABLE//ENABLE
+#define YOUKU_SDK                       DISABLE
 
-#define LCD_SAVESCREEN_FUNC              ENABLE
+//#NT#2016/05/06#Jeah Yen -begin
+//#NT#Support IOTP2P
+#define IOT_P2P_FUNC                    DISABLE
+//#NT#2016/05/06#Jeah Yen -end
 
-#define CAR_NUMBER_STAMP_STR        "AAAAAA"
-#define CAR_NUMBER_STAMP_FUNC       ENABLE
+//#NT#2016/07/14#Charlie Chang -begin
+//#NT# Support 4g module
+#define NETWORK_4G_MODULE               DISABLE
+//#NT#2016/07/14#Charlie Chang -end
 
+#if (YOUKU_SDK == ENABLE)
+#define WIFI_MOVIE_FOLDER             "MOVIE_WIFI"
+#define CUT_MOVIE_FOLDER              "MOVIE_CUT"
+//the following two functions should be exclusive
+#define SAVE_DUAL_STREAM_FUNC           ENABLE
 #define CUT_MOVIE_FUNC                  DISABLE
+#endif
 
+//#NT#2016/05/31#Lincy Lin -begin
+//#NT#Support fileSize align function
+#define FILESIZE_ALIGN_FUNC             DISABLE
+#define PHOTO_FILESIZE_ALIGN_VALUE      2*1024*1024   //  2MB
+#define MOVIE_FILESIZE_ALIGN_VALUE      32*1024*1024  //  32MB
+#define FS_ALIGN_RESERVED_SIZE          (2 * MOVIE_FILESIZE_ALIGN_VALUE)
+//#NT#2016/05/31#Lincy Lin -end
+//#NT#2016/10/18#Niven Cho -begin
+//#NT#mount sd-2 as "B:\\"
+//To mount sd-2 as "B:\\" please do the following steps
+// 1. set .int_id_dst[CC_CORE_MIPS1].Bit.bInt_ID_SDIO2 to TRUE
+// 2. enable FS_DX_TYPE_DRIVE_B as DX_TYPE_CARD2
+// 3. enable FS_MULTI_STRG_FUNC
+// 4. NETWORK = NETWORK_NONE (Both uITRON and eCos)
+#if defined(YQCONFIG_YUANEDOG_SUPPORT)
+#define FS_MULTI_STRG_FUNC              ENABLE
+#else
+#define FS_MULTI_STRG_FUNC              DISABLE
+
+//#NT#2016/10/18#Niven Cho -end
+//#NT#2016/12/06#Niven Cho -begin
+//#NT#MULTI_DRIVE
+#define FS_DX_TYPE_DRIVE_A DX_TYPE_CARD1
+#define FS_DX_TYPE_DRIVE_B USER_DX_TYPE_EMBMEM_FAT //FS_MULTI_STRG_FUNC must enable for FS_DX_TYPE_DRIVE_B
+//#NT#2016/12/06#Niven Cho -end
+#endif
+
+//#NT#2016/09/20#Bob Huang -begin
+//#NT#Support HDMI Display with 3DNR Out
+#define _3DNROUT_FUNC DISABLE
+//#NT#2016/09/20#Bob Huang -end
+/* modify begin by ZMD, 2017-02-15 new version management*/
+#if defined(YQCONFIG_CUSTOM_NAMING_RULE_SUPPORT)
+#define CUSTOM_NAMING_RULE              ENABLE
+#else
+#define CUSTOM_NAMING_RULE              DISABLE
+#endif
+/* modify end by ZMD, 2017-02-15 */
+
+/* modify begin by ZMD, 2017-02-14 */
+#if defined(YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT)
+#define AUDIO_MIC_SWITCH_SUPPORT  ENABLE  	//pgl 20160628 add
+#endif
+/* modify end by ZMD, 2017-02-14 */
 #endif //_PRJCFG_DEMO_H_

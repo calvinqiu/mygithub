@@ -92,11 +92,11 @@ YQCONFIG_COMB_UIFILETYPE_OPTION = TS
 #****************************************************************************************#
 #  Segment: Software Config Platform Related
 #****************************************************************************************#
-YQCONFIG_COMB_CUST_PROJECT_NAME = U08_BASE
+YQCONFIG_COMB_CUST_PROJECT_NAME = U15_BASE
 								# YQCONFIG_COMB_CUST_PROJECT_NAME_K40_BASE
-            							# Option1:K40_BASE
-            							# Option2:DIDI_BASE
-YQCONFIG_CUSTOM_VERSION_NAME = "U08.public"
+            							# Option1:U08_BASE
+            							# Option2:U15_BASE
+YQCONFIG_CUSTOM_VERSION_NAME = "U15.public"
             							# Option1:.AMX
             							# Option2:.public            							
 
@@ -165,7 +165,7 @@ YQCONFIG_COMB_PLAYMODE_OPTION = USBMSDCMODE
 YQCONFIG_TOUCH_LOCKFILE_OPTION = no	    
             							# Option1:yes
             							# Option2:no  
-YQCONFIG_TOUCH_SETUP_OPTION = no	    
+YQCONFIG_TOUCH_SETUP_OPTION = yes	    
             							# Option1:yes
             							# Option2:no 
             							
@@ -173,7 +173,7 @@ YQCONFIG_COMB_PLAYMODE_ITEMS_ONE_PAGE_OPTION = BIGSCREEN
             							# Option1:BIGSCREEN
             							# Option2:SMALLSCREEN   
 
-YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION = no
+YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION = yes
             							# Option1:yes
             							# Option2:no    
 										
