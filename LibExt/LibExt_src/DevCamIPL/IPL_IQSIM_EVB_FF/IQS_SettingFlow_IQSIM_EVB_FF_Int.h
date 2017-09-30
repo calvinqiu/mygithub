@@ -1,0 +1,12 @@
+#ifndef IQS_SETTINGFLOW_INT_H
+#define IQS_SETTINGFLOW_INT_H
+
+#include "IQS_SettingFlow.h"
+
+UINT32 IQS_GetISOIdx(UINT32 Id, IQS_FLOW_MSG MsgID);
+UINT32 IQS_GetSensorIdx(UINT32 Id);
+void IQS_Init(UINT32 Id);
+ER IQCB_SettingFlowFunc(UINT32 Id, IQS_FLOW_MSG MsgID, ENG_SUBFUNC *Info,IPL_HAL_GROUP* group);
+
+#endif //SENSOR_FLOW_FUNC_H
+

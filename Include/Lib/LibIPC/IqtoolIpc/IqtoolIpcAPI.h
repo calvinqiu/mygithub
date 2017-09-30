@@ -1,0 +1,166 @@
+/*
+    Copyright (c) 2016  Novatek Microelectronics Corporation
+
+    @file IqtoolIpc.h
+
+    @version
+
+    @date
+*/
+
+#ifndef _IQTOOLIPCAPI_H
+#define _IQTOOLIPCAPI_H
+
+#include "Type.h"
+#include "ae_alg.h"
+#include "IQS_SettingFlow.h"
+#include "awb_alg.h"
+#define NVTIQTOOL_RET_OK                       0
+#define NVTIQTOOL_RET_ERR                      (-1)
+#define NVTIQTOOL_FW_NUM "1.0.20"
+/*
+typedef enum{
+
+    NVTIQTOOL_ISP_ECS      =0,
+    NVTIQTOOL_ISP_OUTLIER,
+    NVTIQTOOL_ISP_RANGE,
+    NVTIQTOOL_ISP_OB,
+    NVTIQTOOL_ISP_GBAL,
+    NVTIQTOOL_ISP_LDC,
+    NVTIQTOOL_ISP_EDGE,
+    NVTIQTOOL_ISP_CCTRL,
+    NVTIQTOOL_ISP_COLORNF,
+    NVTIQTOOL_ISP_TNR,
+    NVTIQTOOL_ISP_GAMMA,
+    NVTIQTOOL_ISP_CC,
+    NVTIQTOOL_ISP_ALL
+
+
+}NVTIQTOOL_ISP_IQ_ITEM;
+
+
+typedef enum _NVTIQTOOL_AE_SET_ITEM{
+
+    NVTIQTOOL_AE_SET_EXPECTLUM,
+    NVTIQTOOL_AE_SET_HISTOGRAMADJ,
+    NVTIQTOOL_AE_SET_OVEREXP,
+    NVTIQTOOL_AE_SET_BOUNDARY,
+    NVTIQTOOL_AE_SET_CONVERGE,
+    NVTIQTOOL_AE_SET_MANUAL,
+    NVTIQTOOL_AE_SET_ALL,
+    NVTIQTOOL_AE_SET_MAX
+
+}NVTIQTOOL_AE_SET_ITEM;
+
+typedef enum _NVTIQTOOL_AE_GET_ITEM
+{
+    NVTIQTOOL_AE_GET_EXPECTLUM,
+    NVTIQTOOL_AE_GET_HISTOGRAMADJ,
+    NVTIQTOOL_AE_GET_OVEREXP,
+    NVTIQTOOL_AE_GET_BOUNDARY,
+    NVTIQTOOL_AE_GET_CONVERGE,
+    NVTIQTOOL_AE_GET_MANUAL,
+    NVTIQTOOL_AE_GET_STATUS,
+    NVTIQTOOL_AE_GET_ALL,
+    NVTIQTOOL_AE_GET_MAX
+} NVTIQTOOL_AE_GET_ITEM;
+
+*/
+typedef enum _NVTIQTOOL_CMDID{
+    NVTIQTOOL_CMDID_INIT = 0x00000000,
+    NVTIQTOOL_CMDID_SYSREQ_ACK,
+    NVTIQTOOL_CMDID_UNINIT,
+    NVTIQTOOL_CMDID_ISP_IQ_GET_PARAM,
+    NVTIQTOOL_CMDID_ISP_IQ_SET_PARAM,
+    NVTIQTOOL_CMDID_AETUNING_SET_CMD,
+    NVTIQTOOL_CMDID_AETUNING_GET_CMD,
+    NVTIQTOOL_CMDID_AWBTUNING_GET_CMD,
+    NVTIQTOOL_CMDID_AWBTUNING_SET_CMD,
+    NVTIQTOOL_CMDID_FW_NUM_GET_CMD,
+    NVTIQTOOL_CMDID_MAX
+
+
+}NVTIQTOOL_CMDID;
+
+typedef struct _NVTIQTOOL_IQ_CB_PARAMS{
+
+    ISP_IQ_ITEM item;
+    UINT16 size;
+    UINT32 retValue;
+    char addr;
+
+}NVTIQTOOL_IQ_CB_PARAMS;
+
+typedef struct _NVTIQTOOL_AE_GET_CB_PARAMS{
+
+    UINT32 id;
+    AE_GET_ITEM item;
+    UINT16 size;
+    UINT32 retValue;
+    char addr;
+
+}NVTIQTOOL_AE_GET_CB_PARAMS;
+
+typedef struct _NVTIQTOOL_AE_SET_CB_PARAMS{
+
+    UINT32 id;
+    AE_SET_ITEM item;
+    UINT16 size;
+    UINT32 retValue;
+    char addr;
+
+}NVTIQTOOL_AE_SET_CB_PARAMS;
+
+typedef struct _NVTIQTOOL_AWB_SET_CB_PARAMS{
+
+    UINT32 id;
+    AWB_TUNING_SET_ITEM item;
+    UINT16 size;
+    UINT32 retValue;
+    char addr;
+
+}NVTIQTOOL_AWB_SET_CB_PARAMS;
+
+typedef struct _NVTIQTOOL_AWB_GET_CB_PARAMS{
+
+    UINT32 id;
+    AWB_TUNING_GET_ITEM item;
+    UINT16 size;
+    UINT32 retValue;
+    char addr;
+
+}NVTIQTOOL_AWB_GET_CB_PARAMS;
+
+
+typedef UINT32 (*NVTIQTOOL_IQ_CB)(ISP_IQ_ITEM item, UINT32 addr, UINT16 size);
+typedef UINT32 (*NVTIQTOOL_AE_GET_CB)(UINT32 Id, AE_GET_ITEM item, UINT32 addr, UINT32 size);
+typedef UINT32 (*NVTIQTOOL_AE_SET_CB)(UINT32 Id, AE_SET_ITEM item, UINT32 addr, UINT32 size);
+typedef UINT32 (*NVTIQTOOL_AWB_SET_CB)(UINT32 Id, AWB_TUNING_SET_ITEM item, UINT32 addr, UINT32 size);
+typedef UINT32 (*NVTIQTOOL_AWB_GET_CB)(UINT32 Id, AWB_TUNING_GET_ITEM item, UINT32 addr, UINT32 size);
+
+
+typedef struct _NVTIQTOOL_IQ_CB_ENTRY{
+
+    NVTIQTOOL_CMDID CmdId;
+    NVTIQTOOL_IQ_CB IQ_cbfunc;
+}NVTIQTOOL_IQ_CB_ENTRY;
+
+
+
+typedef struct{
+    NVTIQTOOL_CMDID CmdId;
+    int Arg;
+}NVTIQTOOL_CMDID_MSG;
+
+
+extern void IqtoolIpc_InstallID(void) _SECTION(".kercfg_text");
+
+extern ER IqtoolIpc_Open(UINT32 sharedMemAddr, UINT32 sharedMemSize);
+
+extern ER IqtoolIpc_Close(void);
+
+extern UINT32 IqtoolIpc_getRcvAddr(void);
+
+extern UINT32 IqtoolIpc_RecvMemSize(void);
+
+#endif /* _IQTOOLIPCAPI_H  */

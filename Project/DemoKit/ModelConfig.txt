@@ -1,0 +1,142 @@
+#----------------------------------------------------------------------
+# Set model here
+#
+# The corresponding peripheral device (e.g. Sensor) is referred to
+# ModelConfig_(MODEL).txt
+#
+# [OWNER LIST]
+# DEMO1_EVB: Niven
+# DEMO1: Niven
+# PPG360: KS
+# WiFiSDV: KS
+# IPCAM1_EVB: Niven
+# IPCAM2_EVB: Niven
+# AIRCAM: KS
+# CUBIC_DRONE: Isiah
+# FIREFLY: KS
+# FIREFLY_665: KS
+# FR300: Hideo
+# CarDV: KS
+# CarDV_DUAL_TVP5150: KS
+# Hummingbird: Hideo
+# C10: Calvin
+# AO_EVB: Jeah
+# C86B: KS
+# SP2: Philex
+# IPCAM1: Lincy
+# IPCAM2: Lincy
+# IPCAM3: Lincy
+# MIO_C032: Hideo
+# GS730P: KS
+# KSKP: KS
+# TWIN_360: Hideo
+# PWA6: Isiah
+# PWA6_668: Isiah
+# PWA86: Isiah
+# PTL_668: Isiah
+# XD01: Hideo
+# TVP5150: KS
+# FHD6120: Isiah
+# PWU01: Isiah
+# D6: Isiah
+# CAF050: Philex
+# TL_IPC320: David
+# SUBEI_TFH9: Hideo
+# SP10: Philex
+# TL_IPC330: David
+# TL_IPC340: David
+# TL_IPC350: David
+# CarDV_DUAL_AHD: KS
+# TL_IPC321: David
+# TCT_IPCAM_EVB: Charlie
+# C13: KC
+# DEWARP: KS
+# PMX_IPCAM_EVB: Charlie
+# SWAN_EVB: Ben
+# MIO_IMX326: Hideo
+# IPCAM4_TL_DEWARP: Charlie
+# TCT_IPCAM_TL: Charlie
+# TCT_IPCAM_DUAL_EVB: Charlie
+# MIO_MT39: Hideo
+# TCT_IPCAM1: Charlie
+# YSX_IPCAM1: Charlie
+# DUAL_VX1: KS
+# ADR820D
+#----------------------------------------------------------------------
+
+# DEMO1_EVB
+# DEMO1
+# PPG360
+# WiFiSDV
+# IPCAM1_EVB
+# IPCAM2_EVB
+# AIRCAM
+# CUBIC_DRONE
+# FIREFLY
+# FIREFLY_665
+# FR300
+# CarDV
+# CarDV_DUAL_TVP5150
+# Hummingbird
+# C10
+# C10_Lite
+# AO_EVB
+# PW663
+# C86B
+# PWA86
+# SP2
+# X2S
+# IPCAM1
+# IPCAM2
+# IPCAM3
+# PWA6
+# MIO_C032
+# GS730P
+# KSKP
+# TWIN_360
+# PWA6_668
+# XD01
+# TVP5150
+# PTL_668
+# FHD6120
+# PWU01
+# D6
+# CAF050
+# TL_IPC320
+# SUBEI_TFH9
+# SP10
+# HY_SMIRROR
+# TL_IPC330
+# TL_IPC340
+# TL_IPC350
+# TL_IPC321
+# TL_CD410
+# TL_CD215
+# CarDV_DUAL_AHD
+# TCT_IPCAM_EVB
+# C13
+# DEWARP
+# PMX_IPCAM_EVB
+# SWAN_EVB
+# MIO_IMX326
+# IPCAM4_TL_DEWARP
+# TCT_IPCAM_TL
+# TCT_IPCAM_DUAL_EVB
+# MIO_MT39
+# TCT_IPCAM1
+# YSX_IPCAM1
+# DUAL_VX1
+# ADR820D
+#MODEL = ALL
+
+#xc modify for compile @20170206 start
+ifeq ($(strip $(CUST_COMPILE_SUPPORT)), TRUE)
+  ifneq ($(strip $(PROJECT)),)
+    MODEL = $(PROJECT)
+  else
+    $(error please define PROJECT for MODEL !!!)
+  endif
+else
+  MODEL = DEMO1_EVB
+endif
+#xc modify for compile @20170206 end

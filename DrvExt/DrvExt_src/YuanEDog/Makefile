@@ -1,0 +1,52 @@
+
+#----------------------------------------------------------------------
+# set the library name here
+#----------------------------------------------------------------------
+PRJ_NAME = YuanEDog
+
+#----------------------------------------------------------------------
+# add/delete source files here
+#----------------------------------------------------------------------
+SRC = \
+	YuanDogDvrInterface.c	\
+	YuanDogTsk.c   \
+	YuanDogHal.c	\
+	YuanDogHalDVRCOM.c	\
+	YuanDogHalEvent.c	\
+	YuanDogHalGPSCOM.c	\
+	YuanDogHalKeypad.c	\
+	YuanDogHalLog.c	\
+	YuanDogHalRadarCOM.c	\
+	YuanDogHalSound.c	\
+	YuanDogHalThread.c	\
+	YuanDogHalTime.c	\
+	YuanDogHalUtils.c
+
+
+ASM =
+
+#----------------------------------------------------------------------
+# set the include directory here
+#----------------------------------------------------------------------
+INC_DIR = .. \
+	../../../Include \
+
+#----------------------------------------------------------------------
+# set the image output directory here
+#----------------------------------------------------------------------
+IMG_BASE_DIR = ../../../ARC/Drv
+
+#----------------------------------------------------------------------
+# add additional C and assembly flags here
+#----------------------------------------------------------------------
+CFLAGS_D =
+ASMFLAGS_D =
+
+CFLAGS_R =
+ASMFLAGS_R =
+
+#----------------------------------------------------------------------
+# include common parts of the makefile
+#----------------------------------------------------------------------
+MAKE_COMMON_DIR = ../../../MakeCommon
+include $(MAKE_COMMON_DIR)/OutputLib.txt

@@ -1,0 +1,6 @@
+#ifndef _IQS_TUNINGIQTABLE_IQSIM_EVB_FF_C_
+#define _IQS_TUNINGIQTABLE_IQSIM_EVB_FF_C_
+
+#include "IPL_IQSIM_EVB_FF_Int.h"
+
+#endif

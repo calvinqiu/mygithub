@@ -1,0 +1,1943 @@
+#----------------------------------------------------------------------
+# Set model here
+#----------------------------------------------------------------------
+#MODEL select in ModelConfig.txt
+
+
+#----------------------------------------------------------------------
+# set chip version here
+#----------------------------------------------------------------------
+#CHIP = 660
+
+#----------------------------------------------------------------------
+# pass bin name to c code
+#----------------------------------------------------------------------
+BIN_NAME_PARAM = \
+	-D_BIN_NAME_='"$(BIN_NAME)"' \
+	-D_BIN_NAME_T_='"$(BIN_NAME_T)"' \
+
+#----------------------------------------------------------------------
+# set encrypt binary parameters
+# EBIN_METHOD
+#   CRC: CRC32
+#   SUM: Checksum
+# EBIN_BADDR
+#   Model name address in binary file (VersionInfo.s), should be 0x50
+# EBIN_MNAME
+#   Model name store in binary file (VersionInfo.s)
+# EBIN_PSTR
+#   Optional parameter, use as additional bytes to generate CRC or checksum
+#----------------------------------------------------------------------
+#EBIN_METHOD = CRC
+EBIN_METHOD = SUM
+
+EBIN_BADDR  = 0x50
+
+ifeq "$(CHIP_PREFIX)" ""
+EBIN_MNAME  = NT96$(CHIP)
+else
+EBIN_MNAME  = $(CHIP_PREFIX)$(CHIP)
+endif
+
+EBIN_PSTR   =
+
+#----------------------------------------------------------------------
+# Internal Storage Block Size
+#----------------------------------------------------------------------
+EMBMEM_BLK_SIZE_PARAM = \
+	-D_EMBMEM_BLK_SIZE_=$(EMBMEM_BLK_SIZE)
+
+#----------------------------------------------------------------------
+# Link external AE AWB library or not, moved to ModelConfig.txt
+#----------------------------------------------------------------------
+#EXTERNAL_AA = ON
+#EXTERNAL_AA = OFF
+
+#----------------------------------------------------------------------
+# select external device here
+#----------------------------------------------------------------------
+#----------------------------------------------------------------------
+# select External Audio device
+#----------------------------------------------------------------------
+#AUDIOEXT = AudCodecExt_WM8978
+
+#----------------------------------------------------------------------
+# select External GYRO device
+#----------------------------------------------------------------------
+#GYROEXT = Gyro_None
+#GYROEXT = Gyro_EWTS9PDN21
+#----------------------------------------------------------------------
+# Select internal Storage device
+#----------------------------------------------------------------------
+#STORAGE = Storage_NAND
+#STORAGE = Storage_EMMC
+#STORAGE = Storage_SPI
+#STORAGE = Storage_SPINAND
+
+#----------------------------------------------------------------------
+# select Model Driver
+#----------------------------------------------------------------------
+#MODELEXT = MODELEXT_FPGA
+#MODELEXT = MODELEXT_EVB
+#MODELEXT = MODELEXT_DEMO
+#MODELEXT = MODELEXT_CARDV
+
+#----------------------------------------------------------------------
+# set parameters due to external device selection
+# user doesn't need to modify this area unless adding/deleting devices
+# note: the parameter name must be the same as source code
+#----------------------------------------------------------------------
+#----------------------------------------------------------------------
+# Chip parameters
+#----------------------------------------------------------------------
+ifeq "$(CHIP)" "660"
+  CHIP_TYPE = _CHIP_660_
+endif
+
+ifeq "$(CHIP)" "663"
+  CHIP_TYPE = _CHIP_663_
+endif
+
+ifeq "$(CHIP)" "665"
+  CHIP_TYPE = _CHIP_665_
+endif
+
+ifeq "$(CHIP)" "668"
+  CHIP_TYPE = _CHIP_668_
+endif
+
+ifeq "$(CHIP_PREFIX)" "NT98"
+ifeq "$(CHIP)" "500"
+  CHIP_TYPE = _CHIP_98500_
+endif
+endif
+
+CHIP_PARAM = \
+    -D_CHIP_660_=0 \
+    -D_CHIP_663_=1 \
+    -D_CHIP_665_=2 \
+    -D_CHIP_668_=3 \
+    -D_CHIP_98500_=4 \
+    -D_CHIP_=$(CHIP_TYPE)
+
+ifeq "$(CHIP_PREFIX)" ""
+  CHIP_PARAM += -D_CHIP_NAME_='"NT96$(CHIP)"'
+else
+  CHIP_PARAM += -D_CHIP_NAME_='"$(CHIP_PREFIX)$(CHIP)"'
+endif
+#----------------------------------------------------------------------
+# PARTLOAD
+#----------------------------------------------------------------------
+ifeq "$(FW_PARTIAL_LOAD)" "ON"
+  FW_PARTIAL_LOAD = _FW_PARTIAL_LOAD_ON_
+endif
+
+ifeq "$(FW_PARTIAL_LOAD)" "OFF"
+  FW_PARTIAL_LOAD = _FW_PARTIAL_LOAD_OFF_
+endif
+
+FW_PARTIAL_LOAD_PARAM = \
+    -D_FW_PARTIAL_LOAD_ON_=0 \
+    -D_FW_PARTIAL_LOAD_OFF_=1 \
+    -D_FW_PARTIAL_LOAD_=$(FW_PARTIAL_LOAD)
+
+#----------------------------------------------------------------------
+# KEY METHOD
+#----------------------------------------------------------------------
+ifeq "$(KEY_METHOD)" "KEY_METHOD_NONE"
+  KEY_METHOD = _KEY_METHOD_NONE_
+endif
+
+ifeq "$(KEY_METHOD)" "KEY_METHOD_2KEY"
+  KEY_METHOD = _KEY_METHOD_2KEY_
+endif
+
+ifeq "$(KEY_METHOD)" "KEY_METHOD_4KEY"
+  KEY_METHOD = _KEY_METHOD_4KEY_
+endif
+
+KEY_METHOD_PARAM = \
+	-D_KEY_METHOD_NONE_=0 \
+	-D_KEY_METHOD_2KEY_=1 \
+	-D_KEY_METHOD_4KEY_=2 \
+	-D_KEY_METHOD_=$(KEY_METHOD)
+
+#----------------------------------------------------------------------
+# CPU2 TYPE
+#----------------------------------------------------------------------
+ifeq "$(CPU2_TYPE)" "CPU2_NONE"
+  CPU2_TYPE = _CPU2_NONE_
+endif
+
+ifeq "$(CPU2_TYPE)" "CPU2_ECOS"
+  CPU2_TYPE = _CPU2_ECOS_
+endif
+
+ifeq "$(CPU2_TYPE)" "CPU2_LINUX"
+  CPU2_TYPE = _CPU2_LINUX_
+endif
+
+CPU2_PARAM = \
+	-D_CPU2_NONE_=0 \
+	-D_CPU2_ECOS_=1 \
+	-D_CPU2_LINUX_=2 \
+	-D_CPU2_TYPE_=$(CPU2_TYPE)
+
+
+#----------------------------------------------------------------------
+# DSP TYPE
+#----------------------------------------------------------------------
+ifeq "$(DSP_TYPE)" "DSP_NONE"
+  DSP_TYPE = _DSP_NONE_
+endif
+
+ifeq "$(DSP_TYPE)" "DSP_FREERTOS"
+  DSP_TYPE = _DSP_FREERTOS_
+endif
+
+DSP_PARAM = \
+	-D_DSP_NONE_=0 \
+	-D_DSP_FREERTOS_=1 \
+	-D_DSP_TYPE_=$(DSP_TYPE)
+
+#----------------------------------------------------------------------
+# LCD parameters
+#----------------------------------------------------------------------
+ifeq "$(LCD)" "OFF"
+  LCD_TYPE = _LCDTYPE_OFF_
+endif
+
+ifeq "$(LCD)" "Disp_VIRTUAL_LCD1_OFF"
+  LCD_TYPE = _LCDTYPE_OFF_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_AUCN01"
+  LCD_TYPE = _LCDTYPE_AUCN01_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_PW27P05_ILI8961"
+  LCD_TYPE = _LCDTYPE_PW27P05_ILI8961_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_T15P00_OTA5182A"
+  LCD_TYPE = _LCDTYPE_T15P00_OTA5182A_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_PW35P00_HX8238D"
+  LCD_TYPE = _LCDTYPE_PW35P00_HX8238D_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_UT35067A0_ILI9488"
+  LCD_TYPE = _LCDTYPE_UT35067A0_ILI9488_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_NT35510"
+  LCD_TYPE = _LCDTYPE_NT35510_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_NT35410"
+  LCD_TYPE = _LCDTYPE_NT35410_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_TXDT270C_8961_6A6"
+    LCD_TYPE = _LCDTYPE_TXDT270C_8961_6A6_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_GPM1364A0"
+    LCD_TYPE = _LCDTYPE_GPM1364A0_
+endif
+
+ifeq "$(LCD)" "Disp_IFPA_LCD1_AT050TN43_ILI6122"
+    LCD_TYPE = _LCDTYPE_AT050TN43_ILI6122_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_ILI9341"
+  LCD_TYPE = _LCDTYPE_ILI9341_IF8B_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_PWT30P66_ILI8961"
+  LCD_TYPE = _LCDTYPE_PWT30P66_ILI8961_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_PW50P00_HX8369B"
+    LCD_TYPE = _LCDTYPE_PW50P00_HX8369B_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_T27P14_ILI8961"
+    LCD_TYPE = _LCDTYPE_T27P14_ILI8961_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_ALT_025CSLN_J2_OTA5184A"
+  LCD_TYPE = _LCDTYPE_ALT_025CSLN_J2_OTA5184A_
+endif
+
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_TWJ50IP008_ILI9806G"
+  LCD_TYPE = _LCDTYPE_TWJ50IP008_ILI9806G_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_FD050FWV047_JD9161"
+  LCD_TYPE = _LCDTYPE_FD050FWV047_JD9161_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_TWJ50IP008_ILI9806E"
+  LCD_TYPE = _LCDTYPE_TWJ50IP008_ILI9806E_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_TG078UW006A0"
+  LCD_TYPE = _LCDTYPE_TG078UW006A0_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_TM686B18BA139_EK79030"
+  LCD_TYPE = _LCDTYPE_TM686B18BA139_EK79030_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_UT35067A0_ILI9488"
+  LCD_TYPE = _LCDTYPE_UT35067A0_ILI9488_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_BPB5017BFW_ILI9806E"
+  LCD_TYPE = _LCDTYPE_BPB5017BFW_ILI9806E_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_HX5274A"
+  LCD_TYPE = _LCDTYPE_HX5274A_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_HY40_JD9161"
+  LCD_TYPE = _LCDTYPE_HY40_JD9161_
+endif
+
+ifeq "$(LCD)" "Disp_IF8B_LCD1_TXDT270C_8961_6A6_Flip"
+    LCD_TYPE = _LCDTYPE_TXDT270C_8961_6A6_FLIP_
+endif
+
+ifeq "$(LCD)" "Disp_IFPA_LCD1_M935UX01M_SN75LVDS83B"
+    LCD_TYPE = _LCDTYPE_M935UX01M_SN75LVDS83B_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_ILI9163C"
+  LCD_TYPE = _LCDTYPE_ILI9163C_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_TXDT500EKPA_9806E"
+  LCD_TYPE = _LCDTYPE_TXDT500EKPA_9806E_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_WTL078401G01"
+  LCD_TYPE = _LCDTYPE_TWTL078401G01_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_QiCheng"
+  LCD_TYPE = _LCDTYPE_QiCheng_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_XJ040WV1402C_R61408"
+    LCD_TYPE = _LCDTYPE_XJ040WV1402C_R61408_DSI_
+endif
+
+ifeq "$(LCD)" "Disp_IFDSI_LCD1_TWJ40017A_ST7701S"
+    LCD_TYPE = _LCDTYPE_TWJ40017A_ST7701S_DSI_
+endif
+ifeq "$(LCD)" "Disp_IFMI_LCD1_ST7789S"
+  LCD_TYPE = _LCDTYPE_ST7789S_
+endif
+
+LCD_PARAM = \
+    -D_LCDTYPE_OFF_=0 \
+    -D_LCDTYPE_AUCN01_=1 \
+    -D_LCDTYPE_PW27P05_ILI8961_=2 \
+    -D_LCDTYPE_PW35P00_HX8238D_=3 \
+    -D_LCDTYPE_UT35067A0_ILI9488_DSI_=4 \
+    -D_LCDTYPE_NT35510_DSI_=5 \
+    -D_LCDTYPE_T15P00_OTA5182A_=6 \
+    -D_LCDTYPE_NT35410_DSI_=7 \
+    -D_LCDTYPE_TXDT270C_8961_6A6_=8 \
+    -D_LCDTYPE_GPM1364A0_=9 \
+    -D_LCDTYPE_AT050TN43_ILI6122_=10 \
+    -D_LCDTYPE_ILI9341_IF8B_=11 \
+    -D_LCDTYPE_PWT30P66_ILI8961_=12 \
+    -D_LCDTYPE_PW50P00_HX8369B_DSI_=13 \
+    -D_LCDTYPE_T27P14_ILI8961_=14 \
+    -D_LCDTYPE_ALT_025CSLN_J2_OTA5184A_=15 \
+    -D_LCDTYPE_TWJ50IP008_ILI9806G_=16 \
+    -D_LCDTYPE_FD050FWV047_JD9161_=17 \
+    -D_LCDTYPE_TG078UW006A0_DSI_=18 \
+    -D_LCDTYPE_UT35067A0_ILI9488_DSI__=19 \
+    -D_LCDTYPE_BPB5017BFW_ILI9806E_DSI_=20 \
+    -D_LCDTYPE_HX5274A_DSI_=21 \
+    -D_LCDTYPE_HY40_JD9161_=22 \
+    -D_LCDTYPE_TXDT270C_8961_6A6_FLIP_=23 \
+    -D_LCDTYPE_ILI9163C_DSI_=24 \
+    -D_LCDTYPE_TXDT500EKPA_9806E_DSI_=25 \
+    -D_LCDTYPE_TWTL078401G01_DSI_=26 \
+    -D_LCDTYPE_TWJ50IP008_ILI9806E_=27\
+	-D_LCDTYPE_TM686B18BA139_EK79030_DSI_=28\
+	-D_LCDTYPE_QiCheng_DSI_=29\
+    -D_LCDTYPE_XJ040WV1402C_R61408_DSI_=30 \
+    -D_LCDTYPE_TWJ40017A_ST7701S_DSI_=31 \
+    -D_LCDTYPE_=$(LCD_TYPE)
+
+#----------------------------------------------------------------------
+# LCD2 parameters
+#----------------------------------------------------------------------
+ifeq "$(LCD2)" "OFF"
+  LCD2_TYPE = _LCD2TYPE_OFF_
+endif
+
+ifeq "$(LCD2)" "Disp_VIRTUAL_LCD2_OFF"
+  LCD2_TYPE = _LCD2TYPE_OFF_
+endif
+
+ifeq "$(LCD2)" "Disp_IF8B_LCD2_AUCN01"
+  LCD2_TYPE = _LCD2TYPE_AUCN01_
+endif
+
+LCD2_PARAM = \
+    -D_LCD2TYPE_OFF_=0 \
+    -D_LCD2TYPE_AUCN01_=1 \
+    -D_LCD2TYPE_=$(LCD2_TYPE)
+
+#----------------------------------------------------------------------
+# TV parameters
+#----------------------------------------------------------------------
+ifeq "$(TV)" "OFF"
+  TV_TYPE = _TV_OFF_
+endif
+
+ifeq "$(TV)" "ON"
+  TV_TYPE = _TV_ON_
+endif
+
+TV_PARAM = \
+    -D_TV_OFF_=0 \
+    -D_TV_ON_=1 \
+    -D_TVTYPE_=$(TV_TYPE)
+
+#----------------------------------------------------------------------
+# HDMI parameters
+#----------------------------------------------------------------------
+ifeq "$(HDMI)" "OFF"
+  HDMI_TYPE = _HDMI_OFF_
+endif
+
+ifeq "$(HDMI)" "ON"
+  HDMI_TYPE = _HDMI_ON_
+endif
+
+HDMI_PARAM = \
+    -D_HDMI_OFF_=0 \
+    -D_HDMI_ON_=1 \
+    -D_HDMITYPE_=$(HDMI_TYPE)
+
+#----------------------------------------------------------------------
+# Sensor parameters
+#----------------------------------------------------------------------
+ifeq "$(SENSOR)" "OFF"
+  SENSOR_TYPE = _SENSORLIB_OFF_
+endif
+
+ifeq "$(SENSOR)" "CMOS_MN34110"
+  SENSOR_TYPE = _SENSORLIB_CMOS_MN34110_
+endif
+
+ifeq "$(SENSOR)" "CMOS_OV4689"
+  SENSOR_TYPE = _SENSORLIB_CMOS_OV4689_
+endif
+
+ifeq "$(SENSOR)" "CMOS_NT99141"
+  SENSOR_TYPE = _SENSORLIB_CMOS_NT99141_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0330P"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0330P_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX124LQT"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX124LQT_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX123LQT"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX123LQT_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0330M"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0330M_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX322LQJ"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX322LQJ_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX322LQJVX1"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX322LQJVX1_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX078CQK"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX078CQK_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX291M"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX291M_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX290LQR"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX290LQR_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0230CS"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0230CS_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX206CQC"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX206CQC_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX206CQC_DUAL"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX206CQC_DUAL_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX179"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX179_
+endif
+
+ifeq "$(SENSOR)" "CMOS_OV2710VX1"
+  SENSOR_TYPE = _SENSORLIB_CMOS_OV2710VX1_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX117CQT"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX117_
+endif
+
+ifeq "$(SENSOR)" "CMOS_TVP5150"
+  SENSOR_TYPE = _SENSORLIB_CMOS_TVP5150_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX225LQR"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX225LQR_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0237CS"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0237CS_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0238CS"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0238CS_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX258"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX258_
+endif
+
+ifeq "$(SENSOR)" "CMOS_MN34120"
+  SENSOR_TYPE = _SENSORLIB_CMOS_MN34120_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0237CSP"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0237CSP_
+endif
+
+ifeq "$(SENSOR)" "CMOS_ISX016VX1"
+  SENSOR_TYPE = _SENSORLIB_CMOS_ISX016VX1_
+endif
+
+ifeq "$(SENSOR)" "CMOS_ISX016VX1_HDP60"
+  SENSOR_TYPE = _SENSORLIB_CMOS_ISX016VX1_HDP60_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AR0238CSP"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AR0238CSP_
+endif
+
+ifeq "$(SENSOR)" "CMOS_OV5658M"
+  SENSOR_TYPE = _SENSORLIB_CMOS_OV5658M_
+endif
+
+ifeq "$(SENSOR)" "CMOS_AHD"
+  SENSOR_TYPE = _SENSORLIB_CMOS_AHD_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX326LQC"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX326LQC_
+endif
+
+ifeq "$(SENSOR)" "CMOS_OV12895M"
+  SENSOR_TYPE = _SENSORLIB_CMOS_OV12895M_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX322LQJ_THCV236"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX322LQJ_THCV236_
+endif
+
+ifeq "$(SENSOR)" "CMOS_IMX317CQC"
+  SENSOR_TYPE = _SENSORLIB_CMOS_IMX317CQC_
+endif
+
+SENSOR_PARAM = \
+    -D_SENSORLIB_OFF_=0 \
+    -D_SENSORLIB_CMOS_MN34110_=1 \
+    -D_SENSORLIB_CMOS_OV4689_=2 \
+    -D_SENSORLIB_CMOS_NT99141_=3 \
+    -D_SENSORLIB_CMOS_AR0330P_=4 \
+    -D_SENSORLIB_CMOS_IMX124LQT_=5 \
+    -D_SENSORLIB_CMOS_AR0330M_=6 \
+    -D_SENSORLIB_CMOS_IMX123LQT_=7 \
+    -D_SENSORLIB_CMOS_IMX322LQJ_=8 \
+    -D_SENSORLIB_CMOS_IMX078CQK_=9 \
+    -D_SENSORLIB_CMOS_IMX291M_=10 \
+    -D_SENSORLIB_CMOS_IMX290LQR_=11 \
+    -D_SENSORLIB_CMOS_AR0230CS_=12 \
+    -D_SENSORLIB_CMOS_IMX206CQC_=13 \
+    -D_SENSORLIB_CMOS_IMX206CQC_DUAL_=14 \
+    -D_SENSORLIB_CMOS_IMX322LQJVX1_=15 \
+    -D_SENSORLIB_CMOS_IMX179_=16 \
+    -D_SENSORLIB_CMOS_OV2710VX1_=17 \
+    -D_SENSORLIB_CMOS_IMX117_=18 \
+    -D_SENSORLIB_CMOS_TVP5150_=19 \
+    -D_SENSORLIB_CMOS_IMX225LQR_=20 \
+    -D_SENSORLIB_CMOS_AR0237CS_=21 \
+    -D_SENSORLIB_CMOS_AR0238CS_=22 \
+    -D_SENSORLIB_CMOS_IMX258_=23 \
+    -D_SENSORLIB_CMOS_MN34120_=24 \
+    -D_SENSORLIB_CMOS_AR0237CSP_=25 \
+    -D_SENSORLIB_CMOS_ISX016VX1_=26 \
+    -D_SENSORLIB_CMOS_AR0238CSP_=27 \
+    -D_SENSORLIB_CMOS_OV5658M_=28 \
+    -D_SENSORLIB_CMOS_AHD_=29 \
+    -D_SENSORLIB_CMOS_IMX326LQC_=30 \
+    -D_SENSORLIB_CMOS_OV12895M_=31 \
+    -D_SENSORLIB_CMOS_IMX322LQJ_THCV236_=32 \
+    -D_SENSORLIB_CMOS_IMX317CQC_=33 \
+    -D_SENSORLIB_CMOS_ISX016VX1_HDP60_=34 \
+    -D_SENSORLIB_=$(SENSOR_TYPE)
+
+#----------------------------------------------------------------------
+# Sensor2 parameters
+#----------------------------------------------------------------------
+ifeq "$(SENSOR_2)" "OFF"
+  SENSOR_TYPE_2 = _SENSORLIB2_OFF_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_MN34110"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_MN34110_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_NT99141"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_NT99141_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX124LQT"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX124LQT_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_AR0330M"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_AR0330M_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX123LQT"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX123LQT_
+endif
+
+
+ifeq "$(SENSOR_2)" "CMOS_IMX322LQJ"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX322LQJ_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX206CQC"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX206CQC_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX206CQC_DUAL"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX206CQC_DUAL_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX322LQJVX1"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX322LQJVX1_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_OV9750VX1"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_OV9750VX1_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_OV9712VX1"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_OV9712VX1_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_TVP5150"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_TVP5150_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_OV2710VX1"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_OV2710VX1_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_OV4689"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_OV4689_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX225LQR"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IMX225LQR_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_OV7251M"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_OV7251M_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IT66021FN"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_IT66021FN_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_MN34120"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_MN34120_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_ISX016VX1"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_ISX016VX1_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_ISX016VX1_HDP60"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_ISX016VX1_HDP60_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_AHD"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_AHD_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_IMX225LQRVX1"
+  SENSOR_TYPE_2 = _SENSORLIB_CMOS_IMX225LQRVX1_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_GM7150"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_GM7150_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_ISX016P"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_ISX016P_
+endif
+
+ifeq "$(SENSOR_2)" "CMOS_CCIR601A"
+  SENSOR_TYPE_2 = _SENSORLIB2_CMOS_CCIR601A_
+endif
+
+SENSOR_PARAM_2 = \
+    -D_SENSORLIB2_OFF_=0 \
+    -D_SENSORLIB2_CMOS_MN34110_=1 \
+    -D_SENSORLIB2_CMOS_NT99141_=2 \
+    -D_SENSORLIB2_CMOS_IMX124LQT_=3 \
+    -D_SENSORLIB2_CMOS_AR0330M_=4 \
+    -D_SENSORLIB2_CMOS_IMX123LQT_=5 \
+    -D_SENSORLIB2_CMOS_IMX322LQJ_=6 \
+    -D_SENSORLIB2_CMOS_IMX206CQC_=7 \
+    -D_SENSORLIB2_CMOS_IMX206CQC_DUAL_=8 \
+    -D_SENSORLIB2_CMOS_IMX322LQJVX1_=9 \
+    -D_SENSORLIB2_CMOS_OV9750VX1_=10 \
+    -D_SENSORLIB2_CMOS_OV9712VX1_=11 \
+    -D_SENSORLIB2_CMOS_TVP5150_=12 \
+    -D_SENSORLIB2_CMOS_OV2710VX1_=13 \
+    -D_SENSORLIB2_CMOS_OV4689_=14 \
+    -D_SENSORLIB2_CMOS_IMX225LQR_=15 \
+    -D_SENSORLIB2_CMOS_OV7251M_=16 \
+    -D_SENSORLIB2_CMOS_IT66021FN_=17 \
+    -D_SENSORLIB2_CMOS_MN34120_=19 \
+    -D_SENSORLIB2_CMOS_ISX016VX1_=20 \
+    -D_SENSORLIB2_CMOS_AHD_=21 \
+    -D_SENSORLIB_CMOS_IMX225LQRVX1_=22 \
+    -D_SENSORLIB2_CMOS_GM7150_=23 \
+    -D_SENSORLIB2_CMOS_ISX016P_=24 \
+    -D_SENSORLIB2_CMOS_CCIR601A_=25 \
+    -D_SENSORLIB2_CMOS_ISX016VX1_HDP60_=26 \
+    -D_SENSORLIB2_=$(SENSOR_TYPE_2)
+
+#----------------------------------------------------------------------
+# Sensor3 parameters
+#----------------------------------------------------------------------
+ifeq "$(SENSOR_3)" "OFF"
+  SENSOR_TYPE_3 = _SENSORLIB3_OFF_
+endif
+
+ifeq "$(SENSOR_3)" "CMOS_NT99141"
+  SENSOR_TYPE_3 = _SENSORLIB3_CMOS_NT99141_
+endif
+
+ifeq "$(SENSOR_3)" "CMOS_GM7150"
+  SENSOR_TYPE_3 = _SENSORLIB3_CMOS_GM7150_
+endif
+
+SENSOR_PARAM_3 = \
+    -D_SENSORLIB3_OFF_=0 \
+    -D_SENSORLIB3_CMOS_NT99141_=1 \
+    -D_SENSORLIB3_CMOS_GM7150_=2 \
+    -D_SENSORLIB3_=$(SENSOR_TYPE_3)
+
+#----------------------------------------------------------------------
+# Sensor4 parameters
+#----------------------------------------------------------------------
+ifeq "$(SENSOR_4)" "OFF"
+  SENSOR_TYPE_4 = _SENSORLIB4_OFF_
+endif
+
+ifeq "$(SENSOR_4)" "CMOS_NT99141"
+  SENSOR_TYPE_4 = _SENSORLIB4_CMOS_NT99141_
+endif
+
+SENSOR_PARAM_4 = \
+    -D_SENSORLIB4_OFF_=0 \
+    -D_SENSORLIB4_CMOS_NT99141_=1 \
+    -D_SENSORLIB4_=$(SENSOR_TYPE_4)
+
+#----------------------------------------------------------------------
+# IPP parameters
+#----------------------------------------------------------------------
+ifeq "$(IPP)" "IPL_FAKE"
+  IPP_TYPE = _IPL_FAKE_
+endif
+
+ifeq "$(IPP)" "IPL_IMX083_SAMPLE_FF"
+  IPP_TYPE = _IPL_IMX083_SAMPLE_FF_
+endif
+
+ifeq "$(IPP)" "IPL_MN34110_EVB_FF"
+  IPP_TYPE = _IPL_MN34110_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_MI5100_EVB_FF"
+  IPP_TYPE = _IPL_MI5100_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IQSIM_SAMPLE_FF"
+  IPP_TYPE = _IPL_IQSIM_SAMPLE_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0330P_EVB_FF"
+  IPP_TYPE = _IPL_AR0330P_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0330M_EVB_FF"
+  IPP_TYPE = _IPL_AR0330M_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV2710_EVB_FF"
+  IPP_TYPE = _IPL_OV2710_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX208PQH_EVB_FF"
+  IPP_TYPE = _IPL_IMX208PQH_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0330_NT99141_MSDEMO_FFFF"
+  IPP_TYPE = _IPL_AR0330_NT99141_MSDEMO_FFFF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_EVB_FF"
+  IPP_TYPE = _IPL_OV4689_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_NT99141_EVB_FF"
+  IPP_TYPE = _IPL_NT99141_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IQSIM_EVB_FF"
+  IPP_TYPE = _IPL_IQSIM_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX124LQT_EVB_FF"
+  IPP_TYPE = _IPL_IMX124LQT_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX123LQT_EVB_FF"
+  IPP_TYPE = _IPL_IMX123LQT_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX322LQJ_EVB_FF"
+  IPP_TYPE = _IPL_IMX322LQJ_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_730P_FF"
+  IPP_TYPE = _IPL_OV4689_730P_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_IMX322LQJ_EVB_FF"
+  IPP_TYPE = _IPL_OV4689_IMX322LQJ_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_OV9712_EVB_FF"
+  IPP_TYPE = _IPL_OV4689_OV9712_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_OV2710_EVB_FF"
+  IPP_TYPE = _IPL_OV4689_OV2710_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX078CQK_EVB_FF"
+  IPP_TYPE = _IPL_IMX078CQK_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX291M_EVB_FF"
+  IPP_TYPE = _IPL_IMX291M_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX291M_SPx_FF"
+  IPP_TYPE = _IPL_IMX291M_SPx_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX291M_IMX322LQJ_EVB_FF"
+  IPP_TYPE = _IPL_IMX291M_IMX322LQJ_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX290LQR_IMX322LQJ_EVB_FF"
+  IPP_TYPE = _IPL_IMX290LQR_IMX322LQJ_EVB_FF_
+endif
+ifeq "$(IPP)" "IPL_IMX290LQR_EVB_FF"
+  IPP_TYPE = _IPL_IMX290LQR_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0230CS_EVB_FF"
+  IPP_TYPE = _IPL_AR0230CS_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX206CQC_EVB_FF"
+  IPP_TYPE = _IPL_IMX206CQC_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX206CQC_DUAL_EVB_FF"
+  IPP_TYPE = _IPL_IMX206CQC_DUAL_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0230CS_OV9750_C10_FF"
+  IPP_TYPE = _IPL_AR0230CS_OV9750_C10_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX179_EVB_FF"
+  IPP_TYPE = _IPL_IMX179_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV2710_TVP5150_EVB_FF"
+  IPP_TYPE = _IPL_OV2710_TVP5150_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX117CQT_EVB_FF"
+  IPP_TYPE = _IPL_IMX117_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX078CQK_JGHT_FF"
+  IPP_TYPE = _IPL_IMX078CQK_JGHT_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX078CQK_VR360_FF"
+  IPP_TYPE = _IPL_IMX078CQK_VR360_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX291M_IPCAM_FF"
+  IPP_TYPE = _IPL_IMX291M_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX123LQT_IPCAM_FF"
+  IPP_TYPE = _IPL_IMX123LQT_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_DUAL_TWIN360_FF"
+  IPP_TYPE = _IPL_OV4689_DUAL_TWIN360_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0230CS_IPCAM_FF"
+  IPP_TYPE = _IPL_AR0230CS_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_TVP5150_EVB_FF"
+  IPP_TYPE = _IPL_TVP5150_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX225LQR_DUAL_EVB_FF"
+  IPP_TYPE = _IPL_IMX225LQR_DUAL_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0238CS_EVB_FF"
+  IPP_TYPE = _IPL_AR0238CS_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0230CS_OV2710_EVB_FF"
+  IPP_TYPE = _IPL_AR0230CS_OV2710_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX258_OV7251_EVB_FF"
+  IPP_TYPE = _IPL_IMX258_OV7251_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IT66021FN_EVB_FF"
+  IPP_TYPE = _IPL_IT66021FN_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_MN34120_EVB_FF"
+  IPP_TYPE = _IPL_MN34120_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0237CSP_EVB_FF"
+  IPP_TYPE = _IPL_AR0237CSP_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0237CSP_IPCAM_FF"
+  IPP_TYPE = _IPL_AR0237CSP_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_ISX016VX1_EVB_FF"
+  IPP_TYPE = _IPL_ISX016VX1_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0238CSP_EVB_FF"
+  IPP_TYPE = _IPL_AR0238CSP_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0330P_IPCAM_FF"
+  IPP_TYPE = _IPL_AR0330P_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_IPCAM_FF"
+  IPP_TYPE = _IPL_OV4689_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_AHD_FF"
+  IPP_TYPE = _IPL_OV4689_AHD_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV5658M_IPCAM_FF"
+  IPP_TYPE = _IPL_OV5658M_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX291M_TL_IPC321_FF"
+  IPP_TYPE = _IPL_IMX291M_TL_IPC321_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX291M_TL_CD215_FF"
+  IPP_TYPE = _IPL_IMX291M_TL_CD215_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_TL_CD410_FF"
+  IPP_TYPE = _IPL_OV4689_TL_CD410_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV4689_GM7150_C13_FF"
+  IPP_TYPE = _IPL_OV4689_GM7150_C13_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX322LQJ_TVP5150_EVB_FF"
+  IPP_TYPE = _IPL_IMX322LQJ_TVP5150_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_ISX016P_EVB_FF"
+  IPP_TYPE = _IPL_ISX016P_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0237CS_TCT_IPCAM_FF"
+  IPP_TYPE = _IPL_AR0237CS_TCT_IPCAM_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AHD_DUAL_FF"
+  IPP_TYPE = _IPL_AHD_DUAL_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX326LQC_MIO_FF"
+  IPP_TYPE = _IPL_IMX326LQC_MIO_FF_
+endif
+
+ifeq "$(IPP)" "IPL_CCIR601A_EVB_FF"
+  IPP_TYPE = _IPL_CCIR601A_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_OV12895M_EVB_FF"
+  IPP_TYPE = _IPL_OV12895M_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX317CQC_EVB_FF"
+  IPP_TYPE = _IPL_IMX317CQC_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_IMX322LQJ_ISX016_EVB_FF"
+  IPP_TYPE = _IPL_IMX322LQJ_ISX016_EVB_FF_
+endif
+
+ifeq "$(IPP)" "IPL_AR0237CS_EVB_FF"
+  IPP_TYPE = _IPL_AR0237CS_EVB_FF_
+endif
+ifeq "$(IPP)" "IPL_AR0238CS_IMX322LQJ_EVB_FF"
+  IPP_TYPE = _IPL_AR0238CS_IMX322LQJ_EVB_FF_
+endif
+
+
+ifeq "$(IPP)" "IPL_AR0238CSP_IMX322LQJ_EVB_FF"
+  IPP_TYPE = _IPL_AR0238CSP_IMX322LQJ_EVB_FF_
+endif
+
+IPP_PARAM = \
+    -D_IPL_FAKE_=0 \
+    -D_IPL_IMX083_SAMPLE_FF_=1 \
+    -D_IPL_MN34110_EVB_FF_=2 \
+    -D_IPL_MI5100_EVB_FF_=3 \
+    -D_IPL_IQSIM_SAMPLE_FF_=4 \
+    -D_IPL_AR0330P_EVB_FF_=5 \
+    -D_IPL_AR0330M_EVB_FF_=6 \
+    -D_IPL_OV2710_EVB_FF_=7 \
+    -D_IPL_IMX208PQH_EVB_FF_=8 \
+    -D_IPL_AR0330_NT99141_MSDEMO_FFFF_=9 \
+    -D_IPL_OV4689_EVB_FF_=10 \
+    -D_IPL_NT99141_EVB_FF_=11 \
+    -D_IPL_IQSIM_EVB_FF_=12 \
+    -D_IPL_IMX124LQT_EVB_FF_=13 \
+    -D_IPL_IMX123LQT_EVB_FF_=14 \
+    -D_IPL_IMX322LQJ_EVB_FF_=15 \
+    -D_IPL_OV4689_IMX322LQJ_EVB_FF_=16 \
+    -D_IPL_IMX078CQK_EVB_FF_=17 \
+    -D_IPL_IMX291M_EVB_FF_=18 \
+    -D_IPL_IMX290LQR_EVB_FF_=19 \
+    -D_IPL_AR0230CS_EVB_FF_=20 \
+    -D_IPL_IMX206CQC_EVB_FF_=21 \
+    -D_IPL_IMX206CQC_DUAL_EVB_FF_=22 \
+    -D_IPL_AR0230CS_OV9750_C10_FF_=23 \
+    -D_IPL_IMX179_EVB_FF_=24 \
+    -D_IPL_OV4689_OV9712_EVB_FF_=25 \
+    -D_IPL_OV4689_OV2710_EVB_FF_=26 \
+    -D_IPL_OV2710_TVP5150_EVB_FF_=27 \
+    -D_IPL_IMX117_EVB_FF_=28 \
+    -D_IPL_IMX078CQK_JGHT_FF_=29 \
+    -D_IPL_IMX291M_IPCAM_FF_=30 \
+    -D_IPL_IMX123LQT_IPCAM_FF_=31 \
+    -D_IPL_OV4689_730P_FF_=32 \
+    -D_IPL_OV4689_DUAL_TWIN360_FF_=33 \
+    -D_IPL_AR0230CS_IPCAM_FF_=34 \
+    -D_IPL_TVP5150_EVB_FF_=35 \
+    -D_IPL_IMX291M_IMX322LQJ_EVB_FF_=36 \
+    -D_IPL_IMX291M_SPx_FF_=37 \
+    -D_IPL_IMX225LQR_DUAL_EVB_FF_=38 \
+    -D_IPL_AR0238CS_EVB_FF_=39 \
+    -D_IPL_AR0230CS_OV2710_EVB_FF_=40 \
+    -D_IPL_IMX258_OV7251_EVB_FF_=41 \
+    -D_IPL_IT66021FN_EVB_FF_=42 \
+    -D_IPL_MN34120_EVB_FF_=43 \
+    -D_IPL_AR0237CSP_EVB_FF_=43 \
+    -D_IPL_AR0237CSP_IPCAM_FF_=44 \
+    -D_IPL_ISX016VX1_EVB_FF_=45 \
+    -D_IPL_AR0238CSP_EVB_FF_=46 \
+    -D_IPL_AR0330P_IPCAM_FF_=47 \
+    -D_IPL_OV4689_IPCAM_FF_=48 \
+    -D_IPL_OV4689_AHD_FF_=49 \
+    -D_IPL_OV5658M_IPCAM_FF_=50 \
+    -D_IPL_IMX291M_TL_IPC321_FF_=51 \
+    -D_IPL_IMX291M_TL_CD215_FF_=52 \
+    -D_IPL_OV4689_TL_CD410_FF_=53 \
+    -D_IPL_OV4689_GM7150_C13_FF_=54 \
+    -D_IPL_IMX322LQJ_TVP5150_EVB_FF_=55 \
+    -D_IPL_ISX016P_EVB_FF_=56 \
+    -D_IPL_IMX078CQK_VR360_FF_=57 \
+    -D_IPL_AR0237CS_TCT_IPCAM_FF_=58 \
+    -D_IPL_AHD_DUAL_FF_=59 \
+    -D_IPL_IMX326LQC_MIO_FF_=60 \
+    -D_IPL_CCIR601A_EVB_FF_=61 \
+    -D_IPL_OV12895M_EVB_FF_=62 \
+    -D_IPL_IMX317CQC_EVB_FF_=63 \
+    -D_IPL_AR0237CS_EVB_FF_=64 \
+    -D_IPL_IMX322LQJ_ISX016_EVB_FF_=65 \
+    -D_IPL_IMX290LQR_IMX322LQJ_EVB_FF_=66 \
+     -D_IPL_AR0238CS_IMX322LQJ_EVB_FF_=67 \
+    -D_IPL_AR0238CSP_IMX322LQJ_EVB_FF_=68 \
+    -D_IPPLIB_=$(IPP_TYPE)
+
+#----------------------------------------------------------------------
+# Lens parameters
+#----------------------------------------------------------------------
+ifeq "$(LENSDRV)" "LENSDRV_DCJ36"
+  LENSDRV_TYPE = _LENSDRVLIB_DCJ36_
+endif
+
+ifeq "$(LENSDRV)" "LENSDRV_FF1"
+  LENSDRV_TYPE = _LENSDRVLIB_FF1_
+endif
+
+ifeq "$(LENSDRV)" "LENSDRV_FF_C10"
+  LENSDRV_TYPE = _LENSDRVLIB_FF_C10_
+endif
+
+LENSDRV_PARAM = \
+    -D_LENSDRVLIB_FF1_=0 \
+    -D_LENSDRVLIB_DCJ36_=1 \
+    -D_LENSDRVLIB_FF_C10_=2 \
+    -D_LENSDRVLIB_=$(LENSDRV_TYPE)
+
+#----------------------------------------------------------------------
+# Lens motor driver parameters
+#----------------------------------------------------------------------
+ifeq "$(LENSMOTOR)" "LENSMOTOR_FF1"
+  LENSMOTOR_TYPE = _LENSMOTORLIB_FF1_
+endif
+
+ifeq "$(LENSMOTOR)" "LENSMOTOR_G2007"
+  LENSMOTOR_TYPE = _LENSMOTORLIB_G2007_
+endif
+
+ifeq "$(LENSMOTOR)" "LENSMOTOR_FF_C10"
+  LENSMOTOR_TYPE = _LENSMOTORLIB_FF_C10_
+endif
+
+LENSMOTOR_PARAM = \
+    -D_LENSMOTORLIB_FF1_=0 \
+    -D_LENSMOTORLIB_G2007_=1 \
+    -D_LENSMOTORLIB_FF_C10_=2 \
+    -D_LENSMOTORLIB_=$(LENSMOTOR_TYPE)
+
+#----------------------------------------------------------------------
+# External Audio parameters
+#----------------------------------------------------------------------
+ifeq "$(AUDIOEXT)" ""
+  AUDIO_EXT_TYPE = _AUDIOCODEC_EXT_NONE_
+endif
+
+ifeq "$(AUDIOEXT)" "AudCodecExt_WM8978"
+  AUDIO_EXT_TYPE = _AUDIOCODEC_EXT_WM8978_
+endif
+
+ifeq "$(AUDIOEXT)" "AudCodecExt_AIC3254"
+  AUDIO_EXT_TYPE = _AUDIOCODEC_EXT_AIC3254_
+endif
+
+AUDIO_PARAM = \
+    -D_AUDIOCODEC_EXT_NONE_=0 \
+    -D_AUDIOCODEC_EXT_WM8978_=1 \
+    -D_AUDIOCODEC_EXT_AIC3254_=2 \
+    -D_AUDIOCODEC_EXT_=$(AUDIO_EXT_TYPE)
+
+#----------------------------------------------------------------------
+# External Gyro parameters
+#----------------------------------------------------------------------
+ifeq "$(GYROEXT)" "Gyro_None"
+  GYRO_EXT_TYPE = _GYRO_EXT_NONE_
+endif
+
+ifeq "$(GYROEXT)" "Gyro_EWTS9PDN21"
+  GYRO_EXT_TYPE = _GYRO_EXT_EWTS9PDN21_
+endif
+
+ifeq "$(GYROEXT)" "Gyro_ITG3500A"
+  GYRO_EXT_TYPE = _GYRO_EXT_ITG3500A_
+endif
+
+ifeq "$(GYROEXT)" "Gyro_ITG1010A"
+  GYRO_EXT_TYPE = _GYRO_EXT_ITG1010A_
+endif
+
+ifeq "$(GYROEXT)" "Gyro_ICG20660"
+  GYRO_EXT_TYPE = _GYRO_EXT_ICG20660_
+endif
+
+ifeq "$(GYROEXT)" "Gyro_ICG20630"
+  GYRO_EXT_TYPE = _GYRO_EXT_ICG20630_
+endif
+
+ifeq "$(GYROEXT)" "Gyro_LSM6DS33"
+  GYRO_EXT_TYPE = _GYRO_EXT_LSM6DS33_
+endif
+
+GYRO_PARAM = \
+    -D_GYRO_EXT_NONE_=0 \
+    -D_GYRO_EXT_EWTS9PDN21_=1 \
+    -D_GYRO_EXT_ITG3500A_=2 \
+    -D_GYRO_EXT_ITG1010A_=3 \
+    -D_GYRO_EXT_ICG20660_=4 \
+    -D_GYRO_EXT_ICG20630_=5 \
+    -D_GYRO_EXT_LSM6DS33_=6 \
+    -D_GYRO_EXT_=$(GYRO_EXT_TYPE)
+
+#----------------------------------------------------------------------
+# External GSensor parameters
+#----------------------------------------------------------------------
+ifeq "$(GSENSOREXT)" "GSensor_None"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_NONE_
+endif
+
+ifeq "$(GSENSOREXT)" "GSensor_DRAMD07"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_DRAMD07_
+endif
+
+ifeq "$(GSENSOREXT)" "GSensor_GMA301"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_GMA301_
+endif
+
+ifeq "$(GSENSOREXT)" "GSensor_Combo"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_COMBO_
+endif
+
+ifeq "$(GSENSOREXT)" "GSensor_ICG20660"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_ICG20660_
+endif
+
+ifeq "$(GSENSOREXT)" "GSensor_ICG20630"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_ICG20630_
+endif
+
+ifeq "$(GSENSOREXT)" "GSensor_LSM6DS33"
+  GSENSOR_EXT_TYPE = _GSENSOR_EXT_LSM6DS33_
+endif
+
+GSENSOR_PARAM = \
+    -D_GSENSOR_EXT_NONE_=0 \
+    -D_GSENSOR_EXT_DRAMD07_=1 \
+    -D_GSENSOR_EXT_GMA301_=2 \
+    -D_GSENSOR_EXT_COMBO_=3 \
+    -D_GSENSOR_EXT_ICG20660_=4 \
+    -D_GSENSOR_EXT_ICG20630_=5 \
+    -D_GSENSOR_EXT_LSM6DS33_=6 \
+    -D_GSENSOR_EXT_=$(GSENSOR_EXT_TYPE)
+
+#----------------------------------------------------------------------
+# Storage parameters
+#----------------------------------------------------------------------
+ifeq "$(STORAGE)" "Storage_None"
+  STORAGE_TYPE = _INTERSTORAGE_NONE_
+endif
+
+ifeq "$(STORAGE)" "Storage_NAND"
+  STORAGE_TYPE = _INTERSTORAGE_NAND_
+endif
+
+ifeq "$(STORAGE)" "Storage_EMMC"
+  STORAGE_TYPE = _INTERSTORAGE_EMMC_
+endif
+
+ifeq "$(STORAGE)" "Storage_SPI"
+  STORAGE_TYPE = _INTERSTORAGE_SPI_
+endif
+
+ifeq "$(STORAGE)" "Storage_SPINAND"
+  STORAGE_TYPE = _INTERSTORAGE_SPINAND_
+endif
+
+STORAGE_PARAM = \
+    -D_INTERSTORAGE_NONE_=0 \
+    -D_INTERSTORAGE_NAND_=1 \
+    -D_INTERSTORAGE_EMMC_=2 \
+    -D_INTERSTORAGE_SPI_=3 \
+    -D_INTERSTORAGE_SPINAND_=4\
+    -D_INTERSTORAGE_=$(STORAGE_TYPE)
+
+#----------------------------------------------------------------------
+# Network parameters
+#----------------------------------------------------------------------
+ifeq "$(NETWORK)" ""
+  NETWORK_TYPE = _NETWORK_NONE_
+endif
+
+ifeq "$(NETWORK)" "NETWORK_NONE"
+  NETWORK_TYPE = _NETWORK_NONE_
+endif
+
+ifeq "$(NETWORK)" "NETWORK_SPI_EVB_ETHERNET"
+  NETWORK_TYPE = _NETWORK_SPI_EVB_ETHERNET_
+endif
+
+ifeq "$(NETWORK)" "NETWORK_SDIO_EVB_WIFI"
+  NETWORK_TYPE = _NETWORK_SDIO_EVB_WIFI_
+endif
+
+ifeq "$(NETWORK)" "NETWORK_GMAC_ETHERNET"
+  NETWORK_TYPE = _NETWORK_GMAC_ETHERNET_
+endif
+
+
+NETWORK_PARAM = \
+    -D_NETWORK_NONE_=0 \
+    -D_NETWORK_SPI_EVB_ETHERNET_=1 \
+    -D_NETWORK_SDIO_EVB_WIFI_=2 \
+    -D_NETWORK_GMAC_ETHERNET_=3 \
+    -D_NETWORK_=$(NETWORK_TYPE)
+
+#----------------------------------------------------------------------
+# UI_STYLE parameters
+#----------------------------------------------------------------------
+ifeq "$(UI_STYLE)" "UI_STYLE_CARDV"
+  UI_STYLE_TYPE = _UI_STYLE_CARDV_
+endif
+ifeq "$(UI_STYLE)" "UI_STYLE_SPORTCAM"
+  UI_STYLE_TYPE = _UI_STYLE_SPORTCAM_
+endif
+ifeq "$(UI_STYLE)" "UI_STYLE_IPCAM"
+  UI_STYLE_TYPE = _UI_STYLE_IPCAM_
+endif
+ifeq "$(UI_STYLE)" "UI_STYLE_TOUCH"
+  UI_STYLE_TYPE = _UI_STYLE_TOUCH_
+endif
+
+UI_STYLE_ALL = UI_STYLE_SPORTCAM UI_STYLE_CARDV UI_STYLE_IPCAM UI_STYLE_TOUCH
+
+UI_STYLE_PARAM = \
+    -D_UI_STYLE_CARDV_=0 \
+    -D_UI_STYLE_SPORTCAM_=1 \
+    -D_UI_STYLE_IPCAM_=2 \
+    -D_UI_STYLE_TOUCH_=3 \
+    -D_UI_STYLE_=$(UI_STYLE_TYPE)
+
+#----------------------------------------------------------------------
+# FW partial load parameters
+#----------------------------------------------------------------------
+ifeq "$(FW_PARTIAL_COMPRESS)" "ON"
+    FWCOMPRESS_PARTIAL = _FW_PARTIAL_COMPRESS_ON_
+else
+    FWCOMPRESS_PARTIAL = _FW_PARTIAL_COMPRESS_OFF_
+endif
+
+FWCOMPRESS_PARTIAL_PARAM = \
+    -D_FW_PARTIAL_COMPRESS_ON_=0 \
+    -D_FW_PARTIAL_COMPRESS_OFF_=1 \
+    -D_FW_PARTIAL_COMPRESS_=$(FWCOMPRESS_PARTIAL)
+
+#NT#2016/02/25#Niven Cho -begin
+#NT#fine tune linux-cardv boot time
+#----------------------------------------------------------------------
+# FW compress
+#----------------------------------------------------------------------
+ifeq "$(FW_COMPRESS)" "ON"
+    _FW_COMPRESS_ = _FW_COMPRESS_ON_
+else
+    _FW_COMPRESS_ = _FW_COMPRESS_OFF_
+endif
+
+FW_COMPRESS_PARAM = \
+    -D_FW_COMPRESS_ON_=0 \
+    -D_FW_COMPRESS_OFF_=1 \
+    -D_FW_COMPRESS_=$(_FW_COMPRESS_)
+#NT#2016/02/25#Niven Cho -end
+
+#----------------------------------------------------------------------
+# Model parameters
+#----------------------------------------------------------------------
+ifeq "$(MODEL)" "TEST1"
+  MODEL_TYPE = _MODEL_TEST1_
+endif
+
+ifeq "$(MODEL)" "DEMO1_EVB"
+  MODEL_TYPE = _MODEL_EVB_
+endif
+
+ifeq "$(MODEL)" "DEMO1"
+  MODEL_TYPE = _MODEL_DEMO1_
+endif
+
+ifeq "$(MODEL)" "PPG360"
+  MODEL_TYPE = _MODEL_PPG360_
+endif
+
+ifeq "$(MODEL)" "WiFiSDV"
+  MODEL_TYPE = _MODEL_WiFiSDV_
+endif
+
+ifeq "$(MODEL)" "IPCAM1_EVB"
+  MODEL_TYPE = _MODEL_IPCAM1_EVB_
+endif
+
+ifeq "$(MODEL)" "IPCAM4_TL_DEWARP"
+  MODEL_TYPE = _MODEL_IPCAM4_TL_DEWARP_
+endif
+
+ifeq "$(MODEL)" "IPCAM2_EVB"
+  MODEL_TYPE = _MODEL_IPCAM2_EVB_
+endif
+
+ifeq "$(MODEL)" "CUBIC_DRONE"
+  MODEL_TYPE = _MODEL_CUBIC_DRONE_
+endif
+
+ifeq "$(MODEL)" "AIRCAM"
+  MODEL_TYPE = _MODEL_AIRCAM_
+endif
+
+ifeq "$(MODEL)" "FIREFLY"
+  MODEL_TYPE = _MODEL_FIREFLY_
+endif
+
+ifeq "$(MODEL)" "FIREFLY_665"
+  MODEL_TYPE = _MODEL_FIREFLY_665_
+endif
+
+ifeq "$(MODEL)" "FR300"
+  MODEL_TYPE = _MODEL_FR300_
+endif
+
+ifeq "$(MODEL)" "CarDV"
+  MODEL_TYPE = _MODEL_CarDV_
+endif
+
+ifeq "$(MODEL)" "Hummingbird"
+  MODEL_TYPE = _MODEL_Hummingbird_
+endif
+
+ifeq "$(MODEL)" "C10"
+  MODEL_TYPE = _MODEL_C10_
+endif
+
+ifeq "$(MODEL)" "AO_EVB"
+  MODEL_TYPE = _MODEL_AO_EVB_
+endif
+
+ifeq "$(MODEL)" "PW663"
+  MODEL_TYPE = _MODEL_PW663_
+endif
+
+ifeq "$(MODEL)" "CarDV_DUAL_TVP5150"
+  MODEL_TYPE = _MODEL_CarDV_DUAL_TVP5150_
+endif
+
+ifeq "$(MODEL)" "DUAL_VX1"
+  MODEL_TYPE = _MODEL_DUAL_VX1_
+endif
+
+ifeq "$(MODEL)" "C86B"
+  MODEL_TYPE = _MODEL_C86B_
+endif
+
+ifeq "$(MODEL)" "PWA86"
+  MODEL_TYPE = _MODEL_PWA86_
+endif
+
+ifeq "$(MODEL)" "SP2"
+  MODEL_TYPE = _MODEL_SP2_
+endif
+
+ifeq "$(MODEL)" "X2S"
+  MODEL_TYPE = _MODEL_X2S_
+endif
+
+ifeq "$(MODEL)" "IPCAM1"
+  MODEL_TYPE = _MODEL_IPCAM1_
+endif
+
+ifeq "$(MODEL)" "IPCAM2"
+  MODEL_TYPE = _MODEL_IPCAM2_
+endif
+
+ifeq "$(MODEL)" "IPCAM3"
+  MODEL_TYPE = _MODEL_IPCAM3_
+endif
+
+ifeq "$(MODEL)" "PWA6"
+  MODEL_TYPE = _MODEL_PWA6_
+endif
+
+ifeq "$(MODEL)" "PTL_668"
+  MODEL_TYPE = _MODEL_PTL_668_
+endif
+
+ifeq "$(MODEL)" "PWA6_668"
+  MODEL_TYPE = _MODEL_PWA6_668_
+endif
+
+ifeq "$(MODEL)" "MIO_C032"
+  MODEL_TYPE = _MODEL_MIO_C032_
+endif
+
+ifeq "$(MODEL)" "GS730P"
+  MODEL_TYPE = _MODEL_GS730P_
+endif
+
+ifeq "$(MODEL)" "KSKP"
+  MODEL_TYPE = _MODEL_KSKP_
+endif
+
+ifeq "$(MODEL)" "TWIN_360"
+  MODEL_TYPE = _MODEL_TWIN_360_
+endif
+
+ifeq "$(MODEL)" "XD01"
+  MODEL_TYPE = _MODEL_XD01_
+endif
+
+ifeq "$(MODEL)" "TVP5150"
+  MODEL_TYPE = _MODEL_TVP5150_
+endif
+
+ifeq "$(MODEL)" "FHD6120"
+  MODEL_TYPE = _MODEL_FHD6120_
+endif
+
+ifeq "$(MODEL)" "PWU01"
+  MODEL_TYPE = _MODEL_PWU01_
+endif
+
+ifeq "$(MODEL)" "D6"
+  MODEL_TYPE = _MODEL_D6_
+endif
+
+ifeq "$(MODEL)" "CAF050"
+  MODEL_TYPE = _MODEL_CAF050_
+endif
+
+ifeq "$(MODEL)" "TL_IPC320"
+  MODEL_TYPE = _MODEL_TL_IPC320_
+endif
+
+ifeq "$(MODEL)" "SUBEI_TFH9"
+  MODEL_TYPE = _MODEL_SUBEI_TFH9_
+endif
+
+ifeq "$(MODEL)" "C10_Lite"
+  MODEL_TYPE = _MODEL_C10_LITE_
+endif
+
+ifeq "$(MODEL)" "SP10"
+  MODEL_TYPE = _MODEL_SP10_
+endif
+
+ifeq "$(MODEL)" "HY_SMIRROR"
+  MODEL_TYPE = _MODEL_HY_SMIRROR_
+endif
+
+ifeq "$(MODEL)" "TL_IPC330"
+  MODEL_TYPE = _MODEL_TL_IPC330_
+endif
+
+ifeq "$(MODEL)" "TL_IPC340"
+  MODEL_TYPE = _MODEL_TL_IPC340_
+endif
+
+ifeq "$(MODEL)" "TL_IPC350"
+  MODEL_TYPE = _MODEL_TL_IPC350_
+endif
+
+ifeq "$(MODEL)" "TL_CD410"
+  MODEL_TYPE = _MODEL_TL_CD410_
+endif
+ifeq "$(MODEL)" "CarDV_DUAL_AHD"
+  MODEL_TYPE = _MODEL_CarDV_DUAL_AHD_
+endif
+
+ifeq "$(MODEL)" "TL_CD215"
+  MODEL_TYPE = _MODEL_TL_CD215_
+endif
+
+ifeq "$(MODEL)" "TL_IPC321"
+  MODEL_TYPE = _MODEL_TL_IPC321_
+endif
+
+ifeq "$(MODEL)" "TCT_IPCAM_EVB"
+  MODEL_TYPE = _MODEL_TCT_IPCAM_EVB_
+endif
+
+ifeq "$(MODEL)" "TCT_IPCAM1"
+  MODEL_TYPE = _MODEL_TCT_IPCAM1_
+endif
+
+ifeq "$(MODEL)" "YSX_IPCAM1"
+  MODEL_TYPE = _MODEL_YSX_IPCAM1_
+endif
+
+ifeq "$(MODEL)" "TCT_IPCAM_DUAL_EVB"
+  MODEL_TYPE = _MODEL_TCT_IPCAM_DUAL_EVB_
+endif
+
+ifeq "$(MODEL)" "C13"
+  MODEL_TYPE = _MODEL_C13_
+endif
+
+ifeq "$(MODEL)" "DEWARP"
+  MODEL_TYPE = _MODEL_DEWARP_
+endif
+
+ifeq "$(MODEL)" "PMX_IPCAM_EVB"
+  MODEL_TYPE = _MODEL_PMX_IPCAM_EVB_
+endif
+
+ifeq "$(MODEL)" "SWAN_EVB"
+  MODEL_TYPE = _MODEL_SWAN_EVB_
+endif
+
+ifeq "$(MODEL)" "MIO_IMX326"
+  MODEL_TYPE = _MODEL_MIO_IMX326_
+endif
+
+ifeq "$(MODEL)" "TCT_IPCAM_TL"
+  MODEL_TYPE = _MODEL_TCT_IPCAM_TL_
+endif
+
+ifeq "$(MODEL)" "MIO_MT39"
+  MODEL_TYPE = _MODEL_MIO_MT39_
+endif
+
+ifeq "$(MODEL)" "ADR820D"
+  MODEL_TYPE = _MODEL_ADR820D_
+endif
+
+ifeq "$(MODEL)" "K40"
+  MODEL_TYPE = _MODEL_K40_
+endif
+
+ifeq "$(MODEL)" "ALL"
+  MODEL_TYPE = _MODEL_ALL_
+endif
+
+ifeq "$(MODEL)" "U15"
+  MODEL_TYPE = _MODEL_U15_
+endif
+
+MODEL_PARAM = \
+    -D_MODEL_TEST1_=0 \
+    -D_MODEL_EVB_=1  \
+    -D_MODEL_DEMO1_=2 \
+    -D_MODEL_IPCAM1_EVB_=3 \
+    -D_MODEL_WiFiSDV_=4 \
+    -D_MODEL_PPG360_=5 \
+    -D_MODEL_IPCAM2_EVB_=6 \
+    -D_MODEL_AIRCAM_=7 \
+    -D_MODEL_CUBIC_DRONE_=8 \
+    -D_MODEL_FIREFLY_=9 \
+    -D_MODEL_FR300_=10 \
+    -D_MODEL_CarDV_=11 \
+    -D_MODEL_Hummingbird_=12 \
+    -D_MODEL_C10_=13 \
+    -D_MODEL_AO_EVB_=14 \
+    -D_MODEL_PW663_=15 \
+    -D_MODEL_CarDV_DUAL_TVP5150_=16 \
+    -D_MODEL_C86B_=17 \
+    -D_MODEL_PWA86_=18 \
+    -D_MODEL_SP2_=19 \
+    -D_MODEL_X2S_=20 \
+    -D_MODEL_IPCAM1_=21 \
+    -D_MODEL_IPCAM2_=22 \
+    -D_MODEL_IPCAM3_=23 \
+    -D_MODEL_PWA6_=24 \
+    -D_MODEL_MIO_C032_=25 \
+    -D_MODEL_GS730P_=26 \
+    -D_MODEL_KSKP_=27 \
+    -D_MODEL_TWIN_360_=28 \
+    -D_MODEL_PWA6_668_=29 \
+    -D_MODEL_FIREFLY_665_=30 \
+    -D_MODEL_XD01_=31 \
+    -D_MODEL_TVP5150_=32 \
+    -D_MODEL_PTL_668_=33 \
+    -D_MODEL_FHD6120_=34 \
+    -D_MODEL_PWU01_=35 \
+    -D_MODEL_D6_=36\
+    -D_MODEL_CAF050_=37\
+    -D_MODEL_TL_IPC320_=38\
+    -D_MODEL_SUBEI_TFH9_=39\
+    -D_MODEL_C10_LITE_=40 \
+    -D_MODEL_SP10_=41 \
+    -D_MODEL_HY_SMIRROR_=42\
+    -D_MODEL_TL_IPC330_=43\
+    -D_MODEL_TL_IPC340_=44\
+    -D_MODEL_TL_IPC350_=45\
+    -D_MODEL_TL_CD410_=46\
+    -D_MODEL_TL_CD215_=47\
+    -D_MODEL_CarDV_DUAL_AHD_=48\
+    -D_MODEL_TL_IPC321_=49\
+    -D_MODEL_TCT_IPCAM_EVB_=50\
+    -D_MODEL_C13_=51\
+    -D_MODEL_DEWARP_=52\
+    -D_MODEL_PMX_IPCAM_EVB_=53\
+    -D_MODEL_SWAN_EVB_=54\
+    -D_MODEL_MIO_IMX326_=55\
+    -D_MODEL_IPCAM4_TL_DEWARP_=56\
+    -D_MODEL_TCT_IPCAM_TL_=57\
+    -D_MODEL_TCT_IPCAM_DUAL_EVB_=58\
+    -D_MODEL_MIO_MT39_=59\
+    -D_MODEL_TCT_IPCAM1_=60\
+    -D_MODEL_YSX_IPCAM1_=61\
+    -D_MODEL_DUAL_VX1_=62 \
+    -D_MODEL_ADR820D_=63 \
+    -D_MODEL_K40_=64 \
+    -D_MODEL_ALL_=65\
+    -D_MODEL_DSC_=$(MODEL_TYPE)
+
+
+
+
+
+#----------------------------------------------------------------------
+# HW stage parameters
+#----------------------------------------------------------------------
+ifeq "$(HW_STAGE)" "HW_WS_STAGE"
+  HW_STAGE_TYPE = _HW_WS_STAGE_
+endif
+
+ifeq "$(HW_STAGE)" "HW_ES_STAGE"
+  HW_STAGE_TYPE = _HW_ES_STAGE_
+endif
+
+ifeq "$(HW_STAGE)" "HW_PP_STAGE"
+  HW_STAGE_TYPE = _HW_PP_STAGE_
+endif
+
+ifeq "$(HW_STAGE)" "HW_MP_STAGE"
+  HW_STAGE_TYPE = _HW_MP_STAGE_
+endif
+
+HW_STAGE_PARAM = \
+    -D_HW_WS_STAGE_=0 \
+    -D_HW_ES_STAGE_=1 \
+    -D_HW_PP_STAGE_=2 \
+    -D_HW_MP_STAGE_=3 \
+    -D_HW_STAGE_=$(HW_STAGE_TYPE)
+
+#NT#2016/03/18#Niven Cho -begin
+#NT#improve the using of gprof
+#----------------------------------------------------------------------
+# gprof tool support
+#----------------------------------------------------------------------
+ifeq "$(GPROF_TOOL)" "ON"
+  _GPROF_TOOL_ = _GPROF_TOOL_ON_
+  LDS_MAP := ON
+  SCATTER := LDS_GPROF.lds
+endif
+
+ifeq "$(GPROF_TOOL)" "OFF"
+  _GPROF_TOOL_ = _GPROF_TOOL_OFF_
+endif
+
+ifeq "$(GPROF_TOOL)" ""
+  _GPROF_TOOL_ = _GPROF_TOOL_OFF_
+endif
+
+GPROF_TOOL_PARAM = \
+    -D_GPROF_TOOL_ON_=0 \
+    -D_GPROF_TOOL_OFF_=1 \
+    -D_GPROF_TOOL_=$(_GPROF_TOOL_)
+#NT#2016/03/18#Niven Cho -end
+
+#----------------------------------------------------------------------
+# IR Receiver device parameters
+#----------------------------------------------------------------------
+ifeq "$(IRRX)" "IrRx_NONE"
+  IRRX_TYPE = _IR_REMOTE_NONE_
+endif
+
+ifeq "$(IRRX)" "IrRx_NEC_IRRM"
+  IRRX_TYPE = _IR_REMOTE_NEC_
+endif
+
+IRRX_PARAM = \
+	-D_IR_REMOTE_NONE_=0 \
+	-D_IR_REMOTE_NEC_=1 \
+	-D_IR_REMOTE_=$(IRRX_TYPE)
+
+#----------------------------------------------------------------------
+# GPS device parameters
+#----------------------------------------------------------------------
+ifeq "$(GPS)" "GPS_NONE"
+  GPS_TYPE = _GPS_NONE_
+endif
+
+ifeq "$(GPS)" "GPS_GENERAL"
+  GPS_TYPE = _GPS_GENERAL_
+endif
+
+GPS_PARAM = \
+	-D_GPS_NONE_=0 \
+	-D_GPS_GENERAL_=1 \
+	-D_GPS_TYPE_=$(GPS_TYPE)
+
+#----------------------------------------------------------------------
+# USRT_TO_MTK device parameters
+#----------------------------------------------------------------------
+ifeq "$(UART_TO_MTK_FUNC)" "UART_TO_MTK_NONE"
+  UART_TO_MTK_TYPE = _UART_TO_MTK_NONE_
+endif
+
+ifeq "$(UART_TO_MTK_FUNC)" "UART_TO_MTK_YES"
+  UART_TO_MTK_TYPE = _UART_TO_MTK_YES_
+endif
+
+UART_TO_MTK_PARAM = \
+	-D_UART_TO_MTK_NONE_=0 \
+	-D_UART_TO_MTK_YES_=1 \
+	-D_UART_TO_MTK_TYPE_=$(UART_TO_MTK_TYPE)
+
+#----------------------------------------------------------------------
+# USRT_TO_MCU device parameters
+#----------------------------------------------------------------------
+ifeq "$(UART_TO_MCU_FUN)" "UART_TO_MCU_NONE"
+  UART_TO_MCU_TYPE = _UART_TO_MCU_NONE_
+endif
+
+ifeq "$(UART_TO_MCU_FUN)" "UART_TO_MCU_YES"
+  UART_TO_MCU_TYPE = _UART_TO_MCU_YES_
+endif
+
+UART_TO_MCU_PARAM = \
+	-D_UART_TO_MCU_NONE_=0 \
+	-D_UART_TO_MCU_YES_=1 \
+	-D_UART_TO_MCU_TYPE_=$(UART_TO_MCU_TYPE)
+
+#----------------------------------------------------------------------
+# Touch parameters
+#----------------------------------------------------------------------
+ifeq "$(TOUCH)" "ENABLE"
+  TOUCH_FUNC = _TOUCH_ENABLE_
+else
+  TOUCH_FUNC = _TOUCH_DISABLE_
+endif
+
+TOUCH_PARAM = \
+    -D_TOUCH_DISABLE_=0 \
+    -D_TOUCH_ENABLE_=1 \
+    -D_TOUCH_FUNC_=$(TOUCH_FUNC)
+
+#----------------------------------------------------------------------
+# USB1 TYPE parameters
+#----------------------------------------------------------------------
+ifeq "$(USB1_TYPE)" "HOST"
+  USB1_TYPE = _USB1_HOST_
+else
+  USB1_TYPE = _USB1_DEVICE_
+endif
+
+USB1_TYPE_PARAM = \
+    -D_USB1_DEVICE_=0 \
+    -D_USB1_HOST_=1 \
+    -D_USB1_TYPE_=$(USB1_TYPE)
+
+#----------------------------------------------------------------------
+# C define
+#----------------------------------------------------------------------
+#NT#2016/03/03#Niven Cho -begin
+#NT#reduce project compile arguments
+#NT#2016/02/25#Niven Cho -begin
+#NT#fine tune linux-cardv boot time
+DX_CFG = \
+    $(MODEL_PARAM) \
+    $(HW_STAGE_PARAM) \
+    $(KEY_METHOD_PARAM) \
+    $(CPU2_PARAM) \
+    $(DSP_PARAM) \
+    $(LCD_PARAM) \
+    $(LCD2_PARAM) \
+    $(TV_PARAM) \
+    $(HDMI_PARAM) \
+    $(SENSOR_PARAM) \
+    $(SENSOR_PARAM_2) \
+    $(SENSOR_PARAM_3) \
+    $(SENSOR_PARAM_4) \
+    $(AUDIO_PARAM) \
+    $(GYRO_PARAM) \
+    $(STORAGE_PARAM) \
+    $(FWCOMPRESS_PARTIAL_PARAM) \
+    $(LENSDRV_PARAM) \
+    $(IRRX_PARAM) \
+    $(LENSMOTOR_PARAM) \
+    $(NETWORK_PARAM)\
+    $(GPS_PARAM)\
+    $(TOUCH_PARAM)\
+    $(USB1_TYPE_PARAM)
+
+#NT#2016/03/18#Niven Cho -begin
+#NT#improve the using of gprof
+PRJ_CFG = \
+    $(EMBMEM_BLK_SIZE_PARAM)  \
+    $(FW_PARTIAL_LOAD_PARAM) \
+    $(UI_STYLE_PARAM) \
+    $(PIP_VIEW_PARAM) \
+    $(IPP_PARAM) \
+    $(BIN_NAME_PARAM) \
+	$(FW_COMPRESS_PARAM) \
+	$(GPROF_TOOL_PARAM)
+#NT#2016/03/18#Niven Cho -end
+#NT#2016/02/25#Niven Cho -end
+#NT#2016/03/03#Niven Cho -end
+
+C_DEFINE_EXT = \
+    $(CHIP_PARAM) \
+    $(DX_CFG) \
+    $(PRJ_CFG)

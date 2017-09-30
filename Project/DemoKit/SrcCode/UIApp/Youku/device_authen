@@ -1,0 +1,1569 @@
+"{ \
+    \"version\": \"1.1.2\",  \
+    \"dev_info\": { \ 
+        \"platformid\": \"yuku123\", \
+        \"model_name\": \"ykcamE9000\", \
+        \"brand_name\": \"优酷运动相机\", \
+        \"company_name\": \"youku\" \
+    }, \
+    \"setting_header\": [ \
+        { \
+            \"key\": \"ykcamera_group_video\",  \
+            \"display_name\": \"Video Settings\",  \
+            \"id\": 0,  \
+            \"precedence\": 1 \
+        },  \
+        { \
+            \"key\": \"ykcamera_group_photo\",  \
+            \"display_name\": \"Photo Settings\",  \
+            \"id\": 1,  \
+            \"precedence\": 1 \
+        },  \
+        { \
+            \"key\": \"ykcamera_group_device\",  \
+            \"display_name\": \"Device\",  \
+            \"id\": 2,  \
+            \"precedence\": 1 \
+        },  \
+        { \
+            \"key\": \"ykcamera_group_camera_info\",  \
+            \"display_name\": \"Camera Info\",  \
+            \"id\": 4,  \
+            \"commands\": [ \
+                { \
+                    \"command_key\": \"camera_info_version\",  \
+                    \"display_name\": \"camera version\" \
+                },  \
+                { \
+                    \"command_key\": \"camera_info_model_name\",  \
+                    \"display_name\": \"camera model name\" \
+                } \
+            ] \
+        },  \
+        { \
+            \"key\": \"ykcamera_group_camera_status\",  \
+            \"display_name\": \"Camera Status\",  \
+            \"id\": 5,  \
+            \"commands\": [ \
+                { \
+                    \"command_key\": \"camera_battery\",  \
+                    \"display_name\": \"camera battery\" \
+                },  \
+                { \
+                    \"command_key\": \"camera_capacity\",  \
+                    \"display_name\": \"camera capacity\" \
+                } \
+            ] \
+        } \
+    ],  \
+    \"settings\": [ \
+        { \
+            \"path_segment\": \"ykcamera_group_video\",  \
+            \"display_name\": \"Video\",  \
+            \"value\": 0,  \
+            \"settings\": [ \
+                { \
+                    \"path_segment\": \"default_sub_mode\",  \
+                    \"display_name\": \"Default Video Sub Mode\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 1,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Video\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Video + Photo\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"Looping\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"resolution\",  \
+                    \"display_name\": \"Resolution\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 2,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"VGA\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"WVGA\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"720p\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"1080p\",  \
+                            \"value\": 4 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"fps\",  \
+                    \"display_name\": \"Frames Per Second\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 3,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"15\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"24\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"30\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"60\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"120\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"240\",  \
+                            \"value\": 5 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"resolution_fps\",  \
+                    \"display_name\": \"Resolution Fps\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 4,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"WVGA 30fps\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"720p 30fps\",  \
+                            \"value\": 4 \
+                        },  \                        
+                        { \
+                            \"display_name\": \"1080p 30fps\",  \
+                            \"value\": 8 \
+                        },  \
+                        { \
+                            \"display_name\": \"1080p 60fps\",  \
+                            \"value\": 9 \
+                        },  \
+                        { \
+                            \"display_name\": \"3MHD 30fps\",  \
+                            \"value\": 11 \
+                        },  \
+                        { \
+                            \"display_name\": \"QHD 30fps\",  \
+                            \"value\": 12 \                       
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"fov\",  \
+                    \"display_name\": \"Field of View\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 5,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Wide\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Medium\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"Narrow\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"Crop\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"timelapse_rate\",  \
+                    \"display_name\": \"Timelapse Rate\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 6,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"close\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 Second\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 Second\",  \
+                            \"value\": 5 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 Second\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"30 Second\",  \
+                            \"value\": 7 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 Minute\",  \
+                            \"value\": 8 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 Minute\",  \
+                            \"value\": 9 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 Minute\",  \
+                            \"value\": 10 \
+                        },  \
+                        { \
+                            \"display_name\": \"30 Minute\",  \
+                            \"value\": 11 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 Hour\",  \
+                            \"value\": 12 \
+                        },  \
+                        { \
+                            \"display_name\": \"2 Hour\",  \
+                            \"value\": 13 \
+                        },  \
+                        { \
+                            \"display_name\": \"3 Hour\",  \
+                            \"value\": 14 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 Day\",  \
+                            \"value\": 15 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"looping\",  \
+                    \"display_name\": \"Looping Interval\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 7,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"no looping\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"3 Minutes\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 Minutes\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 Minutes\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"piv\",  \
+                    \"display_name\": \"Interval\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 8,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"1 Photo / 5 Seconds\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 Photo / 10 Seconds\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 Photo / 30 Seconds\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"low_light\",  \
+                    \"display_name\": \"Low Light\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 9,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"spot_meter\",  \
+                    \"display_name\": \"Spot Meter\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 10,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"CENTER\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"MULTI\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"SPOT\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"AIAE\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"effect_enhance\",  \
+                    \"display_name\": \"Effect Enhance\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 11,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"NONE\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"SKETCH\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"FISHEYE\",  \
+                            \"value\": 9 \
+                        },  \
+                        { \
+                            \"display_name\": \"COLORPENCIL\",  \
+                            \"value\": 10 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"white_balance\",  \
+                    \"display_name\": \"White Balance\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 12,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Auto\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"daylight\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"cloudy\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"tungsten\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"fluorescent\",  \
+                            \"value\": 4 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"color\",  \
+                    \"display_name\": \"Color\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 13,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"standard\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"monochrome\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"sepia\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"iso\",  \
+                    \"display_name\": \"ISO Limit\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 14,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Auto\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"100\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"200\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"400\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"sharpness\",  \
+                    \"display_name\": \"Sharpness\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 15,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"High\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Medium\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"Low\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"ev\",  \
+                    \"display_name\": \"EV Comp\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 16,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"-2.0\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"-1.6\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"-1.3\",  \
+                            \"value\": 5 \
+                        },  \
+                        { \
+                            \"display_name\": \"-1.0\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"-0.6\",  \
+                            \"value\": 7 \
+                        },  \
+                        { \
+                            \"display_name\": \"-0.3\",  \
+                            \"value\": 8 \
+                        },  \
+                        { \
+                            \"display_name\": \"0\",  \
+                            \"value\": 9 \
+                        },  \
+                        { \
+                            \"display_name\": \"0.3\",  \
+                            \"value\": 10 \
+                        },  \
+                        { \
+                            \"display_name\": \"0.6\",  \
+                            \"value\": 11 \
+                        },  \
+                        { \
+                            \"display_name\": \"1.0\",  \
+                            \"value\": 12 \
+                        },  \
+                        { \
+                            \"display_name\": \"1.3\",  \
+                            \"value\": 13 \
+                        },  \
+                        { \
+                            \"display_name\": \"1.6\",  \
+                            \"value\": 14 \
+                        },  \
+                        { \
+                            \"display_name\": \"2.0\",  \
+                            \"value\": 15 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"water_print\",  \
+                    \"display_name\": \"Date Print\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 17,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"Audio_Record\",  \
+                    \"display_name\": \"Audio Record\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 18,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"hdr\",  \
+                    \"display_name\": \"HDR\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 19,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"wdr\",  \
+                    \"display_name\": \"WDR\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 20,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                } \
+            ] \
+        },  \
+        { \
+            \"path_segment\": \"ykcamera_group_photo\",  \
+            \"display_name\": \"Photo\",  \
+            \"value\": 1,  \
+            \"settings\": [ \
+                { \
+                    \"path_segment\": \"default_sub_mode\",  \
+                    \"display_name\": \"Default Photo Sub Mode\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 21,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Single\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Continuous\",  \
+                            \"value\": 1 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"resolution\",  \
+                    \"display_name\": \"Megapixels\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 22,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"1MP\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"VGA\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"2MHD\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"3MP\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"5MP\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"8MP\",  \
+                            \"value\": 5 \
+                        },  \
+                        { \
+                            \"display_name\": \"10MP\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"12MP\",  \
+                            \"value\": 7 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"continuous_rate\",  \
+                    \"display_name\": \"Continuous Rate\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 23,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"close\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"3 Frames / Second\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 Frames / Second\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 Frames / Second\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"exposure_time\",  \
+                    \"display_name\": \"Exposure Time\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 24,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Auto\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"2 Seconds\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 Seconds\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 Seconds\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"spot_meter\",  \
+                    \"display_name\": \"Spot Meter\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 25,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"CENTER\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"MULTI\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"SPOT\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"AIAE\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"effect_enhance\",  \
+                    \"display_name\": \"Effect Enhance\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 26,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"NONE\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"SKETCH\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"FISHEYE\",  \
+                            \"value\": 9 \
+                        },  \
+                        { \
+                            \"display_name\": \"COLORPENCIL\",  \
+                            \"value\": 10 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"white_balance\",  \
+                    \"display_name\": \"White Balance\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 27,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Auto\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"daylight\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"cloudy\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"tungsten\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"fluorescent\",  \
+                            \"value\": 4 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"color\",  \
+                    \"display_name\": \"Color\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 28,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"standard\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"monochrome\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"sepia\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"iso\",  \
+                    \"display_name\": \"ISO Limit\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 29,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"auto\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"100\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"200\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"400\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"sharpness\",  \
+                    \"display_name\": \"Sharpness\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 30,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"High\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Medium\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"Low\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"hdr\",  \
+                    \"display_name\": \"HDR\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 31,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"wdr\",  \
+                    \"display_name\": \"WDR\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 32,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"ev\",  \
+                    \"display_name\": \"EV Comp\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 33,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"-2.0\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"-1.6\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"-1.3\",  \
+                            \"value\": 5 \
+                        },  \
+                        { \
+                            \"display_name\": \"-1.0\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"-0.6\",  \
+                            \"value\": 7 \
+                        },  \
+                        { \
+                            \"display_name\": \"-0.3\",  \
+                            \"value\": 8 \
+                        },  \
+                        { \
+                            \"display_name\": \"0\",  \
+                            \"value\": 9 \
+                        },  \
+                        { \
+                            \"display_name\": \"0.3\",  \
+                            \"value\": 10 \
+                        },  \
+                        { \
+                            \"display_name\": \"0.6\",  \
+                            \"value\": 11 \
+                        },  \
+                        { \
+                            \"display_name\": \"1.0\",  \
+                            \"value\": 12 \
+                        },  \
+                        { \
+                            \"display_name\": \"1.3\",  \
+                            \"value\": 13 \
+                        },  \
+                        { \
+                            \"display_name\": \"1.6\",  \
+                            \"value\": 14 \
+                        },  \
+                        { \
+                            \"display_name\": \"2.0\",  \
+                            \"value\": 15 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"fov\",  \
+                    \"display_name\": \"Field of View\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 34,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Wide\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Medium\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"Narrow\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"Crop\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"timelapse_rate\",  \
+                    \"display_name\": \"Interval\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 35,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"close\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"3 Seconds\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 Second\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 Seconds\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"20 Seconds\",  \
+                            \"value\": 4 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"cordinate\",  \
+                    \"display_name\": \"cordinate\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 36,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"fish\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"normal\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"water_print\",  \
+                    \"display_name\": \"Date Print\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 37,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"DATE\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"DATETIME\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                } \
+            ] \
+        },  \
+        { \
+            \"path_segment\": \"ykcamera_group_device\",  \
+            \"display_name\": \"Device\",  \
+            \"value\": 2,  \
+            \"settings\": [ \
+                { \
+                    \"path_segment\": \"stream_size\",  \
+                    \"display_name\": \"Stream Size\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 38,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"WVGA\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"VGA_4_3\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"VGA_16_9\",  \
+                            \"value\": 4 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"stream_window_size\",  \
+                    \"display_name\": \"Stream Window Size\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 39,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"480*270 16:9\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"640*360 16:9\",  \
+                            \"value\": 1 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"stream_bit_rate\",  \
+                    \"display_name\": \"stream bit rate\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 40,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"800 kbps\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"1000 Kbps\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"1600 kbps\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"2000 Kbps\",  \
+                            \"value\": 3 \
+                        },  \
+                        { \
+                            \"display_name\": \"2400 kbps\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"3200 Kbps\",  \
+                            \"value\": 5 \
+                        },  \
+                        { \
+                            \"display_name\": \"6400 Kbps\",  \
+                            \"value\": 6 \
+                        },  \
+                        { \
+                            \"display_name\": \"9600 Kbps\",  \
+                            \"value\": 7 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"lcd_brightness\",  \
+                    \"display_name\": \"LCD Brightness\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 41,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"High\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Medium\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"Low\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"lcd_lock\",  \
+                    \"display_name\": \"LCD Lock\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 42,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"lcd_sleep\",  \
+                    \"display_name\": \"LCD Sleep\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 43,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Never\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"1 MIN\",  \
+                            \"value\": 4 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"orientation\",  \
+                    \"display_name\": \"Up/Down\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 44,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"Up\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"Down\",  \
+                            \"value\": 1 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"led\",  \
+                    \"display_name\": \"LED Blink\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 45,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"quick_capture\",  \
+                    \"display_name\": \"Quick Capture\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 46,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"beep_volume\",  \
+                    \"display_name\": \"Beeps\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 47,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"50%\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"100%\",  \
+                            \"value\": 2 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"auto_power_down\",  \
+                    \"display_name\": \"Auto Off\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 1, \
+                    \"id\": 48,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"NEVER\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"3 MIN\",  \
+                            \"value\": 4 \
+                        },  \
+                        { \
+                            \"display_name\": \"5 MIN\",  \
+                            \"value\": 5 \
+                        },  \
+                        { \
+                            \"display_name\": \"10 MIN\",  \
+                            \"value\": 6 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"gps_location \",  \
+                    \"display_name\": \"GPS Location\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 0, \
+                    \"id\": 49,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"wireless_mode\",  \
+                    \"display_name\": \"Wireless Mode\",  \
+                    \"widget_type\": \"select\",  \
+                    \"support\": 0, \
+                    \"id\": 50,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        },  \
+                        { \
+                            \"display_name\": \"App\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"RC\",  \
+                            \"value\": 2 \
+                        },  \
+                        { \
+                            \"display_name\": \"Smart\",  \
+                            \"value\": 3 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"reset\",  \
+                    \"display_name\": \"Reset\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 51,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"format\",  \
+                    \"display_name\": \"Format Data\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 52,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"wifi_ssid_setting\",  \
+                    \"display_name\": \"Wifi SSID Setting\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 53,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"poweroff\",  \
+                    \"display_name\": \"Power Off Camera\",  \
+                    \"widget_type\": \"toggle\",  \
+                    \"support\": 1, \
+                    \"id\": 56,  \
+                    \"options\": [ \
+                        { \
+                            \"display_name\": \"ON\",  \
+                            \"value\": 1 \
+                        },  \
+                        { \
+                            \"display_name\": \"OFF\",  \
+                            \"value\": 0 \
+                        } \
+                    ] \
+                },  \
+                { \
+                    \"path_segment\": \"update_download_start\",  \
+                    \"display_name\": \"Notify start FW Update File Download\",  \
+                    \"widget_type\": \"button\",  \
+                    \"support\": 0, \
+                    \"id\": 57 \
+                },  \
+                { \
+                    \"path_segment\": \"update_download_done\",  \
+                    \"display_name\": \"Notify completion of FW Update File Download\",  \
+                    \"widget_type\": \"button\",  \
+                    \"support\": 0, \
+                    \"id\": 58 \
+                },  \
+                { \
+                    \"path_segment\": \"cancel_update_download_\",  \
+                    \"display_name\": \"Cancel FW Update File Download\",  \
+                    \"widget_type\": \"button\",  \
+                    \"support\": 0, \
+                    \"id\": 59 \
+                } \
+            ] \
+        } \
+    ],  \
+    \"server\": [ \
+        { \
+            \"key\": \"camera_shutter\",  \
+            \"display_name\": \"Start or stop capture\",  \
+            \"url\": \"/command/54\",  \
+            \"parameter\": { \
+                \"start\": 1,  \
+                \"stop\": 0 \
+            } \
+        },  \
+        { \
+            \"key\": \"set_camera_mode\",  \
+            \"display_name\": \"Set Mode\",  \
+            \"url\": \"/command/55\",  \
+            \"parameter\": { \
+                \"multishot\": 3,  \
+                \"playback\": 2,  \
+                \"video\": 1,  \
+                \"photo\": 0 \
+            } \
+        },  \
+        { \
+            \"path_segment\": \"delete_all_files\",  \
+            \"display_name\": \"Delete All Files from SD Card\",  \
+            \"url\": \"/command/60\" \
+        },  \
+        { \
+            \"path_segment\": \"delete_file\",  \
+            \"display_name\": \"Delete File\",  \
+            \"url\": \"/command/61\" \
+        },  \
+        { \
+            \"path_segment\": \"delete_last_file\",  \
+            \"display_name\": \"Delete Last File\",  \
+            \"url\": \"/command/62\" \
+        },  \
+        { \
+            \"key\": \"photo_stream\",  \
+            \"description\": \"get photo preview stream.\",  \
+            \"url\": \"udp://@:8020?pkt_size=1048576\" \
+        },  \
+        { \
+            \"key\": \"video_stream\",  \
+            \"description\": \"get video preview stream.\",  \
+            \"url\": \"udp://@:8020?pkt_size=1048576\" \
+        },  \
+        { \
+            \"key\": \"live_stream_start\",  \
+            \"description\": \"Start real-time A/V stream using LTP/udp...\",  \
+            \"url\": \"/command/63/1\" \
+        },  \
+        { \
+            \"key\": \"live_stream_stop\",  \
+            \"description\": \"Stop real-time A/V stream using LTP/udp...\",  \
+            \"url\": \"/command/63/0\" \
+        },  \
+        { \
+            \"key\": \"media_thumb_get\",  \
+            \"description\": \"get video thumbnail.\",  \
+            \"url\": \"/command/64\" \
+        },  \
+        { \
+            \"key\": \"get_devinfo\",  \
+            \"description\": \"get devinfo from camera\",  \
+            \"url\": \"/command/65\" \
+        },  \
+        { \
+            \"key\": \"media_list\",  \
+            \"description\": \"Supports listing of media on SD card.\",  \
+            \"url\": \"/command/66\" \
+        },  \
+        { \
+            \"key\": \"sync_camera_date\",  \
+            \"description\": \"sync camera date time.\",  \
+            \"url\": \"/command/67\" \
+        } \
+    ],  \
+    \"status\": [ \
+        { \
+            \"group\": \"system\",  \
+            \"fields\": [ \
+                { \
+                    \"id\": 1,  \
+                    \"name\": \"internal_battery_present\" \
+                },  \
+                { \
+                    \"id\": 2,  \
+                    \"name\": \"external_battery_present\" \
+                },  \
+                { \
+                    \"id\": 3,  \
+                    \"name\": \"device_hot\" \
+                },  \
+                { \
+                    \"id\": 4,  \
+                    \"name\": \"device_busy\" \
+                },  \
+                { \
+                    \"id\": 5,  \
+                    \"name\": \"quick_capture_active\" \
+                },  \
+                { \
+                    \"id\": 6,  \
+                    \"name\": \"date_time\" \
+                },  \
+                { \
+                    \"id\": 7,  \
+                    \"name\": \"video_progress_counter\" \
+                },  \
+                { \
+                    \"id\": 8,  \
+                    \"name\": \"stream_supported\" \
+                },  \
+                { \
+                    \"id\": 9,  \
+                    \"name\": \"sd_status\" \
+                },  \
+                { \
+                    \"id\": 10,  \
+                    \"name\": \"remaining_photos\" \
+                },  \
+                { \
+                    \"id\": 11,  \
+                    \"name\": \"remaining_video_time\" \
+                },  \
+                { \
+                    \"id\": 12,  \
+                    \"name\": \"num_total_photos\" \
+                },  \
+                { \
+                    \"id\": 13,  \
+                    \"name\": \"num_total_videos\" \
+                },  \
+                { \
+                    \"id\": 14,  \
+                    \"name\": \"remaining_space\" \
+                },  \
+                { \
+                    \"id\": 15,  \
+                    \"name\": \"ota_status\" \
+                },  \
+                { \
+                    \"id\": 16,  \
+                    \"name\": \"download_cancel_request_pending\" \
+                } \
+            ] \
+        } \
+    ] \
+}" 

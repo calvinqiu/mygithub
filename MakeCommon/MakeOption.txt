@@ -1,0 +1,302 @@
+ifeq "$(OPTION_LOADED)" ""
+
+#----------------------------------------------------------------------
+# Set option file loaded
+#----------------------------------------------------------------------
+export OPTION_LOADED := TRUE
+
+#----------------------------------------------------------------------
+# Set the target CPU architecture
+#
+# ARM   : ARM CPU
+# MIPS  : MIPS CPU (24KEc)
+#----------------------------------------------------------------------
+#export ARCH := ARM
+export ARCH := MIPS
+
+#----------------------------------------------------------------------
+# Set the toolchain
+#
+# ARM   : ARM ADS, RealView
+# GNU   : GNU C, ASM and linker
+#----------------------------------------------------------------------
+#export TOOLCHAIN := ARM
+export TOOLCHAIN := GNU
+
+#----------------------------------------------------------------------
+# Set branched project code
+#
+# The project code must be 4 characters, please refer to
+# http://mynvt.novatek.com.tw/deptsites/IM/Shared%20Documents/VersionControl.doc
+# for more detailed information.
+# Leaves this variable empty if not branched yet.
+#----------------------------------------------------------------------
+export _BRANCH_PROJECT_ :=
+
+#----------------------------------------------------------------------
+# PClint parameters
+#----------------------------------------------------------------------
+export PCLINT_PARAMETER := -b -v
+
+#----------------------------------------------------------------------
+# Set log file option
+#
+# ON    : Save warning/error message to log files (Win32 Default)
+# OFF   : Just output warning/error message to stdout (Linux Default)
+#----------------------------------------------------------------------
+ifeq "$(shell uname)" "Linux"
+export LOG_ERR := OFF
+else
+export LOG_ERR := ON
+#export LOG_ERR := OFF
+endif
+
+
+#----------------------------------------------------------------------
+# Set clean log file option
+#
+# ON    : Clean log files before make
+# OFF   : Don't clean log files before make
+#         (You should execute "make clean" to clean the log files)
+#----------------------------------------------------------------------
+export CLEAN_LOG := ON
+#export CLEAN_LOG := OFF
+
+#----------------------------------------------------------------------
+# Keep going when encounter error or not
+#
+# ON    : Make will keep going when encounter error (Win32 Default)
+# OFF   : Make will stop when encounter error (Linux Default)
+#----------------------------------------------------------------------
+ifeq "$(shell uname)" "Linux"
+export KEEP_GOING := OFF
+else
+export KEEP_GOING := ON
+endif
+
+#----------------------------------------------------------------------
+# Isolate creating dependency files process
+#
+# ON    : You have to run "make dep" to create dependency files
+# OFF   : dependency file will be created when making the file
+#----------------------------------------------------------------------
+export ISOLATE_DEP := ON
+#export ISOLATE_DEP := OFF
+
+#----------------------------------------------------------------------
+# Generate debug symbol in release target
+# Release target won't generate debug symbol by default, if you want to
+# generate debug symbol in release target, please turn on this option
+#
+# ON    : Generate debug symbol in release target
+# OFF   : Don't generate debug symbol in release target (default value)
+#----------------------------------------------------------------------
+#export RELEASE_SYMBOL := ON
+export RELEASE_SYMBOL := OFF
+
+#----------------------------------------------------------------------
+# Generate debug callback of entry and exit to functions
+# Only support on MIPS (This is GCC Extension)
+# Reference: http://blog.linux.org.tw/~jserv/archives/001870.html
+#
+# ON    : Generate debug callback
+# OFF   : Don't generate debug callback (default value)
+#----------------------------------------------------------------------
+#export INSTRUMENT_FUNCTION := ON
+export INSTRUMENT_FUNCTION := OFF
+
+#----------------------------------------------------------------------
+# Generate one ELF section for each function
+# Compiler will generate one ELF section for one .c file by default.
+# If the .c file contains lots of function that are unused, turn on
+# this function can reduce code size.
+# (Linker will remove unused section by default)
+# Valid only in release target
+#
+# ON    : One ELF section for each function
+# OFF   : One ELF section for each .c file (default value of ADS/GNU C compiler)
+#----------------------------------------------------------------------
+export SECTION_BY_FUNC := ON
+#export SECTION_BY_FUNC := OFF
+
+#----------------------------------------------------------------------
+# Copy bin file to storage after bin file is created
+# You have to set an environment variable named "NVT_STG_PATH" (without
+# quote) to work with this function.
+# Example: set "NVT_STG_PATH" to "H:/" (without quote).
+#
+# ON    : Copy bin file to storage after bin file is created
+# OFF   : Don't copy bin file to storage after bin file is created
+#----------------------------------------------------------------------
+export COPY_BIN_2_STG := ON
+#export COPY_BIN_2_STG := OFF
+
+#----------------------------------------------------------------------
+# Select emulation or design-in (Release code) environment
+#
+# ON    : Emulation environment
+# OFF   : Design-in environment
+#----------------------------------------------------------------------
+#export EMULATION := ON
+export EMULATION := OFF
+
+#----------------------------------------------------------------------
+# Select FPGA or Realchip platform for emulation.
+# Valid only when EMULATION is ON
+#
+# ON    : FPGA platform
+# OFF   : Realchip platform
+#----------------------------------------------------------------------
+#export FPGA_EMULATION := ON
+export FPGA_EMULATION := OFF
+
+#----------------------------------------------------------------------
+# Set PLL OSC frequency for FPGA EMULATION
+# Valid only when FPGA_EMULATION is ON
+#
+# For example, you should set it to 27000000 if your FPGA is connected
+# with a 27 MHz OSC.
+#----------------------------------------------------------------------
+export FPGA_PLL_OSC := 24000000
+
+#----------------------------------------------------------------------
+# Set INCLUDE RULE
+#
+# ON    : Enable include rule checking of platform
+# OFF   : Disable include rule checking of platform
+#----------------------------------------------------------------------
+export INCLUDE_RULE := ON
+#export INCLUDE_RULE := OFF
+
+#----------------------------------------------------------------------
+# Use eCos kernel or uITRON kernel
+#
+# ON    : Use eCos kernel and light weight uITRON kernel compatible wrapper
+# OFF   : Use light weight uITRON kernel
+#----------------------------------------------------------------------
+#export USE_ECOS_KERNEL := ON
+export USE_ECOS_KERNEL := OFF
+
+#----------------------------------------------------------------------
+# PM demo based on customized building way
+#
+# ON    : compile rule depends on _PM_DEMO_ that is informal way.
+# OFF   : formal way to build code
+#----------------------------------------------------------------------
+#export PM_DEMO := ON
+export PM_DEMO := OFF
+
+#----------------------------------------------------------------------
+# Set the parameters of GNU toolchain
+#----------------------------------------------------------------------
+ifeq "$(TOOLCHAIN)" "GNU"
+ifeq "$(shell uname)" "Linux"
+    CROSS_COMPILE      = /opt/im/mipsel-sde-elf-4.4.3/bin/mipsel-sde-elf-
+    TOOLS_DIR          = /opt/im/tools
+else
+    CROSS_COMPILE      = mips-sde-elf-
+    TOOLS_DIR          = C:/NMake
+endif
+    export CC           = $(CROSS_COMPILE)gcc
+    export AS           = $(CROSS_COMPILE)as
+    export LD           = $(CROSS_COMPILE)ld
+    export AR           = $(CROSS_COMPILE)ar
+    export OBJDUMP      = $(CROSS_COMPILE)objdump
+    export FE           = $(CROSS_COMPILE)objcopy
+    export NM           = $(CROSS_COMPILE)nm
+    export LT           = "C:/lint/lint-nt.exe"
+    export GCC          = $(CROSS_COMPILE)gcc
+    export EBIN         = $(TOOLS_DIR)/encrypt_bin
+    export BFC          = $(TOOLS_DIR)/bfc
+    export LDNVT        = $(TOOLS_DIR)/mips-nvt
+endif
+
+#----------------------------------------------------------------------
+# Set the parameters of ARM toolchain (ADS)
+#
+# The ARMCONF and ARMINC are the Windows environment variable. They
+# should be set by the install program of ARM ADS 1.2
+#----------------------------------------------------------------------
+ifeq "$(TOOLCHAIN)" "ARM"
+    TOOL_DIR           := $(subst \,/,$(ARMCONF))
+    export CC           = "$(TOOL_DIR)/armcc"
+    export AS           = "$(TOOL_DIR)/armasm"
+    export LD           = "$(TOOL_DIR)/armlink"
+    export AR           = "$(TOOL_DIR)/armar"
+    export FE           = "$(TOOL_DIR)/fromelf"
+    export LT           = "C:/lint/lint-nt.exe"
+    export GCC          = arm-gcc
+    export EBIN         = encrypt_bin
+    export BFC          = bfc
+    export ARMINC_DIR  := $(subst \,/,$(ARMINC))
+endif
+
+#----------------------------------------------------------------------
+# Set make flags
+#
+# Note: Don't modify this if you didn't add new option
+#----------------------------------------------------------------------
+# Slient mode
+MAKEFLAGS := s
+
+# Keep going or not
+ifeq "$(KEEP_GOING)" "ON"
+    MAKEFLAGS := $(MAKEFLAGS)k
+endif
+
+#----------------------------------------------------------------------
+# OS Type and Number of CPUs
+#----------------------------------------------------------------------
+NPROCS=1
+export OS:=$(shell uname -s)
+
+ifeq ($(OS),Linux)
+  NPROCS:=$(shell grep -c ^processor /proc/cpuinfo)
+endif
+ifeq ($(findstring CYGWIN_NT,$(OS)),CYGWIN_NT)
+  NPROCS:=$(NUMBER_OF_PROCESSORS)
+endif
+
+export JOB_FLAGS:= -j$(NPROCS)
+
+endif
+
+#xc modify for compile @20170206 start
+#
+# Bash Systmm Commands
+#
+  COPY_FILE     = copy /y
+  COPY_DIR      = xcopy /E /Y /R
+  DEL_FILE      = del /F /Q /S
+  ECHO          = "echo.exe"
+  PERL		= "MakeCommon/make_cmd/Perl.exe"
+
+#
+# public function
+# 
+
+  empty:=
+  space:=$(empty) $(empty)
+
+  Path_process = $(if $(strip $(MAKESHELL)),$(subst /,\,$(1)),$(1))
+
+  GET_ALLMACRO_LIST=$(sort $(filter-out $(filter-out_macro) filter-out_macro,$(foreach W,$(.VARIABLES),$(if $(filter-out environment default automatic, $(origin $W)),$W,))))
+  
+
+  GET_C_MACRO=$(foreach V,$(call GET_ALLMACRO_LIST),$(if $(filter-out FALSE,$($(V))),$(if $(filter-out TRUE,$($(V))),$(if $(filter-out NONE,$($(V))),-D$(strip $(V)) -D$(V)_$(strip $($(V))),-D$(V)_$(strip $($(V)))),-D$(strip $(V))),))
+  GET_A_MACRO=$(foreach V,$(call GET_ALLMACRO_LIST),$(if $(filter-out FALSE,$($(V))),$(if $(filter-out TRUE,$($(V))),$(if $(filter-out NONE,$($(V))),$(PD_OPT) "$(V)_$(strip $($(V))) SETL {TRUE}" $(PD_OPT) "$(strip $(V)) SETL {TRUE}",$(PD_OPT) "$(V)_$(strip $($(V))) SETL {TRUE}"),$(PD_OPT) "$(strip $(V)) SETL {TRUE}"),))
+
+  ECHO_Long = $(foreach V,$(1),$(shell $(ECHO) $(V) $(2) $(3)))
+
+  temp_var := $(foreach W,$(.VARIABLES),$(if $(filter-out environment default automatic command line, $(origin $W)),$W,))
+  filter-out_macro := p project P PROJECT m M modules MODULES ib IB run RUN lite LITE job JOB stop STOP C_MACRO A_MACRO $(temp_var) temp_var CUSTOM_CFLAG  
+
+  ENCODE_A_MACRO = $(subst $(space)SETL$(space){TRUE}",:SETL:{TRUE}\",$(subst -pd$(space)",$(PD_OPT):\",$(1)))
+  ENCODE_C_MACRO = $(subst $(space),:,$(1))
+  DECODE_AC_MACRO = $(subst :,$(space),$(1))
+
+  CO_OPTION_TO_FILE = $(if $(1)$(2),$(foreach V, SHELL_ACTION_DELETE $(call ENCODE_C_MACRO,$(wordlist 1, 200,$(1))) $(call ENCODE_C_MACRO,$(wordlist 201, 400,$(1)))  $(wordlist 401, $(words $(1)),$(1)), $(if $(findstring SHELL_ACTION_DELETE,$(V)),$(shell $(PERL) MakeCommon/perl_script/rm_file.pl $(2) ./),$(shell $(ECHO) $(call DECODE_AC_MACRO,$(V)) >> $(2)))),)
+  A_OPTION_TO_FILE  = $(if $(1)$(2),$(foreach V, SHELL_ACTION_DELETE $(call ENCODE_C_MACRO,$(wordlist 1, 150,$(call ENCODE_A_MACRO,$(1)))) $(call ENCODE_C_MACRO,$(wordlist 151, 300,$(call ENCODE_A_MACRO,$(1))))  $(wordlist 301, $(words $(call ENCODE_A_MACRO,$(1))),$(call ENCODE_A_MACRO,$(1))), $(if $(findstring SHELL_ACTION_DELETE,$(V)),$(shell $(PERL) make/perl_script/rm_file.pl $(2) ./),$(shell $(ECHO) $(call DECODE_AC_MACRO,$(V)) >> $(2)))),)
+
+  PATH_TO_FILE = $(if $(1)$(2),$(foreach V, SHELL_ACTION_DELETE $(wordlist 1, 20,$(1)) $(wordlist 21, 40,$(1))  $(wordlist 41, $(words $(1)),$(1)), $(if $(findstring SHELL_ACTION_DELETE,$(V)),$(shell $(PERL) make/perl_script/rm_file.pl $(2) ./),$(shell $(ECHO) $(V) >> $(2)))),)
+  #xc modify for compile @20170206 end

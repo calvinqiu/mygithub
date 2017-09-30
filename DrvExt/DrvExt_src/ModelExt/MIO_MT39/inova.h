@@ -1,0 +1,3 @@
+void INOVA_INIT(void);
+void INAP375T_CONFIG_INIT(void);
+void INAP375R_CONFIG_INIT(void);
