@@ -379,7 +379,7 @@ BOOL UIFlowwndDeleteFWFile(void)
     UINT32 ret;
     FST_FILE filehdl;
 
-    fileName = "A:\\FWPWU01A.bin";
+    fileName = "A:\\FW96663A.bin";
     filehdl = FileSys_OpenFile(fileName, FST_OPEN_READ);
     if (filehdl!=NULL)
     {
@@ -403,7 +403,7 @@ BOOL UIFlowwndDeleteFWFile(void)
         //return FALSE;
     }
 
-    fileName = "A:\\FWPWU01T.bin";
+    fileName = "A:\\FW96663T.bin";
     filehdl = FileSys_OpenFile(fileName, FST_OPEN_READ);
     if (filehdl!=NULL)
     {
@@ -1259,6 +1259,62 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
     #if defined(AUDIO_MIC_SWITCH_SUPPORT) && (AUDIO_MIC_SWITCH_SUPPORT==ENABLE)
     MTKMenuSettingTmp[MENU_AUDIO_RECORD_SWITCH]=UI_GetData(FL_MOVIE_AUDIO) ;
     #endif
+    if((GxSystem_GetPowerOnSource() == GX_PWRON_SRC_PWR_VBAT))
+    {
+        if(gbParkingModeTrigFlag==TRUE)
+        {
+            /* modify begin by ZMD, 2017-03-09 */
+            #if defined(YQCONFIG_PARKING_MODE_SUPPORT)
+            if(GxUSB_GetIsUSBPlug()==FALSE)
+            {
+                ParkingCaptrueFlag=TRUE;
+                // GxTimer_StopTimer(&gUIMotionDetTimerID);
+                //GxTimer_StopTimer(&g_uiDateTimerID);
+                //System_PowerOff(SYS_POWEROFF_NORMAL);
+            }
+            else
+            {
+                debug_msg("====>USB Det pin is high ,do not power down..keep going..\r\n");
+                //UIFlowWndMovie_OnDeleteOld();
+            }
+            debug_msg("Power On by Gsensor...\r\n");
+            gbParkingModeTrigFlag=FALSE;
+            //gbNeedToPowerOff=TRUE;
+            uiResqData[0]= 0;
+            MTKComposeCMDRspFrame(0, CMD_GSENSOR_TRIG,(UINT8 *)&uiResqData, 1);
+            //Here we need to set P_GPIO7 10ms,then clear P_GPIO7 to tell Android 663 is G-sensor powerOn.
+            #if defined(YQCONFIG_GPIO_GSENSOR_POWERON_ANDROID_SUPPORT)
+            GPIO_GSENSOR_POWERON_ANDROID();		//yliu
+            #endif
+
+            #else
+
+            if(GxUSB_GetIsUSBPlug()==FALSE)
+            {
+                GxTimer_StopTimer(&gUIMotionDetTimerID);
+                GxTimer_StopTimer(&g_uiDateTimerID);
+                System_PowerOff(SYS_POWEROFF_NORMAL);
+            }
+            else
+            {
+                debug_msg("====>USB Det pin is high ,do not power down..keep going..\r\n");
+                //UIFlowWndMovie_OnDeleteOld();
+            }
+            #endif
+            /* modify end by ZMD, 2017-03-09 */
+        }
+    }
+    else
+    {
+        #if 1 //#stephen mark -20160421
+        if(firstPowerOn==TRUE)
+        {
+            firstPowerOn=FALSE;
+            UIFlowwndDeleteFWFile();
+        }
+        #endif
+        //UIFlowWndMovie_OnDeleteOld();
+    }
     #endif
     return NVTEVT_CONSUME;
 }
@@ -3326,6 +3382,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
     }
 
     guiMovieTouchUIDisplayCounter=0;
+
 
     switch(TouchKeyStatus)
     {

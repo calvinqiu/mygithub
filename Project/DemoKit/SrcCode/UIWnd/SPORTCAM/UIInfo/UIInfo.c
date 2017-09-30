@@ -1241,7 +1241,7 @@ BOOL TPIsOnRange(VControl *pCtrl,UINT32 P1,UINT32 P2)
 {
  	Ux_RECT Rect;
 	UxCtrl_GetPos(pCtrl,&Rect);
-	//debug_msg("Rang:x1:%d,x2:%d,y1:%d,y2:%d,p1:%d,p2:%d...\r\n",Rect.x1,Rect.x2,Rect.y1,Rect.y2,P1,P2);
+	debug_msg("Rang:x1:%d,x2:%d,y1:%d,y2:%d,p1:%d,p2:%d...\r\n",Rect.x1,Rect.x2,Rect.y1,Rect.y2,P1,P2);
 
 	if((P1>Rect.x1)&&(P1<Rect.x2)&&(P2>Rect.y1)&&(P2<Rect.y2))
 	{
