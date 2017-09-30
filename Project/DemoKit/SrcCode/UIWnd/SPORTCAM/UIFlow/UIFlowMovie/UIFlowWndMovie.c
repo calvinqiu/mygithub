@@ -2815,51 +2815,51 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 	UxCtrl_GetPos(&UIFlowWndMovie_Status_Touch_RERTURNCtrl,&Rect);
 	debug_msg("Rang:x1:%d,x2:%d,y1:%d,y2:%d,p1:%d,p2:%d...\r\n",Rect.x1,Rect.x2,Rect.y1,Rect.y2);
     debug_msg("TouchKeyStatus = %d\r\n",TouchKeyStatus);
-    P1 = (Rect.x1+Rect.x2)/2;
-    P2 = (Rect.y1+Rect.y2)/2;
-    uiMovieKeyPressed=UIFLOW_MOVIE_TOUCH_KEY_RETURN;
+//    P1 = (Rect.x1+Rect.x2)/2;
+//    P2 = (Rect.y1+Rect.y2)/2;
+//    uiMovieKeyPressed=UIFLOW_MOVIE_TOUCH_KEY_RETURN;
     }
     switch(TouchKeyStatus)
     {
     case TOUCH_KEY_STATUS_PRESSED:
-        if(TPIsOnRange(&UIFlowWndMovie_Status_Main_PBCtrl,P1,P2)==TRUE)
-        {
-            debug_msg("Main_PBCtrl...PRESSED...%d\r\n",gMovData.State);
-            if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
-            {
-                Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
-                uiResqData[0]=0x03;
-                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
-                return NVTEVT_CONSUME;
-            }
-            switch(gMovData.State)
-            {
-            case MOV_ST_REC:
-            case MOV_ST_REC|MOV_ST_ZOOM:
-                if (FlowMovie_GetRecCurrTime() >= 3)
-                {
-                    uiMovieKeyPressed=UIFLOW_MOVIE_TOUCH_KEY_PLAYBACK;
-                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
-                    UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
-                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
-                }
-                else
-                {
-                    debug_msg("Movie mode flush Event..\r\n");
-                    Ux_FlushEvent();
-                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
-                    UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
-                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
-                }
-                uiResqData[0]=0x02;
-                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
-                break;
+//        if(TPIsOnRange(&UIFlowWndMovie_Status_Main_PBCtrl,P1,P2)==TRUE)
+//        {
+//            debug_msg("Main_PBCtrl...PRESSED...%d\r\n",gMovData.State);
+//            if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+//            {
+//                Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+//                uiResqData[0]=0x03;
+//                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
+//                return NVTEVT_CONSUME;
+//            }
+//            switch(gMovData.State)
+//            {
+//            case MOV_ST_REC:
+//            case MOV_ST_REC|MOV_ST_ZOOM:
+//                if (FlowMovie_GetRecCurrTime() >= 3)
+//                {
+//                    uiMovieKeyPressed=UIFLOW_MOVIE_TOUCH_KEY_PLAYBACK;
+//                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+//                    UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
+//                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+//                }
+//                else
+//                {
+//                    debug_msg("Movie mode flush Event..\r\n");
+//                    Ux_FlushEvent();
+//                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+//                    UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
+//                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+//                }
+//                uiResqData[0]=0x02;
+//                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
+//                break;
             case MOV_ST_VIEW:
             case MOV_ST_VIEW|MOV_ST_ZOOM:
                 uiMovieKeyPressed=UIFLOW_MOVIE_TOUCH_KEY_PLAYBACK;
-                UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
-                UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
-                UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+                //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+                //UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
+                //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
                 uiResqData[0]=0x02;
                 MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
                 break;
@@ -2973,21 +2973,22 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
         break;
     case TOUCH_KEY_STATUS_RELEASED:
         Ux_FlushEventByRange(NVTEVT_KEY_EVT_START,NVTEVT_KEY_EVT_END);
-        if(TPIsOnRange(&UIFlowWndMovie_Status_Main_PBCtrl,P1,P2)==TRUE)
-        {
-            debug_msg("Main_PBCtrl...RELEASED...%d\r\n",uiMovieKeyPressed);
-            if(uiMovieKeyPressed==UIFLOW_MOVIE_TOUCH_KEY_PLAYBACK)
-            {
-                UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
-                UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-                UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
-                Ux_PostEvent(NVTEVT_KEY_MODE, 1, NVTEVT_KEY_PRESS);
-                uiResqData[0]=0x02;
-                uiResqData[1]=0x01;
-                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
-            }
-        }
-        else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_RECCtrl,P1,P2)==TRUE)
+//        if(TPIsOnRange(&UIFlowWndMovie_Status_Main_PBCtrl,P1,P2)==TRUE)
+//       {
+//            debug_msg("Main_PBCtrl...RELEASED...%d\r\n",uiMovieKeyPressed);
+//            if(uiMovieKeyPressed==UIFLOW_MOVIE_TOUCH_KEY_PLAYBACK)
+//            {
+//                UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+//                UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+//                UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+//                Ux_PostEvent(NVTEVT_KEY_MODE, 1, NVTEVT_KEY_PRESS);
+//                uiResqData[0]=0x02;
+//                uiResqData[1]=0x01;
+//                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+//            }
+//        }
+//        else 
+            if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_RECCtrl,P1,P2)==TRUE)
         {
             debug_msg("Touch_RECCtrl...RELEASED...\r\n");
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RECCtrl, FALSE);
@@ -3176,7 +3177,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
         else
         {
             debug_msg("Touch_NULL...RELEASED...\r\n");
-            UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+            //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RECCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RERTURNCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, FALSE);
@@ -3184,8 +3185,8 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             //UxCtrl_SetShow(&UIFlowWndMovie_Panel_SecondPipview2Ctrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
 
-            UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-            UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+            //UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+            //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
             if(!MovRec_IsRecording())
             {
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_RECCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_REC_ICON_TP_REC);
@@ -3259,11 +3260,11 @@ void UIFlowWndMovie_OnTouchPanelKeyUpdateIcons(BOOL UpdateShow)
                   UxState_GetData(&UIFlowWndMovie_Status_Touch_SETUPCtrl, STATE_CURITEM)
                  );
                  */
-        if(UxState_GetData(&UIFlowWndMovie_Status_Main_PBCtrl, STATE_CURITEM) == UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED)
-        {
-            UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-            UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
-        }
+//        if(UxState_GetData(&UIFlowWndMovie_Status_Main_PBCtrl, STATE_CURITEM) == UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED)
+//        {
+//            UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+//            UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+//        }
         if(UxState_GetData(&UIFlowWndMovie_Status_Touch_RECCtrl, STATE_CURITEM) == UIFlowWndMovie_Status_Touch_REC_ICON_TP_REC_PRESSED)
         {
             //UxState_SetData(&UIFlowWndMovie_Status_Touch_RECCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_REC_ICON_TP_REC);
@@ -3331,33 +3332,35 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 
     case TOUCH_KEY_STATUS_RELEASED:
         // case TOUCH_KEY_STATUS_PRESSED:
-        if(TPIsOnRange(&UIFlowWndMovie_Status_Main_PBCtrl,P1,P2)==TRUE)
-        {
-            debug_msg("Main_PBCtrl...%d\r\n",gMovData.State);
-            if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
-            {
-                Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
-                uiResqData[0]=0x03;
-                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
-                return NVTEVT_CONSUME;
-            }
-            switch(gMovData.State)
-            {
-            case MOV_ST_REC:
-            case MOV_ST_REC|MOV_ST_ZOOM:
-            case MOV_ST_VIEW:
-            case MOV_ST_VIEW|MOV_ST_ZOOM:
-                UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
-                WndMovieTouchPanelKeyUpdateIcons=TRUE;
-                //UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-                break;
-            }
-            Ux_PostEvent(NVTEVT_KEY_MODE, 1, NVTEVT_KEY_PRESS);
-            uiResqData[0]=0x02;
-            uiResqData[1]=0x01;
-            MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
-        }
-        else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_RECCtrl,P1,P2)==TRUE)
+
+//        if(TPIsOnRange(&UIFlowWndMovie_Status_Main_PBCtrl,P1,P2)==TRUE)
+//        {
+//            debug_msg("Main_PBCtrl...%d\r\n",gMovData.State);
+//            if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+//            {
+//                Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+//                uiResqData[0]=0x03;
+//                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
+//                return NVTEVT_CONSUME;
+//            }
+//            switch(gMovData.State)
+//            {
+//            case MOV_ST_REC:
+//            case MOV_ST_REC|MOV_ST_ZOOM:
+//            case MOV_ST_VIEW:
+//            case MOV_ST_VIEW|MOV_ST_ZOOM:
+//                UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE_PRESSED);
+//                WndMovieTouchPanelKeyUpdateIcons=TRUE;
+//                //UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+//                break;
+//            }
+//            Ux_PostEvent(NVTEVT_KEY_MODE, 1, NVTEVT_KEY_PRESS);
+//            uiResqData[0]=0x02;
+//            uiResqData[1]=0x01;
+//            MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+//        }
+//        else 
+            if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_RECCtrl,P1,P2)==TRUE)
         {
             debug_msg("Touch_RECCtrl...\r\n");
 
@@ -3570,7 +3573,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             debug_msg("Touch_NULL...\r\n");
             Ux_FlushEvent();
 
-            UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+            //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RECCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RERTURNCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, FALSE);
@@ -3578,8 +3581,8 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             //UxCtrl_SetShow(&UIFlowWndMovie_Panel_SecondPipview2Ctrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
 
-            UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-            UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+            //UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+            //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
             if(!MovRec_IsRecording())
             {
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_RECCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_REC_ICON_TP_REC);
@@ -4611,7 +4614,7 @@ CTRL_LIST_ITEM(UIFlowWndMovie_Status_FCW_Status)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_LDWS_Status)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Urgent_protect_Manual)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_ParkingMode)
-CTRL_LIST_ITEM(UIFlowWndMovie_Status_Main_PB)
+//CTRL_LIST_ITEM(UIFlowWndMovie_Status_Main_PB)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_REC)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_RERTURN)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_SnapeShot)
@@ -4737,8 +4740,8 @@ EVENT_BEGIN(UIFlowWndMovie_Status_ParkingMode)
 EVENT_END
 
 //----------------------UIFlowWndMovie_Status_Main_PBCtrl Event---------------------------
-EVENT_BEGIN(UIFlowWndMovie_Status_Main_PB)
-EVENT_END
+//EVENT_BEGIN(UIFlowWndMovie_Status_Main_PB)
+//EVENT_END
 
 //----------------------UIFlowWndMovie_Status_Touch_RECCtrl Event---------------------------
 EVENT_BEGIN(UIFlowWndMovie_Status_Touch_REC)

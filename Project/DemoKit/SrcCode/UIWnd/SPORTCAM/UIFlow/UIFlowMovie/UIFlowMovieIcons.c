@@ -541,8 +541,8 @@ void FlowMovie_IconDrawTouchButton(BOOL Show)
 {
     if(Show==FALSE)
     {
-        UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-        UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+        //UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+        //UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
         if(!MovRec_IsRecording())
         {
             UxState_SetData(&UIFlowWndMovie_Status_Touch_RECCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_REC_ICON_TP_REC);
@@ -572,8 +572,8 @@ void FlowMovie_IconDrawTouchButton(BOOL Show)
     }
     else
     {
-        UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
-        UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
+//        UxState_SetData(&UIFlowWndMovie_Status_Main_PBCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Main_PB_ICON_PLAY_MODE);
+//        UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, TRUE);
 
         if(!MovRec_IsRecording())
         {
@@ -671,7 +671,7 @@ void FlowMovie_UpdateIcons(BOOL bShow)
         FlowMovie_IconHideParkingMode();
         FlowMovie_IconHideRecordAudio();
         FlowMovie_IconHideADAS();
-        UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
+//        UxCtrl_SetShow(&UIFlowWndMovie_Status_Main_PBCtrl, FALSE);
         UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RECCtrl, FALSE);
         UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RERTURNCtrl, FALSE);
         UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, FALSE);

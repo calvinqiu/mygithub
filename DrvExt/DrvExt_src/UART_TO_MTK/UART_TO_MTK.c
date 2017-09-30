@@ -69,11 +69,11 @@ typedef signed char         S8;       ///< Signed 8 bits data type
 
 #define MTK_MESSAGE_POOL_SIZE 30
 
-#define DISP_DEV_WIDTH     1280
-#define DISP_DEV_HIGH     400
+#define DISP_DEV_WIDTH     864
+#define DISP_DEV_HIGH     480
 
-#define DISP_UI_WIDTH     1280//768
-#define DISP_UI_HIGH     400//240
+#define DISP_UI_WIDTH     864//768
+#define DISP_UI_HIGH     480//240
 
 typedef struct _MTK_663_FRAME_STRUCT_
 {
