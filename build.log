@@ -1,47 +1,47 @@
 
 Checking uITRON - BT_Brcm release target ...
 
+Checking uITRON - Disp_IFDSI_LCD1_XJ040WV1402C_R61408 release target ...
+
 Checking uITRON - Audio_ExtAIC3254 release target ...
 
 Checking uITRON - Audio_ExtWM8978 release target ...
-
-Checking uITRON - Disp_IFDSI_LCD1_XJ040WV1402C_R61408 release target ...
 Compiling BT_Brcm.c
 Compiling BT_BrcmID.c
-Compiling wiced_bt_cfg.c
-Compiling bt_rfc_server.c
-Compiling AIC3254.c
-Compiling R61408_dsi.c
 Compiling dispdev_IFdsi.c
+Compiling bt_rfc_server.c
+Compiling R61408_dsi.c
+Compiling wiced_bt_cfg.c
+Compiling AIC3254.c
+Compiling rfc_sdp_db.c
 Compiling WM8978.c
 Compiling WM8978_ver.c
-Compiling rfc_sdp_db.c
-Compiling wiced_bt_rfcbte_gatt_db.c
 Compiling bt_le_reporter.c
+Compiling wiced_bt_rfcbte_gatt_db.c
 Compiling hoGP.c
-Creating library Audio_ExtAIC3254.a ...
-Compiling bt_smart_service.c
 Creating library Disp_IFDSI_LCD1_XJ040WV1402C_R61408.a ...
+Compiling bt_smart_service.c
+Creating library Audio_ExtAIC3254.a ...
 Creating library Audio_ExtWM8978.a ...
 Compiling upio_uITRON.c
-Compiling utron_utils.c
 Compiling brcm_patch-43438-26M.c
 Compiling userial_uITRON.c
+Compiling utron_utils.c
 Creating library BT_Brcm.a ...
-
-Checking uITRON - Disp_TV release target ...
 
 Checking uITRON - Disp_PANELCOMMON release target ...
 
 Checking uITRON - Disp_VIRTUAL_LCD2_OFF release target ...
 
+Checking uITRON - Disp_TV release target ...
+
 Checking uITRON - GSensor_Combo release target ...
-Compiling dispdev_tv.c
 Compiling dispdev_panlcomn.c
 Compiling OFF.c
-Creating library Disp_TV.a ...
+Compiling dispdev_tv.c
 Creating library Disp_PANELCOMMON.a ...
 Creating library Disp_VIRTUAL_LCD2_OFF.a ...
+Creating library Disp_TV.a ...
 Compiling GSensor.c
 Compiling Gsensor_Combo.c
 Compiling Gsensor_DRAMD07.c
@@ -49,19 +49,19 @@ Compiling Gsensor_GMA301.c
 Compiling Gsensor_DA380.c
 Compiling Gsensor_None.c
 
+
+Checking uITRON - Gyro_None release target ...
 Checking uITRON - IrRx_NONE release target ...
 
 Checking uITRON - LENSDRV_FF1 release target ...
-
-Checking uITRON - Gyro_None release target ...
 Creating library GSensor_Combo.a ...
 Compiling DUMMY_IRRM.c
 Compiling IrRx_queue.c
+Compiling LensDrv_FF1.c
 
 Checking uITRON - LENSMOTOR_FF1 release target ...
-Compiling LensDrv_FF1.c
-Creating library IrRx_NONE.a ...
 Compiling Gyro_None.c
+Creating library IrRx_NONE.a ...
 Creating library LENSDRV_FF1.a ...
 Creating library Gyro_None.a ...
 Compiling LensMotor_FF1.c
@@ -69,28 +69,28 @@ Compiling LensMotor_FF1.c
 Checking uITRON - MODELEXT_ALL release target ...
 Creating library LENSMOTOR_FF1.a ...
 
-Checking uITRON - UART_TO_MTK release target ...
-
 Checking uITRON - SampleDrv release target ...
-Compiling DxCfg.c
+
+Checking uITRON - UART_TO_MTK release target ...
 Compiling IntDirCfg.c
+Compiling DxCfg.c
 Compiling PinmuxCfg.c
 Compiling IOCfg.c
-Compiling DxStorage_Card.c
 Compiling DxStorage_EmbMem.c
-Compiling DxDisplay_LCD.c
+Compiling DxStorage_Card.c
 Compiling DxDisplay_LCD2.c
-Compiling DxDisplay_TV.c
+Compiling DxDisplay_LCD.c
 Compiling UART_TO_MTK.c
-Compiling SampleDrvID.c
 Compiling SampleDrv.c
+Compiling SampleDrvID.c
+Compiling DxDisplay_TV.c
 Compiling DxDisplay_HDMI.c
-Compiling DxWiFi.c
 Compiling DxUsb.c
-Compiling DxInput_Key.c
-Compiling DxCamera_Sensor.c
+Compiling DxWiFi.c
 Creating library SampleDrv.a ...
 Creating library UART_TO_MTK.a ...
+Compiling DxInput_Key.c
+Compiling DxCamera_Sensor.c
 Compiling DxCamera_Lens.c
 Compiling DxCamera_Flash.c
 Compiling DxSound_Audio.c
@@ -102,19 +102,19 @@ Creating library MODELEXT_ALL.a ...
 
 Checking uITRON - Lens release target ...
 
-Checking uITRON - AE_AR0238CSP_EVB_FF release target ...
-
 Checking uITRON - ADAS release target ...
 
 Checking uITRON - IPL_AR0238CSP_IMX322LQJ_EVB_FF release target ...
 
-Checking uITRON - AF_SAMPLE release target ...
-
-Checking uITRON - AutoVP_PARMS release target ...
+Checking uITRON - AE_AR0238CSP_EVB_FF release target ...
 
 Checking uITRON - AWB_AR0238CSP_EVB_FF release target ...
 
+Checking uITRON - AF_SAMPLE release target ...
+
 Checking uITRON - CAF_SAMPLE release target ...
+
+Checking uITRON - AutoVP_PARMS release target ...
 
 Checking uITRON - FLASHLIGHT_SAMPLE release target ...
 
@@ -126,9 +126,9 @@ Checking uITRON - MD_SAMPLE2 release target ...
 
 Checking uITRON - RSC_OV4689_IMX322LQJ release target ...
 
-Checking uITRON - SnG_Parms release target ...
-
 Checking uITRON - WifiCmdParser release target ...
+
+Checking uITRON - SnG_Parms release target ...
 
 Checking uITRON - DemoKit release target ...
 Assembling CodeInfo.s
@@ -137,25 +137,25 @@ Compiling BinInfo.c
 Compiling CoreInfo.c
 Compiling SysCfg.c
 Compiling main.c
-Compiling SysMain.c
 Compiling SysMain_Exe.c
+Compiling SysMain.c
 Compiling SysMain_Flow_Init.c
 Compiling SysMain_Flow_Exit.c
-Compiling SysMain_Flow_Sleep.c
 Compiling SysMain_Flow_Mode.c
+Compiling SysMain_Flow_Sleep.c
 Compiling SysMain_State.c
-Compiling SysCmd_CB.c
 Compiling SysLock.c
-Compiling SysVideo_Exe.c
+Compiling SysCmd_CB.c
 Compiling SysOutput_Exe.c
+Compiling SysVideo_Exe.c
 Compiling SysVideo_CB.c
 Compiling SysAudio_Exe.c
-Compiling SysUsb_Exe.c
 Compiling SysAudio_CB.c
+Compiling SysUsb_Exe.c
 Compiling SysUsb_CB.c
 Compiling SysStrg_Exe.c
-Compiling SysInput_Exe.c
 Compiling SysStrg_CB.c
+Compiling SysInput_Exe.c
 Compiling SysInput_CB.c
 Compiling SysPower_Exe.c
 Compiling SysPower_CB.c
@@ -168,12 +168,12 @@ Compiling SysUctrl_Exe.c
 Compiling SysBT.c
 Compiling ProjectInfo.c
 Compiling SysUICB.c
-Compiling UIDisplay.c
 Compiling UIGraphics.c
+Compiling UIDisplay.c
 Compiling UIGraphicsID.c
 Compiling UIView.c
-Compiling PhotoView.c
 Compiling PlaybackView.c
+Compiling PhotoView.c
 Compiling MovieView.c
 Compiling UIBuffer.c
 Compiling DpofVendor.c
@@ -185,31 +185,31 @@ Compiling MovieStampTsk.c
 Compiling DateStampFont10x16.c
 Compiling DateStampFont12x20.c
 Compiling DateStampFont18x30.c
-Compiling DateStampFont26x44.c
 Compiling DateStampFont20x44.c
+Compiling DateStampFont26x44.c
 Compiling UniFont.c
-Compiling MsdcNvtCb_Photo.c
 Compiling MsdcNvtCb.c
+Compiling MsdcNvtCb_Photo.c
 Compiling MsdcNvtCb_Adj.c
 Compiling MsdcNvtCb_UpdFw.c
 Compiling MsdcNvtCb_CustomSi.c
 Compiling MsdcNvtCb_IQSim.c
 Compiling MsdcNvtCb_TimeSi.c
-Compiling UserCmdID.c
 Compiling UserCmd.c
+Compiling UserCmdID.c
 Compiling AppDisp_PipView.c
 Compiling AppDisp_SbsView.c
 Compiling AppDisp_RotateView.c
 Compiling AppDisp_ScaleView.c
 Compiling AppDisp_3DNRView.c
 Compiling UIMode.c
+Compiling UIModeMain.c
 Compiling UIModeSleep.c
 Compiling UIModeWifi.c
-Compiling UIModeMain.c
-Compiling MenuCommonItem.c
 Compiling FlowCommon.c
-Compiling MenuCommonConfirm.c
+Compiling MenuCommonItem.c
 Compiling MenuCommonOption.c
+Compiling MenuCommonConfirm.c
 Compiling TabMenu.c
 Compiling MenuCommon.c
 Compiling MenuMode.c
@@ -246,15 +246,15 @@ Compiling Engineer_ID.c
 Compiling EngineerModeTbl.c
 Compiling DynamicMenu.c
 Compiling Cal_Header.c
-Compiling IPL_Cal_KeyStrSample.c
 Compiling CalibrationItem.c
+Compiling IPL_Cal_KeyStrSample.c
 Compiling BurnInWnd.c
 Compiling KeyTestWnd.c
 Compiling MovieRecTestWnd.c
 Compiling MoviePlayTestWnd.c
 Compiling LCDTestWnd.c
-Compiling AudioTestWnd.c
 Compiling LEDTestWnd.c
+Compiling AudioTestWnd.c
 Compiling UIMovieMapping.c
 Compiling UIPhotoMapping.c
 Compiling UIInfo.c
@@ -268,8 +268,8 @@ Compiling WifiAppCmd.c
 Compiling WifiAppCmdMapping.c
 Compiling NetFs.c
 Compiling UIMenuWndPlayDel.c
-Compiling UIMenuWndPlaySlideShow.c
 Compiling UIMenuWndPlayConfirmDel.c
+Compiling UIMenuWndPlaySlideShow.c
 Compiling UIMenuWndPlaySlideShowCB.c
 Compiling UIMenuWndSetupDefaultSetting.c
 Compiling UIMenuWndSetupFormat.c
@@ -284,8 +284,8 @@ Compiling UIAppMovie_SetUserData.c
 Compiling UIAppMovie_3DNR.c
 Compiling UIAppMovie_AudNR_Spec_Zoom.c
 Compiling UIAppMovie_AudNR_Spec_Focus.c
-Compiling UIAppMovie_CvHostEx.c
 Compiling UIAppMovie_AudNR_Spec_Iris.c
+Compiling UIAppMovie_CvHostEx.c
 Compiling UIAppMovie_NvtCvEx.c
 Compiling UIAppMovie_TimelapseLPR.c
 Compiling UIModePhoto.c
@@ -312,16 +312,16 @@ Compiling UIModeUsbDisk.c
 Compiling UIAppUsbDisk_Exe.c
 Compiling UIAppUsbPrint_Exe.c
 Compiling YoukuAppCmd.c
-Compiling UIModeUsbPTP.c
 Compiling StatusData.c
+Compiling UIModeUsbPTP.c
 Compiling UIModeUsbCharge.c
 Compiling UIAppUsbCharge_Exe.c
 Compiling UIModeUsbMenu.c
 Compiling UCtrlMain.c
 Compiling UCtrlMainID.c
 Compiling UCtrlMode.c
-Compiling UCtrlAppPlay.c
 Compiling UCtrlAppSetup.c
+Compiling UCtrlAppPlay.c
 Compiling UCtrlAppSystem.c
 Compiling UCtrlAppMovie.c
 Compiling UCtrlAppOnvif.c
@@ -329,8 +329,8 @@ Compiling UCtrlAppOnvifID.c
 Compiling UCtrlAppImage.c
 Compiling UCtrlAppEvent.c
 Compiling UCtrlAppIQtool.c
-Compiling UCtrlAppPhotoID.c
 Compiling UCtrlAppPhoto.c
+Compiling UCtrlAppPhotoID.c
 Compiling UIResource.c
 Compiling BG_Images.c
 Compiling BG_Opening.c
@@ -344,30 +344,30 @@ Compiling DemoKit_PaletteOption.c
 Compiling DemoKit_PaletteConfirm.c
 Compiling DemoKit_String_EN.c
 Compiling DemoKit_String_DE.c
+Compiling DemoKit_String_ES.c
 Compiling DemoKit_String_PO.c
 Compiling DemoKit_String_IT.c
-Compiling DemoKit_String_ES.c
-Compiling DemoKit_String_SC.c
 Compiling DemoKit_String_FR.c
+Compiling DemoKit_String_SC.c
 Compiling DemoKit_String_TC.c
 Compiling DemoKit_String_JP.c
-Compiling SoundData.c
 Compiling DemoKit_String_RU.c
-Copying ObjectLds: NvtIPC.a
+Compiling SoundData.c
 Copying ObjectLds: Startup.a
-Extracting: DemoKit_Data/Release/ObjectLds/NvtIPC/NvtIpcSemData.o
+Copying ObjectLds: NvtIPC.a
 Extracting: DemoKit_Data/Release/ObjectLds/Startup/exception_MIPS.o
-Copying ObjectLds: MODELEXT_ALL.a
+Extracting: DemoKit_Data/Release/ObjectLds/NvtIPC/NvtIpcSemData.o
 Extracting: DemoKit_Data/Release/ObjectLds/Startup/Isr_MIPS.o
-Extracting: DemoKit_Data/Release/ObjectLds/MODELEXT_ALL/PartitionInfo.o
+Copying ObjectLds: MODELEXT_ALL.a
 Extracting: DemoKit_Data/Release/ObjectLds/Startup/Loader_MIPS.o
+Extracting: DemoKit_Data/Release/ObjectLds/MODELEXT_ALL/PartitionInfo.o
 Copying ObjectLds: GxGfx.a
 Extracting: DemoKit_Data/Release/ObjectLds/Startup/Startup_MIPS.o
 Copying ObjectLds: Driver_IPP.a
 Extracting: DemoKit_Data/Release/ObjectLds/GxGfx/DC.o
 Copying ObjectLds: Driver_Codec.a
-Extracting: DemoKit_Data/Release/ObjectLds/Driver_IPP/grph.o
 Copying ObjectLds: GxTimer.a
+Extracting: DemoKit_Data/Release/ObjectLds/Driver_IPP/grph.o
 Extracting: DemoKit_Data/Release/ObjectLds/Driver_Codec/jpeg.o
 Copying ObjectLds: GxStrg.a
 Extracting: DemoKit_Data/Release/ObjectLds/GxTimer/GxTimer_p1.o
@@ -378,7 +378,7 @@ Creating image DemoKit_Data/Release/DemoKit.axf ...
 Creating executable DemoKit_Data/Release/FW96663A.bin ...
 Encrypt binary file DemoKit_Data/Release/FW96663A.bin ...
 Reading 'DemoKit_Data/Release/FW96663A.bin'...
-File size = 7484048
+File size = 7484144
 
 ==Display binary file info== Begin
 Model Name: NT96663
@@ -386,23 +386,23 @@ VersionNumber: 10000000
 ReleaseDate: 20100701
 ==Display binary file info== End
 
-Total binary size after padding: 7484048
+Total binary size after padding: 7484144
 
-##ui32BinDataSumValue: 0x4DE5086C
-CheckSum: 0xF794
+##ui32BinDataSumValue: 0x58C4A2C6
+CheckSum: 0x5D3A
 
 Writing 'DemoKit_Data/Release/FW96663A.bin'...
-Write size = 7484048
+Write size = 7484144
 Save binary OK.
 bfc.exe: 2015-04-15
 full load version
 compress DemoKit_Data/Release/FW96663A.bin to tmp...
-Input file: 7484048 bytes
-Compressed data: 3167988 bytes (42.3%)
+Input file: 7484144 bytes
+Compressed data: 3168199 bytes (42.3%)
 Alignment on, padding to 4 bytes!
-Full compress, new file size = outsize + 16bytes = 3168008
+Full compress, new file size = outsize + 16bytes = 3168216
 Calculate and write back checksum...
-Checksum = 0xbf42
+Checksum = 0xa70
 cp: cannot stat `log*.txt': No such file or directory
 cp: cannot stat `log*.txt': No such file or directory
 cp: cannot stat `log*.txt': No such file or directory
