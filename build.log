@@ -7,21 +7,21 @@ Checking uITRON - Audio_ExtAIC3254 release target ...
 
 Checking uITRON - Audio_ExtWM8978 release target ...
 Compiling BT_Brcm.c
-Compiling BT_BrcmID.c
 Compiling dispdev_IFdsi.c
-Compiling bt_rfc_server.c
+Compiling BT_BrcmID.c
 Compiling R61408_dsi.c
 Compiling wiced_bt_cfg.c
+Compiling bt_rfc_server.c
 Compiling AIC3254.c
-Compiling rfc_sdp_db.c
 Compiling WM8978.c
 Compiling WM8978_ver.c
+Compiling rfc_sdp_db.c
 Compiling bt_le_reporter.c
+Creating library Disp_IFDSI_LCD1_XJ040WV1402C_R61408.a ...
 Compiling wiced_bt_rfcbte_gatt_db.c
 Compiling hoGP.c
-Creating library Disp_IFDSI_LCD1_XJ040WV1402C_R61408.a ...
-Compiling bt_smart_service.c
 Creating library Audio_ExtAIC3254.a ...
+Compiling bt_smart_service.c
 Creating library Audio_ExtWM8978.a ...
 Compiling upio_uITRON.c
 Compiling brcm_patch-43438-26M.c
@@ -48,21 +48,21 @@ Compiling Gsensor_DRAMD07.c
 Compiling Gsensor_GMA301.c
 Compiling Gsensor_DA380.c
 Compiling Gsensor_None.c
-
-
-Checking uITRON - Gyro_None release target ...
-Checking uITRON - IrRx_NONE release target ...
+Creating library GSensor_Combo.a ...
 
 Checking uITRON - LENSDRV_FF1 release target ...
-Creating library GSensor_Combo.a ...
+
+Checking uITRON - IrRx_NONE release target ...
+
+Checking uITRON - Gyro_None release target ...
+Compiling LensDrv_FF1.c
 Compiling DUMMY_IRRM.c
 Compiling IrRx_queue.c
-Compiling LensDrv_FF1.c
 
 Checking uITRON - LENSMOTOR_FF1 release target ...
 Compiling Gyro_None.c
-Creating library IrRx_NONE.a ...
 Creating library LENSDRV_FF1.a ...
+Creating library IrRx_NONE.a ...
 Creating library Gyro_None.a ...
 Compiling LensMotor_FF1.c
 
@@ -72,22 +72,22 @@ Creating library LENSMOTOR_FF1.a ...
 Checking uITRON - SampleDrv release target ...
 
 Checking uITRON - UART_TO_MTK release target ...
-Compiling IntDirCfg.c
 Compiling DxCfg.c
+Compiling IntDirCfg.c
 Compiling PinmuxCfg.c
 Compiling IOCfg.c
-Compiling DxStorage_EmbMem.c
 Compiling DxStorage_Card.c
-Compiling DxDisplay_LCD2.c
-Compiling DxDisplay_LCD.c
-Compiling UART_TO_MTK.c
 Compiling SampleDrv.c
+Compiling DxStorage_EmbMem.c
 Compiling SampleDrvID.c
+Compiling UART_TO_MTK.c
+Compiling DxDisplay_LCD.c
+Compiling DxDisplay_LCD2.c
 Compiling DxDisplay_TV.c
+Creating library SampleDrv.a ...
 Compiling DxDisplay_HDMI.c
 Compiling DxUsb.c
 Compiling DxWiFi.c
-Creating library SampleDrv.a ...
 Creating library UART_TO_MTK.a ...
 Compiling DxInput_Key.c
 Compiling DxCamera_Sensor.c
@@ -100,21 +100,21 @@ Compiling DxCmd.c
 Compiling PartitionInfo.c
 Creating library MODELEXT_ALL.a ...
 
+Checking uITRON - IPL_AR0238CSP_IMX322LQJ_EVB_FF release target ...
+
 Checking uITRON - Lens release target ...
 
 Checking uITRON - ADAS release target ...
 
-Checking uITRON - IPL_AR0238CSP_IMX322LQJ_EVB_FF release target ...
-
 Checking uITRON - AE_AR0238CSP_EVB_FF release target ...
-
-Checking uITRON - AWB_AR0238CSP_EVB_FF release target ...
 
 Checking uITRON - AF_SAMPLE release target ...
 
-Checking uITRON - CAF_SAMPLE release target ...
+Checking uITRON - AWB_AR0238CSP_EVB_FF release target ...
 
 Checking uITRON - AutoVP_PARMS release target ...
+
+Checking uITRON - CAF_SAMPLE release target ...
 
 Checking uITRON - FLASHLIGHT_SAMPLE release target ...
 
@@ -126,9 +126,9 @@ Checking uITRON - MD_SAMPLE2 release target ...
 
 Checking uITRON - RSC_OV4689_IMX322LQJ release target ...
 
-Checking uITRON - WifiCmdParser release target ...
-
 Checking uITRON - SnG_Parms release target ...
+
+Checking uITRON - WifiCmdParser release target ...
 
 Checking uITRON - DemoKit release target ...
 Assembling CodeInfo.s
@@ -137,8 +137,8 @@ Compiling BinInfo.c
 Compiling CoreInfo.c
 Compiling SysCfg.c
 Compiling main.c
-Compiling SysMain_Exe.c
 Compiling SysMain.c
+Compiling SysMain_Exe.c
 Compiling SysMain_Flow_Init.c
 Compiling SysMain_Flow_Exit.c
 Compiling SysMain_Flow_Mode.c
@@ -162,14 +162,14 @@ Compiling SysPower_CB.c
 Compiling SysSensor_Exe.c
 Compiling SysSensor_CB.c
 Compiling SysLens_Exe.c
-Compiling SysLens_CB.c
 Compiling SysIpc_Exe.c
+Compiling SysLens_CB.c
 Compiling SysUctrl_Exe.c
 Compiling SysBT.c
 Compiling ProjectInfo.c
 Compiling SysUICB.c
-Compiling UIGraphics.c
 Compiling UIDisplay.c
+Compiling UIGraphics.c
 Compiling UIGraphicsID.c
 Compiling UIView.c
 Compiling PlaybackView.c
@@ -218,8 +218,8 @@ Compiling MenuPhoto.c
 Compiling MenuPlayback.c
 Compiling MenuSetup.c
 Compiling MenuExtSetup.c
-Compiling UIMenuWndSetupDateTime.c
 Compiling UIMenuWndWiFiWait.c
+Compiling UIMenuWndSetupDateTime.c
 Compiling UIMenuWndWiFiModuleLink.c
 Compiling UIMenuWndWiFiMobileLinkOK.c
 Compiling UIMenuWndUSB.c
@@ -231,8 +231,8 @@ Compiling UIFlowPhotoFuncs.c
 Compiling UIFlowPhotoIcons.c
 Compiling UIFlowPhotoParams.c
 Compiling UIFlowWndMovie.c
-Compiling UIFlowMovieIcons.c
 Compiling UIFlowMovieFuncs.c
+Compiling UIFlowMovieIcons.c
 Compiling UIFlowWndPlay.c
 Compiling UIFlowWndPlayThumb.c
 Compiling UIFlowWndPlayMagnify.c
@@ -312,16 +312,16 @@ Compiling UIModeUsbDisk.c
 Compiling UIAppUsbDisk_Exe.c
 Compiling UIAppUsbPrint_Exe.c
 Compiling YoukuAppCmd.c
-Compiling StatusData.c
 Compiling UIModeUsbPTP.c
+Compiling StatusData.c
 Compiling UIModeUsbCharge.c
 Compiling UIAppUsbCharge_Exe.c
 Compiling UIModeUsbMenu.c
 Compiling UCtrlMain.c
 Compiling UCtrlMainID.c
 Compiling UCtrlMode.c
-Compiling UCtrlAppSetup.c
 Compiling UCtrlAppPlay.c
+Compiling UCtrlAppSetup.c
 Compiling UCtrlAppSystem.c
 Compiling UCtrlAppMovie.c
 Compiling UCtrlAppOnvif.c
@@ -361,24 +361,24 @@ Extracting: DemoKit_Data/Release/ObjectLds/Startup/Isr_MIPS.o
 Copying ObjectLds: MODELEXT_ALL.a
 Extracting: DemoKit_Data/Release/ObjectLds/Startup/Loader_MIPS.o
 Extracting: DemoKit_Data/Release/ObjectLds/MODELEXT_ALL/PartitionInfo.o
-Copying ObjectLds: GxGfx.a
 Extracting: DemoKit_Data/Release/ObjectLds/Startup/Startup_MIPS.o
+Copying ObjectLds: GxGfx.a
 Copying ObjectLds: Driver_IPP.a
-Extracting: DemoKit_Data/Release/ObjectLds/GxGfx/DC.o
 Copying ObjectLds: Driver_Codec.a
-Copying ObjectLds: GxTimer.a
+Extracting: DemoKit_Data/Release/ObjectLds/GxGfx/DC.o
 Extracting: DemoKit_Data/Release/ObjectLds/Driver_IPP/grph.o
 Extracting: DemoKit_Data/Release/ObjectLds/Driver_Codec/jpeg.o
+Copying ObjectLds: GxTimer.a
 Copying ObjectLds: GxStrg.a
-Extracting: DemoKit_Data/Release/ObjectLds/GxTimer/GxTimer_p1.o
 Extracting: DemoKit_Data/Release/ObjectLds/Driver_Codec/jpeg_int.o
+Extracting: DemoKit_Data/Release/ObjectLds/GxTimer/GxTimer_p1.o
 Extracting: DemoKit_Data/Release/ObjectLds/GxStrg/GxStrg_p1.o
 Linking ...
 Creating image DemoKit_Data/Release/DemoKit.axf ...
 Creating executable DemoKit_Data/Release/FW96663A.bin ...
 Encrypt binary file DemoKit_Data/Release/FW96663A.bin ...
 Reading 'DemoKit_Data/Release/FW96663A.bin'...
-File size = 7484144
+File size = 7482800
 
 ==Display binary file info== Begin
 Model Name: NT96663
@@ -386,23 +386,23 @@ VersionNumber: 10000000
 ReleaseDate: 20100701
 ==Display binary file info== End
 
-Total binary size after padding: 7484144
+Total binary size after padding: 7482800
 
-##ui32BinDataSumValue: 0x58C4A2C6
-CheckSum: 0x5D3A
+##ui32BinDataSumValue: 0xC12C55ED
+CheckSum: 0xAA13
 
 Writing 'DemoKit_Data/Release/FW96663A.bin'...
-Write size = 7484144
+Write size = 7482800
 Save binary OK.
 bfc.exe: 2015-04-15
 full load version
 compress DemoKit_Data/Release/FW96663A.bin to tmp...
-Input file: 7484144 bytes
-Compressed data: 3168199 bytes (42.3%)
+Input file: 7482800 bytes
+Compressed data: 3167794 bytes (42.3%)
 Alignment on, padding to 4 bytes!
-Full compress, new file size = outsize + 16bytes = 3168216
+Full compress, new file size = outsize + 16bytes = 3167812
 Calculate and write back checksum...
-Checksum = 0xa70
+Checksum = 0xdb2c
 cp: cannot stat `log*.txt': No such file or directory
 cp: cannot stat `log*.txt': No such file or directory
 cp: cannot stat `log*.txt': No such file or directory

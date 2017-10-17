@@ -462,7 +462,7 @@ void FlowMovie_IconHideGPS(void)
 
 void FlowMovie_IconDrawSpeed(void)
 {
-    sprintf(g_SpeedStr,"%d  km/h", (UINT32)g_CurSpeed);
+    sprintf(g_SpeedStr,"%dkm/h", (UINT32)g_CurSpeed);
     UxStatic_SetData(&UIFlowWndMovie_Static_SpeedCtrl,STATIC_VALUE,Txt_Pointer(g_SpeedStr));
     UxCtrl_SetShow(&UIFlowWndMovie_Static_SpeedCtrl, TRUE);
 }
@@ -476,7 +476,8 @@ void FlowMovie_IconHideSpeed(void)
 void FlowMovie_IconDrawDistance(void)
 {
     #if _ADAS_FUNC_
-    sprintf(g_DistanceStr,"%d m", ADAS_GetFcwsCurrentDist());//(UINT32)g_uiAdasAlertDistance);
+	#include "adas_dsp_lib.h"
+    sprintf(g_DistanceStr,"%d m", ADASDsp_GetFcwsCurrentDist());//(UINT32)g_uiAdasAlertDistance);
     UxStatic_SetData(&UIFlowWndMovie_Static_DistanceCtrl,STATIC_VALUE,Txt_Pointer(g_DistanceStr));
     UxCtrl_SetShow(&UIFlowWndMovie_Static_DistanceCtrl, TRUE);
     #endif

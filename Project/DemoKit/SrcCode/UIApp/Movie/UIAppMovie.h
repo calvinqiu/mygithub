@@ -68,7 +68,8 @@ typedef enum
 #include "adas_dsp_lib.h"
 #include "autoVP_Parms.h"
 #include "SnG_Parms.h"
-extern ADAS_DSP_RESULT_INFO* MovieExe_GetAdasRltOSD(void);//extern ADAS_APPS_RESULT_INFO* MovieExe_GetAdasRltOSD(void);
+extern ADAS_APPS_RESULT_INFO* MovieExe_GetAdasRltOSD(void);
+extern ADAS_DSP_RESULT_INFO* MovieExe_GetAdasDspRltOSD(void);
 extern ADAS_APPS_RESULT_INFO* MovieExe_GetAdasRltVideo(void);
 extern ADAS_SNG_ROI_INFO* MovieExe_GetSnGROIOSD(void);
 extern ADAS_SNG_ROI_INFO* MovieExe_GetSnGROIVideo(void);

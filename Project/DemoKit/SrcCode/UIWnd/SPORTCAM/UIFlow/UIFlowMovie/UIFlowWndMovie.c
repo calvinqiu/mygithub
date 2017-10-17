@@ -2645,7 +2645,7 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 {
 #if (_ADAS_FUNC_ == ENABLE)
     UINT32 AlarmType;
-    ADAS_APPS_RESULT_INFO *pAdasRlt = MovieExe_GetAdasRltOSD();
+    ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasDspRltOSD();
 
     Ux_FlushEventByRange(NVTEVT_CB_ADAS_SHOWALARM, NVTEVT_CB_ADAS_SHOWALARM);
     AlarmType = paramArray[0];
@@ -2657,59 +2657,63 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
     {
     case ADAS_ALARM_LD:
         g_uiAdasAlertSecCnt = 0;
+		/*
         if(paramNum>1)
         {
             DepartureDirVoice_Temp = paramArray[1];
         }
+		*/
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
-        #else
-        UISound_Play(DEMOSOUND_SOUND_LDWS_TONE);
-        #endif
+		/*
         if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
         {
+		*/
             UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl,TRUE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,TRUE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
-            switch (DepartureDirVoice_Temp)
-            {
-            case LDWS_DEPARTURE_LEFT:
+//            switch (DepartureDirVoice_Temp)
+//            {
+//            case LDWS_DEPARTURE_LEFT:
 
-                uiResqData[0]=(LDWS_LEFT_|WORKING_MODE);
+				uiResqData[0]=(LDWS_RIGHT_ |LDWS_LEFT_|WORKING_MODE);
                 uiResqData[1] = 0;
                 // debug_msg("^GZMD---CMD_ADAS_RESQ1---\r\n");
                 MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2); //0x71==CMD_ADAS_RESQ
 
-                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
-                break;
-            case LDWS_DEPARTURE_RIGHT:
+//                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+//                break;
+//            case LDWS_DEPARTURE_RIGHT:
 
-                uiResqData[0]=(LDWS_RIGHT_|WORKING_MODE);
-                uiResqData[1] = 0;
-                // debug_msg("^GZMD---CMD_ADAS_RESQ2---\r\n");
-                MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2);
+//                uiResqData[0]=(LDWS_RIGHT_ |LDWS_LEFT_|WORKING_MODE);
+//				uiResqData[1] = 0;
+				//debug_msg("^GZMD---CMD_ADAS_RESQ1---\r\n");
+//				MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2); //0x71==CMD_ADAS_RESQ
 
-                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_RIGHT_ALERT);
-                break;
-            default:
-                break;
-            }
-        }
+//                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_RIGHT_ALERT);
+//                break;
+//            default:
+//                break;
+//            }
+//        }
+		#else
+        UISound_Play(DEMOSOUND_SOUND_LDWS_TONE);
+        #endif
         break;
 
     case ADAS_ALARM_FC:
         g_uiAdasAlertSecCnt = 0;
-        if(paramNum>1)
-        {
-            DepartureDirVoice_Temp = paramArray[1];
-        }
+//        if(paramNum>1)
+//        {
+//            DepartureDirVoice_Temp = paramArray[1];
+//        }
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
-        #else
-        UISound_Play(DEMOSOUND_SOUND_FCS_TONE);
-        #endif
-        if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
-        {
+//        #else
+//        UISound_Play(DEMOSOUND_SOUND_FCS_TONE);
+//        #endif
+//        if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
+        //{
             /*
                 UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, FALSE);
                 UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl,TRUE);
@@ -2717,13 +2721,13 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,TRUE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
                 */
-            #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+            //#if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
             // if ((g_AdasResult.FcwsRsltInfo.uiDist < 30) && (g_AdasResult.FcwsRsltInfo.uiDist > 0))
-            if ((DepartureDirVoice_Temp < 30) && (DepartureDirVoice_Temp > 0))
-            #else
-            if ((g_AdasResult.FcwsRsltInfo.uiDist < 15) && (g_AdasResult.FcwsRsltInfo.uiDist > 0))
-            #endif
-            {
+//            if ((DepartureDirVoice_Temp < 30) && (DepartureDirVoice_Temp > 0))
+//            #else
+//            if ((g_AdasResult.FcwsRsltInfo.uiDist < 15) && (g_AdasResult.FcwsRsltInfo.uiDist > 0))
+//            #endif
+            //{
                 UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, FALSE);
                 UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl,TRUE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,FALSE);
@@ -2735,13 +2739,17 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 //debug_msg("^GZMD---CMD_ADAS_RESQ3---\r\n");
                 MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2);
 
-                if ((pAdasRlt->FcwsRsltInfo.uiDist < 15) && (pAdasRlt->FcwsRsltInfo.uiDist > 0))
-                {
-                    UxState_SetData(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_FCWS_Alert_ICON_FCW_FAR_ALERT);
-                }
-            }
-        }
+//                if ((pAdasRlt->FcwsRsltInfo.uiDist < 15) && (pAdasRlt->FcwsRsltInfo.uiDist > 0))
+//                {
+//                    UxState_SetData(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_FCWS_Alert_ICON_FCW_FAR_ALERT);
+//                }
+            //}
+        //}
+		#else
+        UISound_Play(DEMOSOUND_SOUND_FCS_TONE);
+        #endif
         break;
+	}
     #else
     switch (AlarmType)
     {
@@ -2755,7 +2763,7 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,TRUE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,FALSE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
-                switch (pAdasRlt->LdwsRsltInfo.DepartureDirVoice)
+                switch (pAdasDspRlt->LdwsRsltInfo.DepartureDirVoice)
                 {
                     case LDWS_DEPARTURE_LEFT:
                         UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
@@ -2780,13 +2788,12 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,TRUE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
 
-                if ((pAdasRlt->FcwsRsltInfo.uiDist < 15) && (pAdasRlt->FcwsRsltInfo.uiDist > 0))
+                if ((pAdasRlt->FcwsDspRsltInfo.uiDist < 15) && (pAdasRlt->FcwsDspRsltInfo.uiDist > 0))
                 {
                     UxState_SetData(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_FCWS_Alert_ICON_FCW_FAR_ALERT);
                 }
             }
             break;
-    #endif
 
         case ADAS_ALARM_GO:
             g_uiAdasAlertSecCnt = 0;
@@ -2819,6 +2826,7 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
         default:
             break;
     }
+#endif
 #endif
     return NVTEVT_CONSUME;
 }
@@ -5617,9 +5625,9 @@ INT32 UIFlowWndMovie_TZD_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArr
 INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UIScreen ScreenObj = *paramArray;
-    ADAS_APPS_RESULT_INFO *pAdasRlt = MovieExe_GetAdasRltOSD();
+    //ADAS_APPS_RESULT_INFO *pAdasRlt = MovieExe_GetAdasRltOSD();
 
-	ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasRltOSD();
+	ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasDspRltOSD();
 	
     CHAR InfoStr[20] = {0};
     BVALUE LineColor = 0;
@@ -5628,25 +5636,25 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
     {
         return NVTEVT_CONSUME;
     }
-#if 0 
+
     // Draw FC distance and speed info
 	//#NT#2016/09/29#KCHong -begin
 	//#NT#The GPS related variables should not depend on ADAS.
-	#if (GPS_FUNCTION == ENABLE)
-    sprintf(InfoStr ,"%dm/%dkm",ADAS_GetAppsStatus()?ADAS_GetFcwsCurrentDist():0, (UINT32)g_CurSpeed);
-	#else
-    sprintf(InfoStr ,"%dm/0km",ADAS_GetAppsStatus()?ADAS_GetFcwsCurrentDist():0);
-	#endif
+//	#if (GPS_FUNCTION == ENABLE)
+//    sprintf(InfoStr ,"%dm/%dkm",ADAS_GetAppsStatus()?ADAS_GetFcwsCurrentDist():0, (UINT32)g_CurSpeed);
+//	#else
+//    sprintf(InfoStr ,"%dm/0km",ADAS_GetAppsStatus()?ADAS_GetFcwsCurrentDist():0);
+//	#endif
 	//#NT#2016/09/29#KCHong -end
-#endif
-	#if ((GPS_FUNCTION == ENABLE)&&(_DRAW_LDFCINFO_ON_OSD_ == ENABLE))
-    sprintf(InfoStr ,"%dm/%dkm",ADASDsp_GetFcwsCurrentDist(),(UINT32)g_CurSpeed);
-	#else
-	//sprintf(InfoStr ,"%dkm",(UINT32)g_CurSpeed);
-	#endif
 
-    GxGfx_SetTextStroke((const FONT*)&gDemoKit_Font, FONTEFFECT_HIGHLIGHT2, SCALE_1X);
-    GxGfx_Text(((DC**)ScreenObj)[GxGfx_OSD], 180, 150, (CHAR *)InfoStr);
+//	#if ((GPS_FUNCTION == ENABLE)&&(_DRAW_LDFCINFO_ON_OSD_ == ENABLE))
+//    sprintf(InfoStr ,"%dm/%dkm",ADASDsp_GetFcwsCurrentDist(),(UINT32)g_CurSpeed);
+//	#else
+//	sprintf(InfoStr ,"%dkm",(UINT32)g_CurSpeed);
+//	#endif
+
+//    GxGfx_SetTextStroke((const FONT*)&gDemoKit_Font, FONTEFFECT_HIGHLIGHT2, SCALE_1X);
+//    GxGfx_Text(((DC**)ScreenObj)[GxGfx_OSD], 180, 150, (CHAR *)InfoStr);
 
     if (ADASDsp_GetAppsStatus() == FALSE)
     {
@@ -5657,25 +5665,25 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
     GxGfx_SetShapeColor(CLRID_IDX_GREEN, CLRID_IDX_GREEN, NULL);;
 
     // SnG ROI
-    #if ((_SNG_FUNC_ == ENABLE) && (_DRAW_SNG_ROI_ == ENABLE))
-    if (1)
-    #else
-    if (ADAS_IsAdasDebug())
-    #endif
-    {
-        ADAS_SNG_ROI_INFO *pSnGROI = MovieExe_GetSnGROIOSD();
-        
-        if (pSnGROI)
-        {
-            //debug_msg("\r\n----ADAS_draw----\r\n");
-            LineColor = (pAdasRlt->SnGInfo.uiMvValid == STOPNGO_MV_VALID)?CLRID_IDX_GREEN:CLRID_IDX_RED;
-            GxGfx_SetShapeColor(LineColor, LineColor, NULL);
-            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP1x, pSnGROI->uiP1y, pSnGROI->uiP2x, pSnGROI->uiP2y);
-            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP2x, pSnGROI->uiP2y, pSnGROI->uiP3x, pSnGROI->uiP3y);
-            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP3x, pSnGROI->uiP3y, pSnGROI->uiP4x, pSnGROI->uiP4y);
-            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP4x, pSnGROI->uiP4y, pSnGROI->uiP1x, pSnGROI->uiP1y);
-        }
-    }
+//    #if ((_SNG_FUNC_ == ENABLE) && (_DRAW_SNG_ROI_ == ENABLE))
+//    if (1)
+//    #else
+//    if (ADAS_IsAdasDebug())
+//    #endif
+//    {
+//        ADAS_SNG_ROI_INFO *pSnGROI = MovieExe_GetSnGROIOSD();
+//        
+//        if (pSnGROI)
+//        {
+//            //debug_msg("\r\n----ADAS_draw----\r\n");
+//            LineColor = (pAdasRlt->SnGInfo.uiMvValid == STOPNGO_MV_VALID)?CLRID_IDX_GREEN:CLRID_IDX_RED;
+//            GxGfx_SetShapeColor(LineColor, LineColor, NULL);
+//            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP1x, pSnGROI->uiP1y, pSnGROI->uiP2x, pSnGROI->uiP2y);
+//            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP2x, pSnGROI->uiP2y, pSnGROI->uiP3x, pSnGROI->uiP3y);
+//            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP3x, pSnGROI->uiP3y, pSnGROI->uiP4x, pSnGROI->uiP4y);
+//            GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pSnGROI->uiP4x, pSnGROI->uiP4y, pSnGROI->uiP1x, pSnGROI->uiP1y);
+//        }
+//    }
 
         // draw lane detection result
     if (pAdasDspRlt->LdwsDspRsltInfo.Failure == LDWS_FAILURE_FALSE)
@@ -5732,16 +5740,19 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
 
     #if (_AUTOVP_FUNC_ == ENABLE)
 	
-    LineColor = (pAdasDspRlt->LdwsDspRsltInfo.Failure == LDWS_FAILURE_FALSE)?CLRID_IDX_BLUE:CLRID_IDX_RED;
+   	if((pAdasDspRlt->LdwsDspRsltInfo.Failure == LDWS_FAILURE_TRUE)&&(pAdasDspRlt->FcwsDspRsltInfo.Failure == FCWS_FAILURE_TRUE))
+	{
+		LineColor=CLRID_IDX_RED;
     GxGfx_SetShapeColor(LineColor, LineColor, NULL);
     GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.x - 10, pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.y, pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.x + 10, pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.y);
     GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.x, pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.y - 10, pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.x, pAdasDspRlt->LdwsDspRsltInfo.AutoVpParms.AutoVPRslt.y + 10);
+   	}
     #else
     GxGfx_SetShapeColor(CLRID_IDX_RED, CLRID_IDX_RED, NULL);
     GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], OSD_W/2 - 10, OSD_H/2, OSD_W/2 + 10, OSD_H/2);
     GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], OSD_W/2, OSD_H/2 - 10, OSD_W/2, OSD_H/2 + 10);
     #endif
-
+/*
     // Show SnG & stop detection debug info
     if (ADAS_IsAdasDebug())
     {
@@ -5777,6 +5788,7 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
             }
         }
     }
+	*/
     return NVTEVT_CONSUME;
 }
 #endif

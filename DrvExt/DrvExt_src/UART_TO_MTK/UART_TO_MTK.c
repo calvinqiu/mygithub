@@ -1324,9 +1324,9 @@ void XmodemSetMTKHeartBeatRes(BOOL En)
     gbMTKHeatBeatEn=En;
 }
 
-BOOL XmodemGetSpeed(UINT32*Speed)
+BOOL XmodemGetSpeed(FLOAT *Speed)
 {
-    #if 1
+    #if 0
     if((g_mtk_gps.lat!=0)&&(g_mtk_gps.lng!=0))
     {
         *Speed= (UINT32)guiMTKSpeed;
@@ -1337,10 +1337,9 @@ BOOL XmodemGetSpeed(UINT32*Speed)
         *Speed= 0;
         return FALSE;
     }
-    #endif
-    #if 0
-
-    *Speed= (UINT32)120;
+	#else //test
+	guiMTKSpeed =90;
+    *Speed= (FLOAT)guiMTKSpeed;
     return TRUE;
 
     #endif

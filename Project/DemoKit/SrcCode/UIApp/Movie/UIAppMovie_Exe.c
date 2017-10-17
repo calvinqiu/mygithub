@@ -349,23 +349,24 @@ static BOOL g_ADASFuncSupported = FALSE;
 #endif
 
 #if (_ADAS_FUNC_ == ENABLE)
-static ADAS_DSP_RESULT_INFO g_AdasRltOSD = {0};
+static ADAS_DSP_RESULT_INFO g_AdasDspRltOSD = {0};
+static ADAS_APPS_RESULT_INFO g_AdasRltOSD = {0};
 static ADAS_APPS_RESULT_INFO g_AdasRltVideo = {0};
 #if (_SNG_FUNC_ == ENABLE)
 static ADAS_SNG_ROI_INFO g_SnGROIOSD = {0};
 static ADAS_SNG_ROI_INFO g_SnGROIVideo = {0};
 #endif
-#if 1
-ADAS_DSP_RESULT_INFO* MovieExe_GetAdasRltOSD(void)
+
+ADAS_DSP_RESULT_INFO* MovieExe_GetAdasDspRltOSD(void)
 {
-    return &g_AdasRltOSD;
+    return &g_AdasDspRltOSD;
 }
-#else 
+
 ADAS_APPS_RESULT_INFO* MovieExe_GetAdasRltOSD(void)
 {
     return &g_AdasRltOSD;
 }
-#endif 
+
 
 ADAS_APPS_RESULT_INFO* MovieExe_GetAdasRltVideo(void)
 {
@@ -3720,8 +3721,11 @@ debug_msg("\r\n_ADAS_FUNC_...1111\r\n");
     if ((ImageApp_NetMovie_GetConfig(NETMOVIE_CFG_OPEN_REC_IMMEDIATELY) == TRUE) && (g_ADASFuncSupported == TRUE))
     {
         memset(&g_AdasRltOSD, 0, sizeof(ADAS_APPS_RESULT_INFO));
+		memset(&g_AdasDspRltOSD, 0, sizeof(ADAS_DSP_RESULT_INFO));
         memset(&g_AdasRltVideo, 0, sizeof(ADAS_APPS_RESULT_INFO));
-		g_AdasRltOSD.LdwsDspRsltInfo.Failure = LDWS_FAILURE_TRUE;//g_AdasRltOSD.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
+		g_AdasRltOSD.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
+		g_AdasDspRltOSD.LdwsDspRsltInfo.Failure = LDWS_FAILURE_TRUE;
+		g_AdasRltOSD.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
         
         g_AdasRltVideo.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
         #if (_SNG_FUNC_ == ENABLE)
@@ -3905,8 +3909,10 @@ debug_msg("\r\n_ADAS_FUNC_...1111\r\n");
 		if ((ImageApp_UsbMovie_GetConfig(NVT_USBMOVIE_CFG_OPEN_REC_IMMEDIATELY) == TRUE) && (g_ADASFuncSupported == TRUE))
 	    {
 	        memset(&g_AdasRltOSD, 0, sizeof(ADAS_APPS_RESULT_INFO));
+		    memset(&g_AdasDspRltOSD, 0, sizeof(ADAS_DSP_RESULT_INFO));
 	        memset(&g_AdasRltVideo, 0, sizeof(ADAS_APPS_RESULT_INFO));
 	        g_AdasRltOSD.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
+			g_AdasDspRltOSD.LdwsDspRsltInfo.Failure = LDWS_FAILURE_TRUE;
 	        g_AdasRltVideo.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
 	        #if (_SNG_FUNC_ == ENABLE)
 	        memset(&g_SnGROIOSD, 0, sizeof(ADAS_SNG_ROI_INFO));
@@ -5332,8 +5338,10 @@ debug_msg("\r\n_ADAS_FUNC_...3333\r\n");
     if (MovRec_IsRecording() && (g_ADASFuncSupported == TRUE))
     {
         memset(&g_AdasRltOSD, 0, sizeof(ADAS_APPS_RESULT_INFO));
+		  memset(&g_AdasDspRltOSD, 0, sizeof(ADAS_DSP_RESULT_INFO));
         memset(&g_AdasRltVideo, 0, sizeof(ADAS_APPS_RESULT_INFO));
-        g_AdasRltOSD.LdwsDspRsltInfo.Failure = LDWS_FAILURE_TRUE;//g_AdasRltOSD.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
+		g_AdasRltOSD.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
+        g_AdasDspRltOSD.LdwsDspRsltInfo.Failure = LDWS_FAILURE_TRUE;
         g_AdasRltVideo.LdwsRsltInfo.Failure = LDWS_FAILURE_TRUE;
         #if (_SNG_FUNC_ == ENABLE)
         memset(&g_SnGROIOSD, 0, sizeof(ADAS_SNG_ROI_INFO));

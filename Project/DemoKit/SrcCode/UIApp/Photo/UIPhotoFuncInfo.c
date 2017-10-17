@@ -1318,10 +1318,10 @@ void Photo_ADASProcess(MEM_RANGE *buf, MEM_RANGE *cachebuf)
     //#NT#2016/03/25#KCHong -begin
     //#NT#New ADAS
     //ADAS_Process();
-    g_CurSpeed = 90;
+    //g_CurSpeed = 90;
     ADAS_MidPrioAppsProcess();
 #if 1//(GPS_FUNCTION == ENABLE)
-	AV_DumpRltToADASDspBuf(g_CurSpeed);
+	AV_DumpRltToADASDspBuf((UINT32)g_CurSpeed);
 #endif
 
     //#NT#2016/03/25#KCHong -end
@@ -1330,6 +1330,7 @@ void Photo_ADASProcess(MEM_RANGE *buf, MEM_RANGE *cachebuf)
 
 //#NT#2016/06/15#KCHong -begin
 //#NT#ImageUnit_ALG
+#if 0
 void Photo_ADASProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
 {
     URECT ADASCropWin = {0};
@@ -1409,6 +1410,11 @@ void Photo_ADASProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
         Ux_PostEvent(NVTEVT_EXE_MOVIE_ALGEND,1, NVTEVT_EXE_MOVIE_ALGEND);
     }
 }
+#else
+void Photo_ADASProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
+{
+}
+#endif
 //#NT#2016/06/15#KCHong -end
 
 PHOTO_FUNC_INFO PhotoFuncInfo_adas =
@@ -1635,7 +1641,7 @@ void Photo_ADASDSPProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
 	//CHKPNT;
     URECT ADASCropWin = {0};
     URECT DispCord = {0,0,OSD_W,OSD_H};
-    ADAS_DSP_RESULT_INFO *pAdasRlt = MovieExe_GetAdasRltOSD();
+    ADAS_DSP_RESULT_INFO *pAdasRlt = MovieExe_GetAdasDspRltOSD();
     //debug_msg("Photo_ADASDSPProcessEnd....\r\n");
     if (ADAS_GetAppsStatus() == FALSE)
     {

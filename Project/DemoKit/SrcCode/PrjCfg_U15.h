@@ -749,7 +749,7 @@
 //..............................................................................
 // ADAS subsetting (The following sub-functions are available only if _ADAS_FUNC_ = ENABLE
 #define _AUTOVP_FUNC_                   ENABLE
-#define _SNG_FUNC_                      ENABLE
+#define _SNG_FUNC_                      DISABLE//ENABLE
 #define _DRAW_LDFCINFO_ON_OSD_          ENABLE
 #define _DRAW_SNG_ROI_                  DISABLE
 #define _DRAW_LDWSINFO_ON_VIDEO_        DISABLE     // This function is only valid if data path is D2D!!

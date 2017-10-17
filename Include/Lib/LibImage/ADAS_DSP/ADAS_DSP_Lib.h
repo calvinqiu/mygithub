@@ -95,4 +95,5 @@ extern INT32 ADASDsp_GetLdFcRslt(ADAS_DSP_RESULT_INFO *pADASDspResult, URECT* pT
 extern BOOL ADASDsp_GetAppsStatus(void);
 
 
+extern UINT32 ADASDsp_GetFcwsCurrentDist(void);
 #endif

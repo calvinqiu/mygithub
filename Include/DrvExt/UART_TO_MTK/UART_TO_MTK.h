@@ -92,7 +92,7 @@ extern void MTKComposeCMDRspFrame(UINT8 frame_id, UINT8 cmd,UINT8 * data, UINT8 
 extern void  XmodeStartSendFirstToMTK(UINT32 Addr, UINT32 Size);
 extern BOOL XmodemGetMTKMenuSetting(CHAR *Setting);
 extern void XmodemSetMTKHeartBeatRes(BOOL En);
-extern BOOL XmodemGetSpeed(UINT32 *Speed);
+extern BOOL XmodemGetSpeed(FLOAT *Speed);
 
 extern void XmodemSetBackSensorMode(int mode);
 extern BOOL XmodemGetMTKReverseGearDet(void);
