@@ -1151,6 +1151,7 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
     }
     #endif
     //#NT#2016/03/07#KCHong -end
+   
 
     //#NT#2015/07/17#KS Hung -begin
     //#NT#For ADAS
@@ -1316,6 +1317,7 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
         //UIFlowWndMovie_OnDeleteOld();
     }
     #endif
+   
     return NVTEVT_CONSUME;
 }
 INT32 UIFlowWndMovie_OnClose(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
@@ -2335,6 +2337,8 @@ INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
 
         #if defined(YQCONFIG_UART_TO_MTK_SUPPORT) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
         g_GPSStatus=XmodemGetSpeed(&g_CurSpeed);
+
+        debug_msg("onTimer g_CurSpeed=%d,%f  ", (UINT32)g_CurSpeed, g_CurSpeed);
         FlowMovie_IconDrawSpeed();
         FlowMovie_IconDrawDistance();
         #endif
@@ -2646,7 +2650,9 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 #if (_ADAS_FUNC_ == ENABLE)
     UINT32 AlarmType;
     ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasDspRltOSD();
-
+    {
+        debug_msg("");
+    }
     Ux_FlushEventByRange(NVTEVT_CB_ADAS_SHOWALARM, NVTEVT_CB_ADAS_SHOWALARM);
     AlarmType = paramArray[0];
     #if defined(YQCONFIG_UART_TO_MTK_SUPPORT) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
@@ -2668,11 +2674,38 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
         if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
         {
 		*/
+		#if 0
             UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl,TRUE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,TRUE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
+        #else
+            UISound_Play(DEMOSOUND_SOUND_LDWS_TONE);
+            debug_msg("^UIFlowWndMovie_OnADASShowAlarm--UISound_Play--\r\n");
+            if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
+            {
+                debug_msg("^UIFlowWndMovie_OnADASShowAlarm--UxCtrl_IsShow--\r\n");
+                UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, FALSE);
+                UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl,TRUE);
+                UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,TRUE);
+                UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,FALSE);
+                UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
+                debug_msg("\r\npAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice--%d--\r\n",pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice);
+                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+//                switch (pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice)
+//                {
+//                    case LDWS_DEPARTURE_LEFT:
+//                        UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+//                        break;
+//                    case LDWS_DEPARTURE_RIGHT:
+//                        UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_RIGHT_ALERT);
+//                        break;
+//                    default:
+//                        break;
+//                }
+            }
+            #endif
 //            switch (DepartureDirVoice_Temp)
 //            {
 //            case LDWS_DEPARTURE_LEFT:

@@ -232,6 +232,9 @@ UINT8  *ftype_img_src                       = NULL;
 UINT8  *ftype_img_dst                       = NULL;
 #endif
 
+#if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+extern FLOAT g_CurSpeed;
+#endif
 void MovieStamp_InitImeStamp(UINT32 uiVidEncId);
 //#NT#2016/06/08#Lincy Lin -begin
 //#NT#Implement generic OSD and video drawing mechanism for ALG function
@@ -2224,7 +2227,7 @@ void MovieStamp_UpdateData(void)
 
     //CurDateTime = HwClock_GetTime(TIME_ID_CURRENT);
     CurDateTime = g_CurDateTime;
-
+    debug_msg("\r\n************MovieStamp_UpdateData************\r\n");
     for (i = 0; i < VIDEO_IN_MAX; i++)
     {
         if ((g_uiMovieStampSetup[i] & STAMP_SWITCH_MASK) == STAMP_ON)
@@ -2259,20 +2262,42 @@ void MovieStamp_UpdateData(void)
             // Prepare date-time string
             if ((g_uiMovieStampSetup[i] & STAMP_DATE_TIME_MASK) == STAMP_DATE_TIME)
             {
+               // debug_msg("\r\n**********g_CurSpeed = %f, %d, %u,%03d, km/h**************\r\n",g_CurSpeed, (UINT32)g_CurSpeed,(UINT32)g_CurSpeed,(UINT32)g_CurSpeed);
                 switch (g_uiMovieStampSetup[i] & STAMP_DATE_FORMAT_MASK)
                 {
-                case STAMP_DD_MM_YY:
+#if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+                case STAMP_DD_MM_YY:debug_msg("1");
+                    if((UINT32)g_CurSpeed==0)
+                        snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%02d/%02d/%04d %02d:%02d:%02d  ---km/h", CurDateTime.tm_mday, CurDateTime.tm_mon, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
+                    else
+                        snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%02d/%02d/%04d %02d:%02d:%02d  %03d km/h",CurDateTime.tm_mday, CurDateTime.tm_mon, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec, (UINT32)g_CurSpeed);
+                    break;
+                case STAMP_MM_DD_YY:debug_msg("2");
+                    if((UINT32)g_CurSpeed==0)
+                        snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%02d/%02d/%04d %02d:%02d:%02d  ---km/h", CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
+                    else
+                        snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%02d/%02d/%04d %02d:%02d:%02d  %03d km/h",CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec, (UINT32)g_CurSpeed);
+                    break;
+                default:debug_msg("3");
+                    if((UINT32)g_CurSpeed==0)
+                        snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%04d/%02d/%02d %02d:%02d:%02d  ---km/h",CurDateTime.tm_year, CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
+                    else
+                        snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%04d/%02d/%02d %02d:%02d:%02d  %03d km/h", CurDateTime.tm_year, CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec,(UINT32)g_CurSpeed);
+                    break;
+                    #else
+                case STAMP_DD_MM_YY:debug_msg("4");
                     //sprintf(&g_cMovieStampStr[i][0], "%02d/%02d/%04d %02d:%02d:%02d", CurDateTime.tm_mday, CurDateTime.tm_mon, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
                     snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%02d/%02d/%04d %02d:%02d:%02d", CurDateTime.tm_mday, CurDateTime.tm_mon, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
                     break;
-                case STAMP_MM_DD_YY:
+                case STAMP_MM_DD_YY:debug_msg("5");
                     //sprintf(&g_cMovieStampStr[i][0], "%02d/%02d/%04d %02d:%02d:%02d", CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
                     snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%02d/%02d/%04d %02d:%02d:%02d", CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_year, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
                     break;
-                default:
+                default:debug_msg("6");
                     //sprintf(&g_cMovieStampStr[i][0], "%04d/%02d/%02d %02d:%02d:%02d", CurDateTime.tm_year, CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
                     snprintf(&g_cMovieStampStr[i][0], MOVIE_STAMP_MAX_LEN, "%04d/%02d/%02d %02d:%02d:%02d", CurDateTime.tm_year, CurDateTime.tm_mon, CurDateTime.tm_mday, CurDateTime.tm_hour, CurDateTime.tm_min, CurDateTime.tm_sec);
                     break;
+#endif
                 }
             }
             else if ((g_uiMovieStampSetup[i] & STAMP_DATE_TIME_MASK) == STAMP_DATE_TIME_AMPM)

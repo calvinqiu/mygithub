@@ -23,7 +23,7 @@ static CHAR    time_str[20] = {0};
 static CHAR    g_SpeedStr[20] = {0};
 static CHAR    g_DistanceStr[20] = {0};
 extern UINT32 uiGpsSpeed;
-extern UINT32 g_CurSpeed;
+extern FLOAT g_CurSpeed;
 #if _ADAS_FUNC_
 extern UINT32 g_uiAdasAlertDistance;
 #endif

@@ -205,17 +205,17 @@ typedef struct _AE_INT_CTRL_INFO
     UINT32 AEPeroid;        //minimum value: 3
 } AE_INT_CTRL_INFO;
 
-typedef struct _AE_SET_PARAMINFO
-{
-    AE_PLINEMODE PLineMode;
-    AE_BOUNDARY ExpT;
-    AE_BOUNDARY ISO;
-    AE_IRISINFO IrisInfo;
-    AE_BOUNDARY ConvRange;
-    UINT32 ConvSpeed;
-    UINT32 DelayCnt;
-    UINT32 AntiOverExpEn;
-} AE_SET_PARAMINFO;
+//typedef struct _AE_SET_PARAMINFO
+//{
+//    AE_PLINEMODE PLineMode;
+//    AE_BOUNDARY ExpT;
+//    AE_BOUNDARY ISO;
+//    AE_IRISINFO IrisInfo;
+//    AE_BOUNDARY ConvRange;
+//    UINT32 ConvSpeed;
+//    UINT32 DelayCnt;
+//    UINT32 AntiOverExpEn;
+//} AE_SET_PARAMINFO;
 
 extern AE_PARAMINFO AeParamInfo[AE_PROC_CNT];
 extern AE_SET_PARAMINFO AeExtSetDefaultParamInfo[AE_PROC_CNT];

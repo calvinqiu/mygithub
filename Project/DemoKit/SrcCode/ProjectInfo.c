@@ -38,7 +38,7 @@ char gFWExternalVersion[33]=FW_VERSION_NUM;
 /* modify begin by ZMD, 2017-02-15 new version management*/
 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
 //#define FW_VER_NUM   ".R0001"
-#define FW_VER_NUM   ".R0005"
+#define FW_VER_NUM   ".R0006"
 
 #if defined(YQCONFIG_CUSTOM_VERSION_NAME)
 #define PRJ_NAME    YQCONFIG_PLATFORM_NAME  

@@ -76,18 +76,6 @@ typedef enum _AWB_MODE
     ENUM_DUMMY4WORD(AWB_MODE)
 }AWB_MODE;
 
-typedef enum _AWB_CT_RANGE
-{
-    AWB_CT_RANGE_NONE   = 0x00000000,     ///< not in range
-    AWB_CT_RANGE_1      = 0x00000001,     ///< awb ct range 1
-    AWB_CT_RANGE_2      = 0x00000002,     ///< awb ct range 2
-    AWB_CT_RANGE_3      = 0x00000004,     ///< awb ct range 3
-    AWB_CT_RANGE_4      = 0x00000008,     ///< awb ct range 4
-    AWB_CT_RANGE_5      = 0x00000010,     ///< awb ct range 5
-    AWB_CT_RANGE_6      = 0x00000020,     ///< awb ct range 6
-    AWB_CT_RANGE_MAX    = 7,
-    ENUM_DUMMY4WORD(AWB_CT_RANGE)
-} AWB_CT_RANGE;
 
 
 extern AWB_CTINFO AwbCTTable[AWB_PROC_CNT][AWB_CT_RANGE_MAX];

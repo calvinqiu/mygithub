@@ -643,6 +643,6 @@ typedef enum _AWBALG_CT_CALMODE
 void AWB_GetCurCT_R(UINT32 id, UINT32 Rgain, UINT32 Bgain, UINT32 *CT);
 void AWB_GetCurCT_B(UINT32 id, UINT32 Rgain, UINT32 Bgain, UINT32 *CT);
 void AWB_GetCurCT_RB(UINT32 id, UINT32 Rgain, UINT32 Bgain, UINT32 *CT);
-void AWB_GetCurCT(UINT32 id, AWBALG_CT_CALMODE CTCalMode, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT);
+//void AWB_GetCurCT(UINT32 id, AWBALG_CT_CALMODE CTCalMode, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT);
 
 #endif //_AWB_ALG_H_

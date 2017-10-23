@@ -46,7 +46,7 @@ static UINT16 FlagTab[AWB_PROC_CNT][AWB_CABUFFER_SIZE];
 static void AWB_setGain(AWBALG_INFO *Info, UINT32 RG, UINT32 GG, UINT32 BG);
 static void AWB_getCA(UINT32 id, UINT16 *R, UINT16 *G, UINT16 *B, UINT16 *Cnt, UINT32 Size);
 static UINT32 AWB_Intpl(int Index, int LowValue, int HighValue, int MinIndex, int MaxIndex);
-static void AWB_GetCurCT(UINT32 id, UINT32 Rgain, UINT32 Bgain, UINT32 *CT);
+static void AWB_GetCurCT(UINT32 id, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT);
 static AWB_MODE AWB_getMode(UINT32 Idx);
 static void AWB_autoProc(AWBALG_INFO *Info);
 static void AWB_manualProc(AWBALG_INFO *Info, AWB_MODE Idx);
@@ -493,7 +493,7 @@ UINT32 AWB_Intpl(int Index, int LowValue, int HighValue, int MinIndex, int MaxIn
         return LowValue + ((HighValue - LowValue)) * ((Index  - MinIndex)+1) / ((MaxIndex - MinIndex+1));
 }
 
-void AWB_GetCurCT(UINT32 id, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT)
+static void AWB_GetCurCT(UINT32 id, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT)
 {
     AWB_CT_RANGE awbCTRange_Rgain = AWB_CT_RANGE_NONE;
     AWB_CT_RANGE awbCTRange_Bgain = AWB_CT_RANGE_NONE;

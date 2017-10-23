@@ -40,7 +40,7 @@
 #define __DBGFLT__ "*"      //*=All
 #include "DebugModule.h"
 
-#define AE_STAMPLOG  1
+#define AE_STAMPLOG  0
 
 extern UINT32 IQS_GetGammaValue(UINT32 Id, UINT32 Data12Bit);
 extern UINT32 IQS_GetInvGammaValue(UINT32 Id, UINT32 Data10Bit);
@@ -106,6 +106,9 @@ UINT16 AfdBuffer[LA_WIN_X*LA_WIN_Y*AEAFD_DETECT_CYCLE]; //32*32*6
 UINT16 Blk_Gacc[AE_PROC_CNT][LA_WIN_X*LA_WIN_Y], Blk_Yacc[AE_PROC_CNT][LA_WIN_X*LA_WIN_Y];
 UINT32 AEB_Ratio[AE_PROC_CNT] = {100, 100};
 
+UINT32 AE_firstStable[AE_PROC_CNT] = {FALSE, FALSE};
+UINT32 AE_stableLum[AE_PROC_CNT] = {1015, 1000};
+UINT32 AE_stableEV[AE_PROC_CNT] = {540, 1000};
 #define AE_GET_GAMMA_VAL(Id) (Id == IPL_ID_1 ? AE_GetGammaValue_ID_1 : AE_GetGammaValue_ID_2)
 #define AE_GET_INV_GAMMA_VAL(Id) (Id == IPL_ID_1 ? AE_GetInvGammaValue_ID_1 : AE_GetInvGammaValue_ID_2)
 
@@ -413,7 +416,7 @@ extern UINT32 ExpLine;
 extern UINT32 Analog_Gain;
 extern UINT32 Conversion_Gain;
 extern UINT32 Digital_Gain;
-
+extern UINT32 ISO_NOW;
 UINT32 AECURVE_TEST = 0;
 void AE_Process (UINT32 Id, UINT32 CurrentStatus)
 {

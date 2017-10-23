@@ -637,7 +637,7 @@ void UART_TO_MTKRecTsk(void)
                         guiMTKSpeed=(UINT32)g_mtk_gps.speed;
                         //guiMTKSpeed=70;
 
-                        // debug_msg("GPS info is  lat=%d,%c,  lng=%d,%c,  speed=%d,%d\r\n", g_mtk_gps.lat, g_mtk_gps.N_S, g_mtk_gps.lng, g_mtk_gps.W_E,g_mtk_gps.speed,guiMTKSpeed);
+                        debug_msg("GPS info is  lat=%d,%c,  lng=%d,%c,  speed=%d,%d\r\n", g_mtk_gps.lat, g_mtk_gps.N_S, g_mtk_gps.lng, g_mtk_gps.W_E,g_mtk_gps.speed,guiMTKSpeed);
 
                         if(gbMTKHeatBeatEn==TRUE)
                         {
@@ -1326,7 +1326,7 @@ void XmodemSetMTKHeartBeatRes(BOOL En)
 
 BOOL XmodemGetSpeed(FLOAT *Speed)
 {
-    #if 0
+    #if 1
     if((g_mtk_gps.lat!=0)&&(g_mtk_gps.lng!=0))
     {
         *Speed= (UINT32)guiMTKSpeed;
@@ -1339,7 +1339,12 @@ BOOL XmodemGetSpeed(FLOAT *Speed)
     }
 	#else //test
 	guiMTKSpeed =90;
+
+    debug_msg("\r\n**********XmodemGetSpeed  guiMTKSpeed = %f, %d**************\r\n",(FLOAT)guiMTKSpeed, guiMTKSpeed);
+    
     *Speed= (FLOAT)guiMTKSpeed;
+    debug_msg("\r\n**********XmodemGetSpeed  g_CurSpeed = %f, %d, %u,%03d, km/h**************\r\n",*Speed, (UINT32)(*Speed),(UINT32)(*Speed),(UINT32)(*Speed));
+    
     return TRUE;
 
     #endif
