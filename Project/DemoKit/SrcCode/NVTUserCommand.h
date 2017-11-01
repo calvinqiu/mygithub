@@ -145,6 +145,13 @@ typedef enum
 	NVTEVT_MTK_ADAS_SWITCH = 0x8000300F,
     NVTEVT_MTK_CHANGE_DIAPLAYMODE = 0x80003010,
     NVTEVT_MTK_CHANGE_MODE = 0x80003011,
+    NVTEVT_MTK_OTG_TO_MTK = 0x80003012,
+
+    NVTEVT_MTK_OTG_TO_NTK = 0x80003013,
+    //add by qiuhan on 20171030 for   The lens position calibration
+    NVTEVT_MTK_LENS_POS_CAL_OPEN = 0x80003014,
+    NVTEVT_MTK_LENS_POS_CAL_CLOSE = 0x80003015,
+    //add end
 #endif
     // wifi event
     NVTEVT_WIFI_EXE_PHOTO_SIZE  = 0x8000e000,         ///< Set Photo size by Wi-Fi App

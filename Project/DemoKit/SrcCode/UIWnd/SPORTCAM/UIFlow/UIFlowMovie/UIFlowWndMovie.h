@@ -298,6 +298,8 @@ extern VControl UIFlowWndMovie_ADAS_DrawingLineCtrl;//Panel type
 
 extern VControl UIFlowWndMovie_ALG_DrawCtrl;//Panel type 
 
+extern VControl UIFlowWndMovie_ADAS_LineCtrl;//Panel type 
+
 extern VControl UIFlowWndMovie_ADAS_Alert_DisplayCtrl;//Panel type 
 
 extern VControl UIFlowWndMovie_StatusICN_LDWS_AlertCtrl;//Status type 

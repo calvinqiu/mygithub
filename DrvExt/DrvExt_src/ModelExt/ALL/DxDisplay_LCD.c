@@ -673,8 +673,8 @@ static void GPIOMap_TurnOffLCDPower(void)
 ////////////////////////////////////////////////////////////////////////
 
 //#NT#2009/12/15#Lincy Lin -begin
-#if (LCD_BACKLIGHT_CTRL == LCD_BACKLIGHT_BY_PWM)
-static PWM_CFG g_LCDBacklightPWMInfo = {1, 60, 0, 60, 0, 0};
+#if 1//(LCD_BACKLIGHT_CTRL == LCD_BACKLIGHT_BY_PWM)
+static PWM_CFG g_LCDBacklightPWMInfo = { 60, 0, 60, 0, 0};
 static UINT32 g_LCDBacklightLvlPWMDuty[DRVLCD_BRT_LEVEL_MAX]=
 {
     59,//48,// level 0
@@ -809,3 +809,54 @@ static void GPIOMap_DumpBacklight(void)
 #endif
 }
 
+UINT32 BeepPrd = 0;
+void GPIOMap_TurnOnLCDBeep(void)
+{
+	if(pwm_open(PWMID_5)!=E_OK)
+	{  
+	     pwm_close(PWMID_5, FALSE);
+	     pwm_open(PWMID_5);
+	}
+	g_LCDBacklightPWMInfo.uiPrd=BeepPrd;
+        g_LCDBacklightPWMInfo.uiRise = g_LCDBacklightPWMInfo.uiPrd/2;
+	 g_LCDBacklightPWMInfo.uiFall=g_LCDBacklightPWMInfo.uiPrd;
+        debug_msg("PWM: GPIOMap_TurnOnLCDBeep\r\n");
+	debug_msg("QIUHAN===========g_LCDBacklightPWMInfo.uiPrd=%d,,g_LCDBacklightPWMInfo.uiRise=%d,,g_LCDBacklightPWMInfo.uiFall=%d\r\n",g_LCDBacklightPWMInfo.uiPrd,g_LCDBacklightPWMInfo.uiRise,g_LCDBacklightPWMInfo.uiFall);
+        pwm_pwmConfig(PWMID_5, &g_LCDBacklightPWMInfo);
+        pwm_pwmEnable(PWMID_5);
+		
+
+}
+
+
+void GPIOMap_ReTurnOnBeep()
+{
+              if(pwm_open(PWMID_5)!=E_OK)
+		{  
+		     pwm_close(PWMID_5, TRUE);
+		     pwm_open(PWMID_5);
+		}
+              pwm_setConfig(PWMID_5, &g_LCDBacklightPWMInfo);
+	       pwm_pwmEnable(PWMID_5);
+		pwm_pwmReload(PWMID_5);
+
+
+}
+
+
+void GPIOMap_TurnOFFLCDBeep(void)
+{
+
+     /*   g_LCDBacklightPWMInfo.uiRise = 5;
+        DBG_IND("PWM: rise=%d\r\n", g_LCDBacklightPWMInfo.uiRise);
+        pwm_open(PWMID_5);
+        pwm_pwmConfig(PWMID_5, &g_LCDBacklightPWMInfo);
+        pwm_pwmEnable(PWMID_5);*/
+       pwm_pwmDisable(PWMID_5);
+        pwm_close(PWMID_5, FALSE);
+
+	 debug_msg("PWM: GPIOMap_TurnOFFLCDBeep\r\n");
+	 
+
+		
+}

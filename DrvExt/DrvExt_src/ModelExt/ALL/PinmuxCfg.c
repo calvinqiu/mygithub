@@ -251,8 +251,8 @@ const PIN_GROUP_CONFIG vTopConfig[] =
 
     {
         PIN_FUNC_PWM,              PIN_PWM_CFG_NONE |
-        #if (_LENSDRVLIB_ == _LENSDRVLIB_DCJ36_)
-        /*PIN_PWM_CFG_PWM2 | PIN_PWM_CFG_PWM3 |*/
+        #if  1//(_LENSDRVLIB_ == _LENSDRVLIB_DCJ36_)
+        PIN_PWM_CFG_PWM5|
         #endif
         0
     },

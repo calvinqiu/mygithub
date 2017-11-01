@@ -185,8 +185,11 @@ CTRL_LIST_ITEM(UIFlowWndMovie_ALG_Draw)
 #endif
 CTRL_LIST_ITEM(UIFlowWndMovie_ADAS_Alert_Display)
 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+//CTRL_LIST_ITEM(UIFlowWndMovie_OT_DrawRect)
+//CTRL_LIST_ITEM(UIFlowWndMovie_TD_DrawRect)
 CTRL_LIST_ITEM(UIFlowWndMovie_Static_Speed)
 CTRL_LIST_ITEM(UIFlowWndMovie_Static_Distance)
+
 #endif
 CTRL_LIST_END
 
@@ -240,6 +243,13 @@ INT32 UIFlowWndMovie_Capture(VControl *, UINT32, UINT32 *);
 INT32 UIFlowWndMovie_TransmitFinish(VControl *, UINT32, UINT32 *);
 INT32 UIFlowWndMovie_OnAdasSetting(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray);//pgl adas_switch_cmd add 20160429
 INT32 UIFlowWndMovie_MTK_Change_DiaplayMode(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray);//pgl adas_switch_cmd add 20160429
+//add by qiuhan on 20171028 for U15 begin
+void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
+//add end
+// //add by qiuhan on 20171030 for   The lens position calibration
+void UIFLowWndMovie_ShowLensPositionCalibration(VControl *pCtrl, UINT32 paramNum, UINT32 * paramArray);
+void UIFLowWndMovie_HideLensPositionCalibration(VControl *pCtrl, UINT32 paramNum, UINT32 * paramArray);
+//add end
 #endif
 //#NT#2016/06/23#Niven Cho -begin
 //#NT#Enter calibration by cgi event or command event
@@ -319,6 +329,13 @@ EVENT_ITEM(NVTEVT_MTK_CAPTURE,UIFlowWndMovie_Capture)
 EVENT_ITEM(NVTEVT_MTK_TRANSMIT_FINISH,UIFlowWndMovie_TransmitFinish)
 EVENT_ITEM(NVTEVT_MTK_ADAS_SWITCH,UIFlowWndMovie_OnAdasSetting)
 EVENT_ITEM(NVTEVT_MTK_CHANGE_DIAPLAYMODE,UIFlowWndMovie_MTK_Change_DiaplayMode)
+//add by qiuhan on 20171028 for U15 begin
+EVENT_ITEM(NVTEVT_MTK_OTG_TO_MTK, UIFlowWndMovie_ChangeOtgToMtk)
+//add end
+ //add by qiuhan on 20171030 for   The lens position calibration
+EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_OPEN, UIFLowWndMovie_ShowLensPositionCalibration)
+EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_CLOSE, UIFLowWndMovie_HideLensPositionCalibration)
+//add end
 #endif
 EVENT_END
 
@@ -373,6 +390,48 @@ void UIFlowWndMovie_LockFile(void)
     }
     return NVTEVT_CONSUME;
 }
+//add by qiuhan on 20171028 for U15 begin
+void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
+           UINT32 FrameId;
+	    UINT8   uiResqData[16]= {0};
+	    if(paramNum==1){
+                FrameId = paramArray[0];
+	     }
+
+           if (System_GetState(SYS_STATE_CURRMODE)!=PRIMARY_MODE_USBMSDC)
+           {
+                debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
+		  Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
+		  uiResqData[0]=0x01;
+		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+           }else{
+                uiResqData[0]=0x00;
+		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);  
+           }
+
+}
+//add end
+
+
+ //add by qiuhan on 20171030 for   The lens position calibration
+void UIFLowWndMovie_ShowLensPositionCalibration(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
+
+    //add by qiuhan on 20171030 for   The lens position calibration
+    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, TRUE);
+    //add end
+}
+
+
+void UIFLowWndMovie_HideLensPositionCalibration(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
+
+    //add by qiuhan on 20171030 for   The lens position calibration
+    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, FALSE);
+    //add end
+}
+//add end
+
+
+
 BOOL UIFlowwndDeleteFWFile(void)
 {
     char        *fileName;
@@ -1155,6 +1214,9 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
 
     //#NT#2015/07/17#KS Hung -begin
     //#NT#For ADAS
+    //add by qiuhan on 20171030 for   The lens position calibration
+    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, FALSE);
+    //add end
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl, FALSE);
     UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, TRUE);
     //#NT#2015/07/17#KS Hung -end
@@ -1935,6 +1997,25 @@ INT32 UIFlowWndMovie_OnMovieOneSec(VControl *pCtrl, UINT32 paramNum, UINT32 *par
             FlowMovie_IconHideMaxRecTime(&UIFlowWndMovie_Static_maxtimeCtrl);
             FlowMovie_SetRecCurrTime(paramArray[0]);
             FlowMovie_IconDrawRecTime(&UIFlowWndMovie_Static_timeCtrl);
+            #if defined(YQCONFIG_GSENSOR_SUPPORT)&& defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+            if((paramArray[0]>=2)&&(paramArray[0]<=3))
+            {
+                if(gbGsensorTrig==TRUE)
+                {
+                    gbGsensorTrig=FALSE;
+                    if(gbMovieTouchUIDisplayEn==FALSE)
+                    {
+                        FlowMovie_IconHideGsensor();
+                        FlowMovie_IconHideLockFile();
+                    }
+                    else
+                    {
+                        FlowMovie_IconHideLockFile();
+                    }
+                }
+            }
+            #endif
+            /* modify end by ZMD, 2017-02-15 */
         }
 //        FlowMovie_IconDrawRecTime(&UIFlowWndMovie_Static_timeCtrl);
         if (UxCtrl_IsShow(&UIFlowWndMovie_StaticIcon_PIMCCtrl))
@@ -2020,14 +2101,19 @@ INT32 UIFlowWndMovie_OnLoopRecFull(VControl *pCtrl, UINT32 paramNum, UINT32 *par
     FlowMovie_IconDrawMaxRecTime(&UIFlowWndMovie_Static_maxtimeCtrl);
     return NVTEVT_CONSUME;
 }
+static BOOL showLockButton = FALSE;
 INT32 UIFlowWndMovie_OnEMRCompleted(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UINT32  uiPathId = 0;
-
+     char m_cmd_at_last_video_path[256] = {0};//add by qiuhan on 20171027
     if (paramNum)
         uiPathId = paramArray[0];
 
     DBG_IND("EMR(%d) completed!\r\n", uiPathId);
+    MovRec_GetLastEMRFilePath(m_cmd_at_last_video_path);//add by qiuhan on 20171027
+    debug_msg("QIUHAN=======================lase_video_path Completed ==%s\r\n",m_cmd_at_last_video_path);//add by qiuhan on 20171027
+    debug_msg("QIUHAN===============================EMR(%d) completed!\r\n", uiPathId);
+    showLockButton = TRUE;
     return NVTEVT_CONSUME;
 }
 #if 0
@@ -2338,7 +2424,7 @@ INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
         #if defined(YQCONFIG_UART_TO_MTK_SUPPORT) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
         g_GPSStatus=XmodemGetSpeed(&g_CurSpeed);
 
-        debug_msg("onTimer g_CurSpeed=%d,%f  ", (UINT32)g_CurSpeed, g_CurSpeed);
+       // debug_msg("onTimer g_CurSpeed=%d,%f  ", (UINT32)g_CurSpeed, g_CurSpeed);
         FlowMovie_IconDrawSpeed();
         FlowMovie_IconDrawDistance();
         #endif
@@ -2398,6 +2484,14 @@ INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
             FlowMovie_UpdateIcons(TRUE);
             g_bDelayUpdateIcon = FALSE;
         }
+
+
+        if(showLockButton){
+            UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+            UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
+	     showLockButton=FALSE;
+        }
+	
 
         FlowMovie_OnTimer1SecIndex();
         // Isiah, implement YUV merge mode of recording func.
@@ -2610,11 +2704,13 @@ INT32 UIFlowWndMovie_OnACUnplug(VControl *pCtrl, UINT32 paramNum, UINT32 *paramA
 INT32 UIFlowWndMovie_OnCustom1(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UINT32  uiWidth  = GetMovieSizeWidth(UI_GetData(FL_MOVIE_SIZE));
-
+    debug_msg("QIUHAN=========================UIFlowWndMovie_OnCustom1!!!\r\n");
     if(SysGetFlag(FL_GSENSOR) !=GSENSOR_OFF)
     {
         if ( (gMovData.State == MOV_ST_REC) || (gMovData.State == MOV_ST_REC_WAIT) )
         {
+
+		debug_msg("QIUHAN=========================SysGetFlag(FL_MOVIE_URGENT_PROTECT_AUTO)==%d\r\n",SysGetFlag(FL_MOVIE_URGENT_PROTECT_AUTO));
             if (SysGetFlag(FL_MOVIE_URGENT_PROTECT_AUTO)==MOVIE_URGENT_PROTECT_AUTO_ON)
             {
 
@@ -2623,13 +2719,16 @@ INT32 UIFlowWndMovie_OnCustom1(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
                     || GetMovieRecType_2p(UI_GetData(FL_MOVIE_SIZE))==MOVIE_REC_TYPE_CLONE)
                 {
                    DBG_DUMP("dual record, only support set crash\r\n");
+				   debug_msg("QIUHAN=========================dual record, only support set crash!!!\r\n");
 				   MovRec_SetCrash();
                    return NVTEVT_CONSUME;
                 }
 #endif
+                debug_msg("QIUHAN=========================uiWidth==%d,UI_GetData(FL_MOVIE_CYCLIC_REC)==%d\r\n",uiWidth,UI_GetData(FL_MOVIE_CYCLIC_REC));
                 if ((uiWidth <= 1920) && (UI_GetData(FL_MOVIE_CYCLIC_REC) != MOVIE_CYCLICREC_OFF))
                 {
                     DBG_DUMP("process flash video record!!!\r\n");
+		      debug_msg("QIUHAN=========================process flash video record!!!\r\n");
                     MovRec_StopFlash(0);
                 }
                 else
@@ -2640,15 +2739,22 @@ INT32 UIFlowWndMovie_OnCustom1(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
             }
         }
     }
+    
+					
     return NVTEVT_CONSUME;
 }
 
 //#NT#2016/03/25#KCHong -begin
 //#NT#New ADAS
+char EventEMRName[256] = {0};//qiuhan add 20171027
+char EventLDWSLName[256] = {0};//qiuhan add 20171027 
+char EventLDWSRName[256] = {0};//qiuhan add 20171027 
+char EventFDWSName[256] = {0};//qiuhan add 20171027 
 INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
 #if (_ADAS_FUNC_ == ENABLE)
     UINT32 AlarmType;
+    UINT32 i;
     ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasDspRltOSD();
     {
         debug_msg("");
@@ -2663,12 +2769,10 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
     {
     case ADAS_ALARM_LD:
         g_uiAdasAlertSecCnt = 0;
-		/*
         if(paramNum>1)
         {
             DepartureDirVoice_Temp = paramArray[1];
         }
-		*/
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
 		/*
         if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
@@ -2681,6 +2785,13 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,FALSE);
             UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
         #else
+
+	                            for( i = 0; i<=1; i++){
+					GPIOMap_TurnOnLCDBeep();
+					Delay_DelayMs(500);
+					GPIOMap_TurnOFFLCDBeep();
+					Delay_DelayMs(500);
+                                   }	
             UISound_Play(DEMOSOUND_SOUND_LDWS_TONE);
             debug_msg("^UIFlowWndMovie_OnADASShowAlarm--UISound_Play--\r\n");
             if (!UxCtrl_IsShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl))
@@ -2692,7 +2803,7 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,FALSE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
                 debug_msg("\r\npAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice--%d--\r\n",pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice);
-                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+ //               UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
 //                switch (pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice)
 //                {
 //                    case LDWS_DEPARTURE_LEFT:
@@ -2706,29 +2817,35 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 //                }
             }
             #endif
-//            switch (DepartureDirVoice_Temp)
-//            {
-//            case LDWS_DEPARTURE_LEFT:
-
-				uiResqData[0]=(LDWS_RIGHT_ |LDWS_LEFT_|WORKING_MODE);
+			debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
+			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+debug_msg("QIUHAN=====================pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice=%d\r\n",pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice);//dual record, only support set crash
+			
+            switch (DepartureDirVoice_Temp)
+            {
+            case LDWS_DEPARTURE_LEFT:
+		 memset(EventLDWSLName, 0, sizeof(EventLDWSLName));
+                strcat(EventLDWSLName, "LDWSL-");
+                uiResqData[0]=(LDWS_LEFT_|WORKING_MODE);
                 uiResqData[1] = 0;
                 // debug_msg("^GZMD---CMD_ADAS_RESQ1---\r\n");
                 MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2); //0x71==CMD_ADAS_RESQ
-
-//                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
-//                break;
-//            case LDWS_DEPARTURE_RIGHT:
-
-//                uiResqData[0]=(LDWS_RIGHT_ |LDWS_LEFT_|WORKING_MODE);
-//				uiResqData[1] = 0;
-				//debug_msg("^GZMD---CMD_ADAS_RESQ1---\r\n");
-//				MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2); //0x71==CMD_ADAS_RESQ
-
-//                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_RIGHT_ALERT);
-//                break;
-//            default:
-//                break;
-//            }
+                debug_msg("QIUHAN=====================LDWS_DEPARTURE_LEFT=%d \r\n",uiResqData[0]);
+                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+                break;
+            case LDWS_DEPARTURE_RIGHT:
+		 memset(EventLDWSRName, 0, sizeof(EventLDWSRName)); 
+                strcat(EventLDWSRName, "LDWSR-");
+                uiResqData[0]=(LDWS_RIGHT_|WORKING_MODE);
+                uiResqData[1] = 0;
+                // debug_msg("^GZMD---CMD_ADAS_RESQ2---\r\n");
+                MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2);
+                debug_msg("QIUHAN=====================LDWS_DEPARTURE_RIGHT=%d \r\n",uiResqData[0]);
+                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+                break;
+            default:
+                break;
+            }
 //        }
 		#else
         UISound_Play(DEMOSOUND_SOUND_LDWS_TONE);
@@ -2742,6 +2859,12 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 //            DepartureDirVoice_Temp = paramArray[1];
 //        }
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+		                     for( i = 0; i<=1; i++){
+					GPIOMap_TurnOnLCDBeep();
+					Delay_DelayMs(500);
+					GPIOMap_TurnOFFLCDBeep();
+					Delay_DelayMs(500);
+                                   }
 //        #else
 //        UISound_Play(DEMOSOUND_SOUND_FCS_TONE);
 //        #endif
@@ -2766,6 +2889,10 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,FALSE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,TRUE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
+		  memset(EventFDWSName, 0, sizeof(EventFDWSName));
+                 strcat(EventFDWSName, "FCWS-");
+		  debug_msg("QIUHAN=====================FC begin send CUSTOM2\r\n");//dual record, only support set crash
+		  Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
 
                 uiResqData[0]=(FCW_WARNING|WORKING_MODE);
                 uiResqData[1]= 0;
@@ -2863,6 +2990,7 @@ INT32 UIFlowWndMovie_OnADASShowAlarm(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 #endif
     return NVTEVT_CONSUME;
 }
+
 /* modify begin by ZMD, 2017-02-15 new version management*/
 #if defined(YQCONFIG_UART_TO_MTK_SUPPORT) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
 #if !defined(YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION)
@@ -3036,9 +3164,38 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             uiResqData[0]=0x02;
             MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
         }
+        #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+        else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_LockFileCtrl,P1,P2)==TRUE)
+        {
+            debug_msg("UIFlowWndMovie_Status_Touch_LockFileCtrl...PRESSED...\r\n");
+            if(gbGsensorTrig==FALSE)
+            {
+                if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+                {
+                    Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+                    uiResqData[0]=0x03;
+                    MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+                    return NVTEVT_CONSUME;
+                }
 
-        
+                switch(gMovData.State)
+                {
+                // case MOV_ST_VIEW:
+                // case MOV_ST_VIEW|MOV_ST_ZOOM:
+                case MOV_ST_REC:
+                case MOV_ST_REC|MOV_ST_ZOOM:
+                    uiMovieKeyPressed=UIFLOW_MOVIE_TOUCH_KEY_LOCKFILE;
+                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+                    UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_PRESS);
+                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
 
+                    uiResqData[0]=0x02;
+                    MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+                    break;
+                }
+            }
+        }
+        #endif
         #if defined(YQCONFIG_TOUCH_AUDIOSWITCH_OPTION)
         else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_AudioSwitchCtrl,P1,P2)==TRUE)
         {
@@ -3234,7 +3391,34 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             }
         }
         #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+        else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_LockFileCtrl,P1,P2)==TRUE)
+        {
+            debug_msg("UIFlowWndMovie_Status_Touch_LockFileCtrl...RELEASED...\r\n");
+            if(uiMovieKeyPressed==UIFLOW_MOVIE_TOUCH_KEY_LOCKFILE)
+            {
+                switch(gMovData.State)
+                {
+                // case MOV_ST_VIEW:
+                // case MOV_ST_VIEW|MOV_ST_ZOOM:
+                case MOV_ST_REC:
+                case MOV_ST_REC|MOV_ST_ZOOM:
 
+                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+                    UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
+
+                    //UIFlowWndMovie_LockFile();
+                    debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
+			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+                    UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+
+                    uiResqData[0]=0x02;
+                    uiResqData[1]=0x06;
+                    MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+                    break;
+                }
+            }
+        }
         #endif
         #if defined(YQCONFIG_TOUCH_AUDIOSWITCH_OPTION)
         else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_AudioSwitchCtrl,P1,P2)==TRUE)
@@ -3310,7 +3494,18 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
                 UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
             }
-
+            #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+            if(MovRec_IsRecording()&&(gbGsensorTrig==FALSE))
+            {
+                UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+                UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
+            }
+            else
+            {
+                UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+                UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+            }
+            #endif
             #if defined(YQCONFIG_TOUCH_AUDIOSWITCH_OPTION)
             if(UI_GetData(FL_MOVIE_AUDIO)==MOVIE_AUDIO_ON)
             {
@@ -3371,6 +3566,11 @@ void UIFlowWndMovie_OnTouchPanelKeyUpdateIcons(BOOL UpdateShow)
             UxState_SetData(&UIFlowWndMovie_Status_Touch_RERTURNCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_RERTURN_ICON_TP_RETURN);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RERTURNCtrl, TRUE);
         }
+/*	 if(UxState_GetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl, STATE_CURITEM) == UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_PRESS)
+        {
+            UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_RERTURN_ICON_TP_RETURN);
+            UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
+        }*///20171028 qiuhan remove
         if(UxState_GetData(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, STATE_CURITEM) == UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_PRESS)
         {
             UxState_SetData(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
@@ -3387,12 +3587,15 @@ void UIFlowWndMovie_OnTouchPanelKeyUpdateIcons(BOOL UpdateShow)
     }
 }
 #if 1
+BOOL isFirstStart = TRUE;
+extern void GPIOMap_TurnOnLCDBeep();
+extern void  GPIOMap_TurnOFFLCDBeep();
 INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UINT32 uiPositon=0,P1=0,P2=0;
     UINT8 FrameID=0;
     UINT32 TouchKeyStatus=0xFFFF;
-
+ UINT32 i;
     UINT8   uiResqData[16]= {0};
     UINT32 uiJpegWidth=0, uiJpegHeight=0, uiDAR=0, uiMovieSize=0;
 
@@ -3469,6 +3672,14 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             else
             {
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_RECCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_REC_ICON_TP_REC);
+            }
+
+	     if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+            {
+                Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+                uiResqData[0]=0x03;
+                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
+                return NVTEVT_CONSUME;
             }
 
             Ux_PostEvent(NVTEVT_KEY_SHUTTER2, 1, NVTEVT_KEY_PRESS);
@@ -3619,6 +3830,55 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
             }
         }
+        #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+        else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_LockFileCtrl,P1,P2)==TRUE)
+        {
+            debug_msg("UIFlowWndMovie_Status_Touch_LockFileCtrl...\r\n");
+            if(gbGsensorTrig==FALSE)
+            {
+                if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+                {
+                    Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+                    uiResqData[0]=0x03;
+                    MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+                    return NVTEVT_CONSUME;
+                }
+                switch(gMovData.State)
+                {
+                // case MOV_ST_VIEW:
+                // case MOV_ST_VIEW|MOV_ST_ZOOM:
+                case MOV_ST_REC:
+                case MOV_ST_REC|MOV_ST_ZOOM:
+		     
+                    UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_PRESS);
+                    WndMovieTouchPanelKeyUpdateIcons=TRUE;
+                    UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+                    //UIFlowWndMovie_LockFile();
+                     memset(EventEMRName, 0, sizeof(EventEMRName));//EventEMRName[256]=NULL;
+                     strcat(&EventEMRName[0], "Emergency-");
+                     debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
+			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+                     UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+                              for( i = 0; i<=1; i++){
+					GPIOMap_TurnOnLCDBeep();
+					Delay_DelayMs(500);
+					GPIOMap_TurnOFFLCDBeep();
+					Delay_DelayMs(500);
+                               }/*else{
+                                   GPIOMap_ReTurnOnBeep();
+					Delay_DelayMs(1000);
+					GPIOMap_TurnOFFLCDBeep();
+
+                               }*/
+					 
+                    break;
+                }
+                uiResqData[0]=0x02;
+                uiResqData[1]=0x06;
+                MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+            }
+        }
+        #endif
         #if defined(YQCONFIG_TOUCH_AUDIOSWITCH_OPTION)
         else if(TPIsOnRange(&UIFlowWndMovie_Status_Touch_AudioSwitchCtrl,P1,P2)==TRUE)
         {
@@ -3712,6 +3972,18 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
                 UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
             }
+            #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+            if(MovRec_IsRecording()&&(gbGsensorTrig==FALSE))
+            {
+                UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+                UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
+            }
+            else
+            {
+                UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+                UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+            }
+            #endif
 
             uiResqData[0]=0x02;
             MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
@@ -4717,13 +4989,20 @@ CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_REC)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_RERTURN)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_SnapeShot)
 CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_Change_DisplayMode)
+#if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+CTRL_LIST_ITEM(UIFlowWndMovie_Status_Touch_LockFile)
+#endif
 CTRL_LIST_ITEM(UIFlowWndMovie_Static_Speed)
 CTRL_LIST_ITEM(UIFlowWndMovie_Static_Distance)
 #endif
+//---------------------UIFlowWndMoive_Static_ADAS_LineCtrl Control List---------------------------
+
+
 CTRL_LIST_ITEM(UIFlowWndMovie_ADAS_DrawingLine)
 ///#NT#2016/06/08#Lincy Lin -begin
 //#NT#Implement generic OSD and video drawing mechanism for ALG function
 CTRL_LIST_ITEM(UIFlowWndMovie_ALG_Draw)
+CTRL_LIST_ITEM(UIFlowWndMovie_ADAS_Line)
 //#NT#2016/06/08#Lincy Lin -end
 CTRL_LIST_END
 
@@ -4861,6 +5140,12 @@ EVENT_END
 EVENT_BEGIN(UIFlowWndMovie_Status_Touch_SETUP)
 EVENT_END
 #endif
+
+#if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+//----------------------UIFlowWndMovie_Status_Touch_LockFileCtrl Event---------------------------
+EVENT_BEGIN(UIFlowWndMovie_Status_Touch_LockFile)
+EVENT_END
+#endif
 #if defined(YQCONFIG_TOUCH_AUDIOSWITCH_OPTION)
 //----------------------UIFlowWndMovie_Status_Touch_AudioSwitchCtrl Event---------------------------
 EVENT_BEGIN(UIFlowWndMovie_Status_Touch_AudioSwitch)
@@ -4871,6 +5156,7 @@ EVENT_END
 #endif
 //#NT#2016/06/08#Lincy Lin -begin
 //#NT#Implement generic OSD and video drawing mechanism for ALG function
+
 
 //---------------------UIFlowWndMovie_ADAS_DrawingLineCtrl Control List---------------------------
 CTRL_LIST_BEGIN(UIFlowWndMovie_ADAS_DrawingLine)
@@ -6182,6 +6468,16 @@ static void UIFlowWndMovie_ALG_ClearDraw(void)
 //#NT#2016/06/08#Lincy Lin -end
 
 
+//---------------------UIFlowWndMovie_ADAS_LineCtrl Control List---------------------------
+CTRL_LIST_BEGIN(UIFlowWndMovie_ADAS_Line)
+CTRL_LIST_END
+
+//----------------------UIFlowWndMovie_ADAS_LineCtrl Event---------------------------
+EVENT_BEGIN(UIFlowWndMovie_ADAS_Line)
+EVENT_END
+
+
+
 CTRL_LIST_BEGIN(UIFlowWndMovie_ADAS_Alert_Display)
 CTRL_LIST_ITEM(UIFlowWndMovie_StatusICN_LDWS_Alert)
 CTRL_LIST_ITEM(UIFlowWndMovie_StatusICN_FCWS_Alert)
@@ -6208,5 +6504,11 @@ EVENT_END
 EVENT_BEGIN(UIFlowWndMovie_Static_Speed)
 EVENT_END
 EVENT_BEGIN(UIFlowWndMovie_Static_Distance)
+EVENT_END
+
+CTRL_LIST_BEGIN(UIFlowWndMoive_Static_ADAS_Line)
+CTRL_LIST_END
+//----------------------UIFlowWndMoive_Static_ADAS_LineCtrl Event---------------------------
+EVENT_BEGIN(UIFlowWndMoive_Static_ADAS_Line)
 EVENT_END
 #endif
