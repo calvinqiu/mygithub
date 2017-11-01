@@ -40,6 +40,7 @@
 #include "AppDisp_3DNRView.h"
 #endif
 //#NT#2016/09/20#Bob Huang -end
+#include "UART_TO_MTK.h"
 
 #define __MODULE__          UIMovieCB
 //#define __DBGLVL__ 0        //OFF mode, show nothing
@@ -449,6 +450,8 @@ void UIMovie_MovieFileNamingCB(UINT32 uiPathId, char *pFileName)
 void UIMovie_EMRMovFileNamingCB(UINT32 uiPathId, char *pFileName)
 {
     UIMovie_SetCustomFileName(uiPathId, pFileName);
+   // MovRec_GetLastEMRFilePath(m_cmd_at_last_video_path);//add by qiuhan on 20171027
+    debug_msg("QIUHAN=======================UIMovie_EMRMovFileNamingCB ==%s\r\n",pFileName);//add by qiuhan on 20171027
 }
 
 void UIMovie_PhotoFileNamingCB(UINT32 uiPathId, char *pFileName)
@@ -596,11 +599,22 @@ void GetStreamQPInfo(UINT32 ID, UINT32 puiParam[2] )
 // Callback function for Record events
 //
 //-------------------------------------------------------------------------------------------------
+
 extern void H264Test_GetEncInfo(INT32 puiParam[8]);
+extern char EventEMRName[256];
+extern char EventLDWSLName[256];
+extern char EventLDWSRName[256];
+extern char EventFDWSName[256];
+char EventEMRNameString[100] = {0};//qiuhan add 20171027
+char EventLDWSLNameString[100] = {0};//qiuhan add 20171027
+char EventLDWSRNameString[100] = {0};//qiuhan add 20171027
+char EventFDWSNameString[100] = {0};//qiuhan add 20171027
 void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 {
     UINT32 uiSeconds;
     INT32  uiParam[8];
+    UINT8   uiResqData[116]= {0};
+    char m_cmd_at_last_video_path[256] = {0};//add by qiuhan on 20171027
     //#NT#2016/06/28#KCHong -begin
     //#NT#DbgLog in GPS section
     #if (LOG_DBGINFO_IN_GPS_SECTION == ENABLE)
@@ -621,6 +635,8 @@ void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
     switch (uiEventID)
     {
     case MOVREC_EVENT_VIDEO_INFO_READY:
+	 MovRec_GetLastEMRFilePath(m_cmd_at_last_video_path);//add by qiuhan on 20171027
+        debug_msg("QIUHAN=======================lase_video_path READY ==%s\r\n",m_cmd_at_last_video_path);//add by qiuhan on 20171027
         Ux_PostEvent(NVTEVT_CB_MOVIE_VEDIO_READY,1,param);
         break;
     case MOVREC_EVENT_AUDREC_START:
@@ -700,16 +716,72 @@ void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
         Ux_PostEvent(NVTEVT_CB_MOVIE_LOOPREC_FULL, 0);
         break;
     case MOVREC_EVENT_EMR_FILECOMPLETE:
-        DBG_IND("EVENT %d: Emergency file completed!\r\n", uiEventID);
+//        DBG_IND("EVENT %d: Emergency file completed!\r\n", uiEventID);
+        MovRec_GetLastEMRFilePath(m_cmd_at_last_video_path);//add by qiuhan on 20171027
+        debug_msg("QIUHAN=======================lase_video_path00 ==%s\r\n",m_cmd_at_last_video_path);//add by qiuhan on 20171027
+        if(strcmp(EventEMRName,"Emergency-")==0 /*|| strcmp(EventEMRName,"LDWSL-")==0 ||strcmp(EventEMRName,"FCWS-")==0|| strcmp(EventEMRName,"LDWSR-")==0 */){
+			// debug_msg("QIUHAN=======================lase_video_path00 ==%d\r\n",strlen(EventEMRName));
+			strncpy(EventEMRNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 ==%s\r\n",EventEMRNameString);
+                     strcat(EventEMRName,EventEMRNameString);
+			debug_msg("QIUHAN=======================EventEMRName ==%s\r\n",EventEMRName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventEMRName);
+			memset(EventEMRName, 0, sizeof(EventEMRName));
+		       MTKComposeCMDRspFrame(0, CMD_EMR_VEDIO,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+        }else if(strcmp(EventLDWSLName,"LDWSL-")==0){
+                     
+                     strncpy(EventLDWSLNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 LDWSL==%s\r\n",EventLDWSLNameString);
+                     strcat(EventLDWSLName,EventLDWSLNameString);
+			debug_msg("QIUHAN=======================EventEMRName LDWSL==%s\r\n",EventLDWSLName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventLDWSLName);
+			memset(EventLDWSLName, 0, sizeof(EventLDWSLName));
+		       MTKComposeCMDRspFrame(0, CMD_ADAS_LDWSL,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+
+        }else if(strcmp(EventLDWSRName,"LDWSR-")==0){
+
+		       strncpy(EventLDWSRNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 LDWSR==%s\r\n",EventLDWSRNameString);
+                     strcat(EventLDWSRName,EventLDWSRNameString);
+			debug_msg("QIUHAN=======================EventEMRName LDWSR==%s\r\n",EventLDWSRName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventLDWSRName);
+			memset(EventLDWSRName, 0, sizeof(EventLDWSRName));
+		       MTKComposeCMDRspFrame(0, CMD_ADAS_FCWS,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+
+        }else if(strcmp(EventFDWSName,"FCWS-")==0){
+
+                     strncpy(EventFDWSNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 FCWS==%s\r\n",EventFDWSNameString);
+                     strcat(EventFDWSName,EventFDWSNameString);
+			debug_msg("QIUHAN=======================EventEMRName FCWS==%s\r\n",EventFDWSName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventFDWSName);
+			memset(EventFDWSName, 0, sizeof(EventFDWSName));
+		       MTKComposeCMDRspFrame(0, CMD_ADAS_LDWSR,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+        }
+		
+        memset(EventEMRName, 0, sizeof(EventEMRName));
+	 debug_msg("QIUHAN=======================EventEMRName_Last ==%s\r\n",EventEMRName);//add by qiuhan on 20171027
         Ux_PostEvent(NVTEVT_CB_EMR_COMPLETED, 1, param);
         break;
     case MOVREC_EVENT_GETNAME_PATH0:
-        ImageApp_CamFile_MakeMovieFileNameCB(param);
+        ImageApp_CamFile_MakeMovieFileNameCB(param);	 
+        MovRec_GetLastEMRFilePath(m_cmd_at_last_video_path);//add by qiuhan on 20171027
+        debug_msg("QIUHAN=======================lase_video_path ==%s\r\n",m_cmd_at_last_video_path);//add by qiuhan on 20171027
         break;
     //#NT#2016/08/10#Brain Yen -begin
     //#NT# for EMR movie file name setting
     case MOVREC_EVENT_GETNAME_EMRPATH:
         ImageApp_CamFile_MakeEMRMovFileNameCB(param);
+	 MovRec_GetLastEMRFilePath(m_cmd_at_last_video_path);//add by qiuhan on 20171027
+        debug_msg("QIUHAN=======================lase_video_path00 ==%s\r\n",m_cmd_at_last_video_path);//add by qiuhan on 20171027
         break;
     //#NT#2016/08/10#Brain Yen -end
     #if STREAM_GET_QP

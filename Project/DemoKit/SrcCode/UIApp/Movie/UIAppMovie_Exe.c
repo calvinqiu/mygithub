@@ -776,7 +776,7 @@ void Movie_SetRecParam(void)
         //#NT#2016/12/27#Calvin Chang#[0115114] ¡Vbegin
         // Disable Emergency Recording
         DBG_DUMP("Disable Emergency Recording on TIMELAPSE mode!\r\n");
-        UI_SetData(FL_MOVIE_URGENT_PROTECT_AUTO, MOVIE_URGENT_PROTECT_AUTO_OFF);
+        UI_SetData(FL_MOVIE_URGENT_PROTECT_AUTO, MOVIE_URGENT_PROTECT_AUTO_OFF);//20171024
         UI_SetData(FL_MOVIE_URGENT_PROTECT_MANUAL, MOVIE_URGENT_PROTECT_MANUAL_OFF);
         MovRec_SetEmergencyRecording(0, 0);
         MovRec_SetEmergencyRecording(1, 0);
@@ -2328,7 +2328,7 @@ INT32 MovieExe_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
     //        FC distance    : 1~40, default is 15. The unit is meter.
     //   --------------------------------------------------------------------------------------------------
     // Set fsize value. This value CANNOT be changed on-the-fly.
-    ADAS_SetLdFcFsizeValueByPixel(188);
+    ADAS_SetLdFcFsizeValueByPixel(194);//(188);
 
     // Set fcws warning distance (unit: m). This value can be changed on-the-fly.
     ADAS_SetFcwsUIWarningDist(20);//15
@@ -5859,7 +5859,7 @@ INT32 MovieExe_OnProtectAuto(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
 
     if (paramNum)
         uiSelect = paramArray[0];
-
+    debug_msg("QIUHAN=======================MovieExe_OnProtectAuto\r\n");
     UI_SetData(FL_MOVIE_URGENT_PROTECT_AUTO, uiSelect);
 
     if (UI_GetData(FL_MOVIE_URGENT_PROTECT_AUTO) == MOVIE_URGENT_PROTECT_AUTO_ON ||
@@ -5877,10 +5877,12 @@ INT32 MovieExe_OnProtectAuto(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
         // protect on
         if (uiWidth <= 1920)
         {
+        debug_msg("QIUHAN=======================MovRec_SetMaxStopFlashSec(5)\r\n");
             //#NT#2016/08/09#Niven Cho -begin
             //#NT#LINUX-CARDV, Protect memory is not enough
             #if (_ADAS_FUNC_ == ENABLE || _CPU2_TYPE_==_CPU2_LINUX_)
-            MovRec_SetMaxStopFlashSec(10); // 10 seconds
+            MovRec_SetMaxStopFlashSec(2); // 10 seconds
+            MovRec_SetMaxKeepSec(3);
             #else
             MovRec_SetMaxStopFlashSec(30); // 30 seconds
             #endif
@@ -5909,7 +5911,7 @@ INT32 MovieExe_OnProtectManual(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
 
     if (paramNum)
         uiSelect = paramArray[0];
-
+    debug_msg("QIUHAN=======================MovieExe_OnProtectManual\r\n");
     UI_SetData(FL_MOVIE_URGENT_PROTECT_MANUAL, uiSelect);
 
     if (UI_GetData(FL_MOVIE_URGENT_PROTECT_AUTO) == MOVIE_URGENT_PROTECT_AUTO_ON ||
@@ -5930,7 +5932,9 @@ INT32 MovieExe_OnProtectManual(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
             //#NT#2016/08/09#Niven Cho -begin
             //#NT#LINUX-CARDV, Protect memory is not enough
             #if (_ADAS_FUNC_ == ENABLE || _CPU2_TYPE_==_CPU2_LINUX_)
-            MovRec_SetMaxStopFlashSec(10); // 10 seconds
+			debug_msg("QIUHAN=======================MovieExe_OnProtectManual(5)\r\n");
+            MovRec_SetMaxStopFlashSec(2); // 10 seconds
+            MovRec_SetMaxKeepSec(3);
             #else
             MovRec_SetMaxStopFlashSec(30); // 30 seconds
             #endif

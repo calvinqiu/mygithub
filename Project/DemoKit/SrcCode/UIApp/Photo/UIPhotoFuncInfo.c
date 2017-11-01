@@ -1635,7 +1635,7 @@ void Movie_ADASDSPProcess(MEM_RANGE *buf, MEM_RANGE *cachebuf)
 
 
 }
-
+extern UINT32 BeepPrd;
 void Photo_ADASDSPProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
 {
 	//CHKPNT;
@@ -1668,16 +1668,27 @@ void Photo_ADASDSPProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
             if ( (pAdasRlt->LdwsDspRsltInfo.Failure == LDWS_FAILURE_FALSE) &&
                 ((pAdasRlt->LdwsDspRsltInfo.DepartureDirVoice == LDWS_DEPARTURE_LEFT) || (pAdasRlt->LdwsDspRsltInfo.DepartureDirVoice == LDWS_DEPARTURE_RIGHT)))
             {
-
-                 	Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 1, ADAS_ALARM_LD);
-                    debug_msg("\r\nwarning:ADAS_ALARM_LD\r\n");
+ /* modify begin by ZMD, 2017-02-15 new version management*/
+                #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+				BeepPrd=100;
+                Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 2, ADAS_ALARM_LD,pAdasRlt->LdwsDspRsltInfo.DepartureDirVoice);
+                #else
+                Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 1, ADAS_ALARM_LD);
+                #endif
+                /* modify end by ZMD, 2017-02-15 */
         	
             }
 			else if((pAdasRlt->FcwsDspRsltInfo.Failure== FCWS_FAILURE_FALSE) && (pAdasRlt->FcwsDspRsltInfo.FCSoundWarning == TRUE))
 	        {
 	
-				Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 1, ADAS_ALARM_FC);
-                debug_msg("\r\nwarning:ADAS_ALARM_FC\r\n");
+			 /* modify begin by ZMD, 2017-02-15 new version management*/
+                #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+				BeepPrd=150;
+                Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 2, ADAS_ALARM_FC,pAdasRlt->FcwsDspRsltInfo.uiDist);
+                #else
+                Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 1, ADAS_ALARM_FC);
+                #endif
+                /* modify end by ZMD, 2017-02-15 */
 
 	        }
         }
