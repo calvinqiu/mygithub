@@ -326,10 +326,18 @@ void sys_profile_process(void)
 ///////////////////////////////////////////////////////////////////////////////
 // user cmd
 ///////////////////////////////////////////////////////////////////////////////
-
+extern UINT32 BeepPrd;
 static BOOL Cmd_user_cmd(CHAR* strCmd)
 {
     DBG_DUMP("this is sample cmd!\r\n");
+	
+UINT32 menuIdx, value;
+
+    sscanf_s(strCmd,"%d", &value);
+    debug_msg("this is sample cmd! %d\r\n",value);
+//	g_LCDBacklightPWMInfo.uiPrd=value;
+	BeepPrd = value;
+	//GPIOMap_TurnOnLCDBeep
     return TRUE;
 }
 
@@ -657,7 +665,7 @@ BOOL Cmd_face_grade(CHAR* strCmd)
 }
 
 SXCMD_BEGIN(user, "user command")
-SXCMD_ITEM("cmd", Cmd_user_cmd, "sample code")
+SXCMD_ITEM("cmd %", Cmd_user_cmd, "sample code")
 SXCMD_ITEM("dump_pool", Cmd_user_dump_pool, "dump pool")
 SXCMD_ITEM("movie %", Cmd_movie, "movie mode test")
 SXCMD_ITEM("photo %", Cmd_photo, "photo mode setting")
