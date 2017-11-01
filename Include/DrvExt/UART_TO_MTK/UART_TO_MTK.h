@@ -65,7 +65,16 @@ extern BOOL FwVersion_Seting_state;
 #define   CMD_DAOCHE                                         0x0E  //pgl 20160705 add daoche
 #define   CMD_CHANGE_DIAPLAYMODE                0x0F  //pgl 20160705 add PIPDISPLAY
 #define   CMD_SWITCH_MODE                    0x10 ///* add begin by ZMD, 2016-10-28, ‘≠“Ú: */
-
+//add by qiuhan on 20171028 for U15 begin
+#define   CMD_OTG_TO_MTK                      0x20
+#define   CMD_OTG_TO_NTK                      0x21
+#define   CMD_EMR_VEDIO              0x23
+#define   CMD_ADAS_LDWSL           0x24
+#define   CMD_ADAS_LDWSR           0x25
+#define   CMD_ADAS_FCWS           0x26
+#define   CMD_LENS_POS_CAL_ON       0x27//add by qiuhan on 20171030 for   The lens position calibration
+#define   CMD_LENS_POS_CAL_OFF       0x28//add by qiuhan on 20171030 for   The lens position calibration
+//add end
 #define 	CMD_GSENSOR_TRIG       				0x70
 #define 	CMD_ADAS_RESQ       					0x71
 #define 	CMD_MENUSETTING_RESQ       		0x72

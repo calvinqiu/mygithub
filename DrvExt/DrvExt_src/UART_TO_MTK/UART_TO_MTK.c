@@ -450,11 +450,11 @@ void UART_TO_MTKRecTsk(void)
 
                 if((CheckSum == CheckSumChar) && (StopChar == STOP_CHAR))
                 {
-                    debug_msg("RX Data OK   cmd=%02x \r\n",  CmdChar);
+                    //debug_msg("RX Data OK   cmd=%02x \r\n",  CmdChar);
                     switch(CmdChar)
                     {
                     case CMD_TOUCH:
-                        debug_msg("RX Data OK   cmd=%02x \r\n",  CmdChar);
+                       // debug_msg("RX Data OK   cmd=%02x \r\n",  CmdChar);
                         TouchStatus = RecSentence_read[0];
                         #if defined(YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION)
                         {
@@ -637,7 +637,7 @@ void UART_TO_MTKRecTsk(void)
                         guiMTKSpeed=(UINT32)g_mtk_gps.speed;
                         //guiMTKSpeed=70;
 
-                        debug_msg("GPS info is  lat=%d,%c,  lng=%d,%c,  speed=%d,%d\r\n", g_mtk_gps.lat, g_mtk_gps.N_S, g_mtk_gps.lng, g_mtk_gps.W_E,g_mtk_gps.speed,guiMTKSpeed);
+                        //debug_msg("GPS info is  lat=%d,%c,  lng=%d,%c,  speed=%d,%d\r\n", g_mtk_gps.lat, g_mtk_gps.N_S, g_mtk_gps.lng, g_mtk_gps.W_E,g_mtk_gps.speed,guiMTKSpeed);
 
                         if(gbMTKHeatBeatEn==TRUE)
                         {
@@ -782,7 +782,44 @@ void UART_TO_MTKRecTsk(void)
                             MTKComposeCMDRspFrame(FrameID, CMD_SWITCH_MODE,&data, 1);
                         }
                         break;
-
+		//add by qiuhan on 20171030 for   The lens position calibration
+		    case CMD_LENS_POS_CAL_ON:
+			    debug_msg("=======CMD_LENS_POS_CAL_ON===========\r\n");//,RecSentence_read);
+			    Ux_PostEvent(NVTEVT_MTK_LENS_POS_CAL_OPEN, 1, FrameID);
+                         break;
+						 
+		    case CMD_LENS_POS_CAL_OFF:
+			    debug_msg("=======CMD_LENS_POS_CAL_OFF===========\r\n");
+			    Ux_PostEvent(NVTEVT_MTK_LENS_POS_CAL_CLOSE, 1, FrameID);
+                         break;
+		//add end
+//add by qiuhan on 20171028 for U15 begin
+		    case CMD_OTG_TO_MTK://add by qiuhan on 20170815
+                        debug_msg("=======CMD_OTG_TO_MTK=========%s===\r\n",RecSentence_read);
+			/*  if (System_GetState(SYS_STATE_CURRMODE)!=PRIMARY_MODE_USBMSDC)
+                        {
+                            debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
+				Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
+                            data=1;
+                            MTKComposeCMDRspFrame(FrameID, CMD_OTG_TO_MTK,&data, 1);
+                        }*/
+                        Ux_PostEvent(NVTEVT_MTK_OTG_TO_MTK, 1, FrameID);
+			  // data=1;
+                      //      MTKComposeCMDRspFrame(FrameID, CMD_OTG_TO_MTK,&data, 1);
+			   
+			   break;
+		    case CMD_OTG_TO_NTK:
+                        debug_msg("=======CMD_OTG_TO_NTK=========%s===\r\n",RecSentence_read);
+		//	   extern int PRIMARY_MODE_USBMSDC;
+                        if (System_GetState(SYS_STATE_CURRMODE)==PRIMARY_MODE_USBMSDC)
+                        {
+                            debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
+				Ux_PostEvent(NVTEVT_MTK_CHANGE_MODE, 1,RecSentence_read[0]);
+                            data=0;
+                            MTKComposeCMDRspFrame(FrameID, CMD_OTG_TO_NTK,&data, 1);
+                        }
+			   break;
+//add end
                         #if(FW_VERSION_NUM_FUNC==ENABLE)
                     case CMD_FWVERSION:
                         debug_msg("CMD_FWVERSION_STATE_OK\r\n");
@@ -1326,7 +1363,7 @@ void XmodemSetMTKHeartBeatRes(BOOL En)
 
 BOOL XmodemGetSpeed(FLOAT *Speed)
 {
-    #if 1
+    #if 0
     if((g_mtk_gps.lat!=0)&&(g_mtk_gps.lng!=0))
     {
         *Speed= (UINT32)guiMTKSpeed;
@@ -1340,10 +1377,10 @@ BOOL XmodemGetSpeed(FLOAT *Speed)
 	#else //test
 	guiMTKSpeed =90;
 
-    debug_msg("\r\n**********XmodemGetSpeed  guiMTKSpeed = %f, %d**************\r\n",(FLOAT)guiMTKSpeed, guiMTKSpeed);
+  //  debug_msg("\r\n**********XmodemGetSpeed  guiMTKSpeed = %f, %d**************\r\n",(FLOAT)guiMTKSpeed, guiMTKSpeed);
     
     *Speed= (FLOAT)guiMTKSpeed;
-    debug_msg("\r\n**********XmodemGetSpeed  g_CurSpeed = %f, %d, %u,%03d, km/h**************\r\n",*Speed, (UINT32)(*Speed),(UINT32)(*Speed),(UINT32)(*Speed));
+ //   debug_msg("\r\n**********XmodemGetSpeed  g_CurSpeed = %f, %d, %u,%03d, km/h**************\r\n",*Speed, (UINT32)(*Speed),(UINT32)(*Speed),(UINT32)(*Speed));
     
     return TRUE;
 

@@ -1247,6 +1247,13 @@ BOOL TPIsOnRange(VControl *pCtrl,UINT32 P1,UINT32 P2)
         debug_msg("Get SnapeShotCtrl Event!\r\n");
         Rect.x1 = Rect.x1 - 80;
     }
+//add by qiuhan on 20171028 begin
+    if(strcmp(pCtrl->Name, UIFlowWndMovie_Status_Touch_LockFileCtrl.Name) == 0)
+    {
+        debug_msg("Get LockFileCtrl Event!\r\n");
+        Rect.x1 = Rect.x1 - 80;
+    }
+//end	
 	if((P1>Rect.x1)&&(P1<Rect.x2)&&(P2>Rect.y1)&&(P2<Rect.y2))
 	{
 		return TRUE;

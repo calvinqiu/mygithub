@@ -279,7 +279,7 @@ INT32 SetupExe_OnChangeDSCMode(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
     DBG_IND("uiType %d \r\n",uiType);
 
     uiCurMode = UI_GetData(FL_NextMode);
-
+      debug_msg("QIUHAN==================333333333333333333333333\r\n");
     switch(uiType)
     {
       case DSCMODE_CHGTO_NEXT:
@@ -294,7 +294,8 @@ INT32 SetupExe_OnChangeDSCMode(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
             {
                 #if (PHOTO_MODE==ENABLE)
 #if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
-                    uiChangeTo = PRIMARY_MODE_USBMSDC;
+                   debug_msg("QIUHAN==================1111111111111111111111111\r\n");
+                    uiChangeTo = PRIMARY_MODE_MOVIE;//PRIMARY_MODE_USBMSDC;
 					#elif defined(YQCONFIG_COMB_PLAYMODE_OPTION_PLAYBACKMODE)
 					                    uiChangeTo = PRIMARY_MODE_PLAYBACK;
 #else
@@ -314,6 +315,7 @@ INT32 SetupExe_OnChangeDSCMode(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
             #if (USB_MODE==ENABLE)
             if (PRIMARY_MODE_USBMSDC == (INT32)uiCurMode)
             {
+             debug_msg("QIUHAN==================2222222222222222222222222\r\n");
                 uiChangeTo = PRIMARY_MODE_MOVIE;
             }
             else

@@ -107,6 +107,7 @@ INT32 UIFlowWndUSB_OnChangeMode(VControl *pCtrl, UINT32 paramNum, UINT32 *paramA
 {
     UINT32 FrameID;
     UIFlowwndMovieSetNeedToRecordFlag(TRUE);
+    debug_msg("QIUHAN======================UIFlowWndUSB_OnChangeMode\r\n");
     Ux_SendEvent(&UISetupObjCtrl,NVTEVT_EXE_CHANGEDSCMODE,1,DSCMODE_CHGTO_NEXT);
 
     return NVTEVT_CONSUME;

@@ -2227,7 +2227,7 @@ void MovieStamp_UpdateData(void)
 
     //CurDateTime = HwClock_GetTime(TIME_ID_CURRENT);
     CurDateTime = g_CurDateTime;
-    debug_msg("\r\n************MovieStamp_UpdateData************\r\n");
+   // debug_msg("\r\n************MovieStamp_UpdateData************\r\n");
     for (i = 0; i < VIDEO_IN_MAX; i++)
     {
         if ((g_uiMovieStampSetup[i] & STAMP_SWITCH_MASK) == STAMP_ON)
