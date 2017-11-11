@@ -820,6 +820,10 @@ void UART_TO_MTKRecTsk(void)
                         }
 			   break;
 //add end
+                    case CMD_EMR_VEDIO:
+				 debug_msg("=======CMD_EMR_VEDIO=========%s===\r\n",RecSentence_read);
+				 Ux_PostEvent(NVTEVT_MTK_EMR_VIDEO, 1, FrameID);
+				 break;
                         #if(FW_VERSION_NUM_FUNC==ENABLE)
                     case CMD_FWVERSION:
                         debug_msg("CMD_FWVERSION_STATE_OK\r\n");
@@ -1363,7 +1367,7 @@ void XmodemSetMTKHeartBeatRes(BOOL En)
 
 BOOL XmodemGetSpeed(FLOAT *Speed)
 {
-    #if 0
+    #if 1
     if((g_mtk_gps.lat!=0)&&(g_mtk_gps.lng!=0))
     {
         *Speed= (UINT32)guiMTKSpeed;

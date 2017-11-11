@@ -250,6 +250,7 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
 void UIFLowWndMovie_ShowLensPositionCalibration(VControl *pCtrl, UINT32 paramNum, UINT32 * paramArray);
 void UIFLowWndMovie_HideLensPositionCalibration(VControl *pCtrl, UINT32 paramNum, UINT32 * paramArray);
 //add end
+void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
 #endif
 //#NT#2016/06/23#Niven Cho -begin
 //#NT#Enter calibration by cgi event or command event
@@ -336,6 +337,7 @@ EVENT_ITEM(NVTEVT_MTK_OTG_TO_MTK, UIFlowWndMovie_ChangeOtgToMtk)
 EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_OPEN, UIFLowWndMovie_ShowLensPositionCalibration)
 EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_CLOSE, UIFLowWndMovie_HideLensPositionCalibration)
 //add end
+EVENT_ITEM(NVTEVT_MTK_EMR_VIDEO, UIFlowWndMovie_UserSaveEMRVideo)
 #endif
 EVENT_END
 
@@ -411,6 +413,47 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
 
 }
 //add end
+
+char EventEMRName[256] = {0};//qiuhan add 20171027
+extern BOOL WndMovieTouchPanelKeyUpdateIcons;
+void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray)
+{
+	         UINT8   uiResqData[16]= {0};
+		  UINT32 FrameId;
+		  if(paramNum==1){
+                    FrameId = paramArray[0];
+	         }
+
+	         if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+                {
+                    Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+                    uiResqData[0]=0x00;
+                    MTKComposeCMDRspFrame(FrameId, CMD_EMR_VEDIO,(UINT8 *)&uiResqData, 2);
+                    return NVTEVT_CONSUME;
+                }
+                switch(gMovData.State)
+                {
+	                case MOV_ST_REC:
+	                case MOV_ST_REC|MOV_ST_ZOOM:
+			     
+	                     UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_PRESS);
+	                     WndMovieTouchPanelKeyUpdateIcons=TRUE;
+	                     UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
+	                    //UIFlowWndMovie_LockFile();
+	                     memset(EventEMRName, 0, sizeof(EventEMRName));//EventEMRName[256]=NULL;
+	                     strcat(&EventEMRName[0], "Emergency-");
+	                     debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
+				Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+	                     UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+				 uiResqData[0]=0x01;
+                             MTKComposeCMDRspFrame(FrameId, CMD_EMR_VEDIO,(UINT8 *)&uiResqData, 2);
+	                     break;
+                }
+              //  uiResqData[0]=0x02;
+              //  MTKComposeCMDRspFrame(FrameId, CMD_EMR_VEDIO,(UINT8 *)&uiResqData, 2);
+
+
+}
 
 
  //add by qiuhan on 20171030 for   The lens position calibration
@@ -2746,7 +2789,7 @@ INT32 UIFlowWndMovie_OnCustom1(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
 
 //#NT#2016/03/25#KCHong -begin
 //#NT#New ADAS
-char EventEMRName[256] = {0};//qiuhan add 20171027
+
 char EventLDWSLName[256] = {0};//qiuhan add 20171027 
 char EventLDWSRName[256] = {0};//qiuhan add 20171027 
 char EventFDWSName[256] = {0};//qiuhan add 20171027 
@@ -3595,7 +3638,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
     UINT32 uiPositon=0,P1=0,P2=0;
     UINT8 FrameID=0;
     UINT32 TouchKeyStatus=0xFFFF;
- UINT32 i;
+    UINT32 i;
     UINT8   uiResqData[16]= {0};
     UINT32 uiJpegWidth=0, uiJpegHeight=0, uiDAR=0, uiMovieSize=0;
 
@@ -3853,13 +3896,14 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                     UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_PRESS);
                     WndMovieTouchPanelKeyUpdateIcons=TRUE;
                     UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
-                    //UIFlowWndMovie_LockFile();
-                     memset(EventEMRName, 0, sizeof(EventEMRName));//EventEMRName[256]=NULL;
+                    UIFlowWndMovie_LockFile();
+             /*        memset(EventEMRName, 0, sizeof(EventEMRName));//EventEMRName[256]=NULL;
                      strcat(&EventEMRName[0], "Emergency-");
                      debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
-			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record*/
                      UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
-                              for( i = 0; i<=1; i++){
+                           #if 0
+				  for( i = 0; i<=1; i++){
 					GPIOMap_TurnOnLCDBeep();
 					Delay_DelayMs(500);
 					GPIOMap_TurnOFFLCDBeep();
@@ -3870,6 +3914,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 					GPIOMap_TurnOFFLCDBeep();
 
                                }*/
+                            #endif
 					 
                     break;
                 }
