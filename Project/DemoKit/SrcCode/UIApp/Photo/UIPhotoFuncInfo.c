@@ -1670,7 +1670,7 @@ void Photo_ADASDSPProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
             {
  /* modify begin by ZMD, 2017-02-15 new version management*/
                 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
-				BeepPrd=100;
+				BeepPrd=90;
                 Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 2, ADAS_ALARM_LD,pAdasRlt->LdwsDspRsltInfo.DepartureDirVoice);
                 #else
                 Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 1, ADAS_ALARM_LD);
@@ -1683,7 +1683,7 @@ void Photo_ADASDSPProcessEnd(MEM_RANGE *buf, MEM_RANGE *cachebuf)
 	
 			 /* modify begin by ZMD, 2017-02-15 new version management*/
                 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
-				BeepPrd=150;
+				BeepPrd=95;
                 Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 2, ADAS_ALARM_FC,pAdasRlt->FcwsDspRsltInfo.uiDist);
                 #else
                 Ux_PostEvent(NVTEVT_CB_ADAS_SHOWALARM , 1, ADAS_ALARM_FC);
