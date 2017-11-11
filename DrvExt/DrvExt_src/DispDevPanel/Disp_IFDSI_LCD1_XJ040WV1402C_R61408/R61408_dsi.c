@@ -28,7 +28,7 @@
 
 
 #define PANEL_WIDTH     480//480
-#define PANEL_HEIGHT    800//864//848
+#define PANEL_HEIGHT    814//800//864//848//20171102 qiuhan xiu gai hua mian duan ceng
 
 
 
