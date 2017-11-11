@@ -448,6 +448,11 @@ void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 *
 				 uiResqData[0]=0x01;
                              MTKComposeCMDRspFrame(FrameId, CMD_EMR_VEDIO,(UINT8 *)&uiResqData, 2);
 	                     break;
+						 default:
+						 	 uiResqData[0]=0x02;
+                                                  MTKComposeCMDRspFrame(FrameId, CMD_EMR_VEDIO,(UINT8 *)&uiResqData, 2);
+							 break;
+						 	
                 }
               //  uiResqData[0]=0x02;
               //  MTKComposeCMDRspFrame(FrameId, CMD_EMR_VEDIO,(UINT8 *)&uiResqData, 2);

@@ -32,7 +32,7 @@
 // FW version and name
 #define FW_UPDATE_NAME                  "A:\\FW96660A.bin"
 #define FW_VERSION_RELEASE              DISABLE //ENABLE
-#define FW_VERSION_NUM                  "2016_02_22_V01" //"GSDEMO_0508_1153"
+#define FW_VERSION_NUM                   "2017_11_06_V01" //"2016_02_22_V01" //"GSDEMO_0508_1153"
 
 //..............................................................................
 // Memory Partition
