@@ -139,7 +139,7 @@ YQCONFIG_LED_FUNCTION_SUPPORT = no
             							# Option1:yes
             							# Option2:no  
 								          							          							         							          							            							
- YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT = no	    
+ YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT = yes	    
             							# Option1:yes
             							# Option2:no   
 								
@@ -162,7 +162,7 @@ YQCONFIG_COMB_PLAYMODE_OPTION = USBMSDCMODE
             							# Option1:USBMSDCMODE
             							# Option2:PLAYBACKMODE    
             							
-YQCONFIG_TOUCH_LOCKFILE_OPTION = no	    
+YQCONFIG_TOUCH_LOCKFILE_OPTION = yes	    
             							# Option1:yes
             							# Option2:no  
 YQCONFIG_TOUCH_SETUP_OPTION = yes	    
