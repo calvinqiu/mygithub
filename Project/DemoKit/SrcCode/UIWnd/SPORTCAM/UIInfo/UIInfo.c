@@ -496,7 +496,7 @@ void KeyScan_EnableMisc(BOOL bEn)
         GxPower_SetControl(GXPWR_CTRL_AUTOPOWEROFF_RESET,0);
         GxPower_SetControl(GXPWR_CTRL_SLEEP_RESET,0);
         SxTimer_SetFuncActive(SX_TIMER_DET_AUTOPOWEROFF_ID,FALSE);
-        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);
+        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
         //UISound_EnableKey(FALSE); // 660 is full-duplex for audio
     } else {
         // enable auto power off/USB detect timer

@@ -26,7 +26,7 @@
 //global debug level: PRJ_DBG_LVL
 #include "PrjCfg.h"
 //local debug level: THIS_DBGLVL
-#define THIS_DBGLVL         1 //0=OFF, 1=ERROR, 2=TRACE
+#define THIS_DBGLVL         2 //0=OFF, 1=ERROR, 2=TRACE
 ///////////////////////////////////////////////////////////////////////////////
 #define __MODULE__          SysUsbExe
 #define __DBGLVL__          ((THIS_DBGLVL>=PRJ_DBG_LVL)?THIS_DBGLVL:PRJ_DBG_LVL)
@@ -244,6 +244,7 @@ INT32 System_OnUsbRemove(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
             if (m_bACPlug == TRUE)
             {
                m_bACPlug = FALSE;
+	       debug_msg("QIUHAN===================System_OnUsbRemove\r\n");
                Ux_PostEvent(NVTEVT_AC_UnPlug, 0, 0);
             }
         }
