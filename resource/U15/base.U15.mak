@@ -10,7 +10,7 @@ YQCONFIG_AWB_CUST = AWB_AR0238CSP_EVB_FF
             							# Option1:AWB_OV4689_IMX322LQJ_EVB_FF
             							# Option2:AWB_SAMPLE             							   							
 
-YQCONFIG_IPP_CUST = IPL_AR0238CSP_IMX322LQJ_EVB_FF
+YQCONFIG_IPP_CUST = IPL_AR0238CSP_EVB_FF
             							#IPL_IMX291M_IMX322LQJ_EVB_FF      
             							# Option1:IPL_OV4689_IMX322LQJ_EVB_FF
             							# Option2:IPL_FAKE  
@@ -19,7 +19,7 @@ YQCONFIG_SENSOR_CUST = CMOS_AR0238CSP
             							# Option1:CMOS_OV4689
             							# Option2:OFF  
             							
-YQCONFIG_SENSOR_2_CUST = CMOS_IMX322LQJVX1      
+YQCONFIG_SENSOR_2_CUST = OFF      
             							# Option1:CMOS_IMX322LQJVX1
             							# Option2:OFF 
 
