@@ -3901,11 +3901,11 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                     UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_PRESS);
                     WndMovieTouchPanelKeyUpdateIcons=TRUE;
                     UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
-                    UIFlowWndMovie_LockFile();
-             /*        memset(EventEMRName, 0, sizeof(EventEMRName));//EventEMRName[256]=NULL;
+                   // UIFlowWndMovie_LockFile();
+                     memset(EventEMRName, 0, sizeof(EventEMRName));//EventEMRName[256]=NULL;
                      strcat(&EventEMRName[0], "Emergency-");
                      debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
-			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record*/
+			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
                      UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
                            #if 0
 				  for( i = 0; i<=1; i++){
