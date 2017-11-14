@@ -828,7 +828,7 @@ static ER IPE_IQparam(UINT32 Id, IQS_FLOW_MSG MsgID, IPE_SUBFUNC *subf,IPL_HAL_G
             {
                 static UINT32 aLv_old[Total_SENIDNum] = {0, 0};
                 #define IQS_LV_DAY_END     100
-                #define IQS_LV_NIGHT_START 60
+                #define IQS_LV_NIGHT_START 80
                 if( (aLv != aLv_old[SenId_Value]) && !((aLv > IQS_LV_DAY_END) && (aLv_old[SenId_Value] > IQS_LV_DAY_END)) && !((aLv < IQS_LV_NIGHT_START) && (aLv_old[SenId_Value] < IQS_LV_NIGHT_START)) )
                     Gamma_update[SenId_Value] = TRUE;
                 aLv_old[SenId_Value] = aLv;

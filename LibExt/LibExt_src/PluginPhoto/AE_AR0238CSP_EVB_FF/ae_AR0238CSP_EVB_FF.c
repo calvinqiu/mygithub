@@ -40,7 +40,7 @@
 #define __DBGFLT__ "*"      //*=All
 #include "DebugModule.h"
 
-#define AE_STAMPLOG  0
+#define AE_STAMPLOG  1//0
 
 extern UINT32 IQS_GetGammaValue(UINT32 Id, UINT32 Data12Bit);
 extern UINT32 IQS_GetInvGammaValue(UINT32 Id, UINT32 Data10Bit);
@@ -153,12 +153,17 @@ void AE_LoadEventTAB(AE_EVENT_TAB *EventTab)
 
 //MovieStamp
 #if AE_STAMPLOG
+#include "awb_api.h"
 extern UINT32 g3DNR[IPL_ID_MAX_NUM];
 extern void AWB_GetColorGain(UINT32 id, UINT32 *Rg,UINT32 *Gg,UINT32 *Bg);
-extern void H264Test_GetEncInfo(INT32 puiParam[8]);
 extern void AWB_GetStatus(UINT32 Id, AWBStatus *pAWBStatus);
-extern UINT32 ISO_NOW;
+extern void H264Test_GetEncInfo(INT32 puiParam[8]);
+extern AUTO_WDR_SET IQS_WDR_Set[IPL_ID_MAX_NUM];
 
+//#NT#2016/10/18#Adrian -begin
+//#NT#Add QP infromation for multiple streaming
+#include "VideoEncode.h"
+extern INT32                   gStr_QP[VIDENC_ID_MAX];
 static void AE_SetMovieLog(UINT32 Id, char* Buf, UINT32 BufLen)
 {
     INT32 uiParam[8];
@@ -168,21 +173,24 @@ static void AE_SetMovieLog(UINT32 Id, char* Buf, UINT32 BufLen)
     AWB_GetColorGain(Id, &RGain, &GGain, &BGain);
     AWB_GetStatus(Id, &pAWBStatus);
 
-    snprintf(Buf, BufLen, "1204 %3d %3d %3d %3d %3d %3d %3d %5d %4d %4d %5d %d %d %3d %3d %3d %1d %2d\0",
+    snprintf(Buf, BufLen, "01 %3d %3d %3d %3d %3d %5d %4d %3d %3d %3d %3d %3d %3d %3d %3d %2d %2d %2d %4d\0",
         AeInfo[Id].PrvAvgEV.LV,
-        AeInfo[Id].ExtSet.AdjHistoInfo.Lum.y,
+        AeInfo[Id].ExtSet.OverExp.CurCnt,
         AeInfo[Id].ExtSet.OverExp.CurTotalStep,
         AeInfo[Id].PrvAvgLum.y,
         AeInfo[Id].CurExpectLum.y,
         PrvNewAeArg[Id][AEStep[Id]].ExpoTime,
         PrvNewAeArg[Id][AEStep[Id]].ISOGain,
         g3DNR[Id], IPL_AlgGetUIInfo(Id, IPL_SEL_WDR),
-        ISO_NOW,
-        pAWBStatus.ColorTemperature,
+        IQS_WDR_Set[Id].DarkGain,
+        IQS_WDR_Set[Id].BrightGain,
+        IQS_WDR_Set[Id].BlackLevel,
+        IQS_WDR_Set[Id].Sharpness,
         RGain, BGain,
-        uiParam[0],  // 0 : P slice, 1 : B slice , 2,3 : I or  IDR slice
-        uiParam[2]   //rc_bug[2] = iQP;
-        
+        gStr_QP[0],//stream0 QP
+        gStr_QP[1],//stream1 QP
+        gStr_QP[2],//stream2 QP
+        pAWBStatus.ColorTemperature
 
 	
     );

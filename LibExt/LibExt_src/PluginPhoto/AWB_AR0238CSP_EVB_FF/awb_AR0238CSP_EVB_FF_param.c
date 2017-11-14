@@ -153,7 +153,7 @@ AWBALG_ELEMET WhiteNightElement1[] =
     {AWBALG_TYPE_RXBG,   370, 171, {  0,  0}, {  0,  0}},
     {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
 #endif
-#if 0 // same as outdoor table
+#if 1 // same as outdoor table
     {AWBALG_TYPE_Y,      (200<<4),   (8<<4), {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_RG,     180,  60, {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_BG,     350, 105, {  0,  0}, {  0,  0}},
@@ -162,31 +162,10 @@ AWBALG_ELEMET WhiteNightElement1[] =
     {AWBALG_TYPE_RXBG,   335, 160, {  0,  0}, {  0,  0}},
     {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
 #endif
-#if 0 // same as outdoor table
-    {AWBALG_TYPE_Y,      (200<<4),   (8<<4), {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RG,     175,  60, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_BG,     300, 100, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RBG,    400,  55, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RBGSUM, 400, 245, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RXBG,   310, 150, {  0,  0}, {  0,  0}},
-    {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
-#endif
-#if 1
-{AWBALG_TYPE_Y, 	 (200<<4),	 (8<<4), {	0,	0}, {  0,  0}},
-{AWBALG_TYPE_RG,	 226,  60, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_BG,	 350, 105, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_RBG,	 420,  60, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_RBGSUM, 429, 251, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_RXBG,	 418, 160, {  0,  0}, {  0,  0}},
-{AWBALG_TAB_END,	   0,	0, {  0,  0}, {  0,  0}}
-#endif
-
-
 };
 
 AWBALG_ELEMET WhiteIndoorElement1[] =
 {
-#if 0
     {AWBALG_TYPE_Y,      (200<<4),   (8<<4), {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_RG,     180,  60, {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_BG,     350, 105, {  0,  0}, {  0,  0}},
@@ -194,33 +173,10 @@ AWBALG_ELEMET WhiteIndoorElement1[] =
     {AWBALG_TYPE_RBGSUM, 420, 251, {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_RXBG,   335, 160, {  0,  0}, {  0,  0}},
     {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
-#endif
-#if 0 // same as outdoor table
-    {AWBALG_TYPE_Y,      (200<<4),   (8<<4), {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RG,     175,  60, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_BG,     300, 100, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RBG,    400,  55, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RBGSUM, 400, 245, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RXBG,   310, 150, {  0,  0}, {  0,  0}},
-    {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
-#endif
-#if 1
-
-{AWBALG_TYPE_Y, 	 (200<<4),	 (8<<4), {	0,	0}, {  0,  0}},
-{AWBALG_TYPE_RG,	 226,  60, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_BG,	 350, 105, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_RBG,	 420,  60, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_RBGSUM, 429, 251, {  0,  0}, {  0,  0}},
-{AWBALG_TYPE_RXBG,	 418, 160, {  0,  0}, {  0,  0}},
-{AWBALG_TAB_END,	   0,	0, {  0,  0}, {  0,  0}}
-
-#endif
-
 };
 
 AWBALG_ELEMET WhiteOutdoorElement1[] =
 {
-	#if 0
     {AWBALG_TYPE_Y,      (200<<4),   (8<<4), {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_RG,     184, 125, {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_BG,     173, 110, {  0,  0}, {  0,  0}},
@@ -228,26 +184,6 @@ AWBALG_ELEMET WhiteOutdoorElement1[] =
     {AWBALG_TYPE_RBGSUM, 355, 251, {  0,  0}, {  0,  0}},
     {AWBALG_TYPE_RXBG,   320, 171, {  0,  0}, {  0,  0}},
     {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
-	#endif 
-	#if 0 // same as outdoor table
-    {AWBALG_TYPE_Y,      (200<<4),   (8<<4), {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RG,     175,  60, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_BG,     300, 100, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RBG,    400,  55, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RBGSUM, 400, 245, {  0,  0}, {  0,  0}},
-    {AWBALG_TYPE_RXBG,   310, 150, {  0,  0}, {  0,  0}},
-    {AWBALG_TAB_END,       0,   0, {  0,  0}, {  0,  0}}
-#endif
-#if 1
-  {AWBALG_TYPE_Y, 	 (200<<4),	 (8<<4), {	0,	0}, {  0,  0}},
-  {AWBALG_TYPE_RG,	   226, 66, {  0,  0}, {  0,  0}},
-  {AWBALG_TYPE_BG,	   283, 110, {	0,	0}, {  0,  0}},
-  {AWBALG_TYPE_RBG,    389,  63, {	0,	0}, {  0,  0}},
-  {AWBALG_TYPE_RBGSUM, 429, 251, {	0,	0}, {  0,  0}},
-  {AWBALG_TYPE_RXBG,   355, 160, {	0,	0}, {  0,  0}},//Green
-  {AWBALG_TAB_END,		 0,   0, {	0,	0}, {  0,  0}}
-
-#endif
 };
 
 //0.97, 0.03, 0.07
