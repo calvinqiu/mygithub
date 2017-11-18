@@ -463,7 +463,9 @@ void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 *
 
  //add by qiuhan on 20171030 for   The lens position calibration
 void UIFLowWndMovie_ShowLensPositionCalibration(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
-
+    FlowMovie_IconHideSpeed();
+    FlowMovie_IconHideDistance();
+    FlowMovie_IconHideDateTime();
     //add by qiuhan on 20171030 for   The lens position calibration
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, TRUE);
     //add end
@@ -475,6 +477,9 @@ void UIFLowWndMovie_HideLensPositionCalibration(VControl * pCtrl, UINT32 paramNu
     //add by qiuhan on 20171030 for   The lens position calibration
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, FALSE);
     //add end
+    FlowMovie_IconDrawSpeed();
+    FlowMovie_IconDrawDistance();
+    FlowMovie_IconDrawDateTime();
 }
 //add end
 
@@ -1263,7 +1268,7 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
     //#NT#2015/07/17#KS Hung -begin
     //#NT#For ADAS
     //add by qiuhan on 20171030 for   The lens position calibration
-    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, FALSE);
+    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, TRUE);
     //add end
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl, FALSE);
     UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, TRUE);
