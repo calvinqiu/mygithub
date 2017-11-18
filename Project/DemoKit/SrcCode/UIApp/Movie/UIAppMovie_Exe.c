@@ -795,7 +795,15 @@ void Movie_SetRecParam(void)
 #if (_CPU2_TYPE_ == _CPU2_LINUX_ && IPCAM_FUNC!=ENABLE)
     uiFileType          = MEDIA_FILEFORMAT_TS;                          // file type
 #else
+   #if defined(YQCONFIG_COMB_UIFILETYPE_OPTION_TS)
+    uiFileType          = MEDIA_FILEFORMAT_TS;                          // file type
+    #elif defined(YQCONFIG_COMB_UIFILETYPE_OPTION_MOV)
+    uiFileType          = MEDIA_FILEFORMAT_MOV;                         // file type
+    #elif defined(YQCONFIG_COMB_UIFILETYPE_OPTION_MP4)
     uiFileType          = MEDIA_FILEFORMAT_MP4;                         // file type
+    #else
+    uiFileType          = MEDIA_FILEFORMAT_MP4;                         // file type
+    #endif                         // file type
 #endif
     //#NT#2016/08/03#Niven Cho -end
 
