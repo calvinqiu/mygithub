@@ -10,7 +10,7 @@ YQCONFIG_AWB_CUST = AWB_AR0238CSP_EVB_FF
             							# Option1:AWB_OV4689_IMX322LQJ_EVB_FF
             							# Option2:AWB_SAMPLE             							   							
 
-YQCONFIG_IPP_CUST = IPL_AR0238CSP_EVB_FF
+YQCONFIG_IPP_CUST = IPL_AR0238CSP_IMX322LQJ_EVB_FF
             							#IPL_IMX291M_IMX322LQJ_EVB_FF      
             							# Option1:IPL_OV4689_IMX322LQJ_EVB_FF
             							# Option2:IPL_FAKE  
@@ -177,4 +177,6 @@ YQCONFIG_COMB_PLAYMODE_ITEMS_ONE_PAGE_OPTION = BIGSCREEN
 YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION = yes
             							# Option1:yes
             							# Option2:no    
-										
+YQCONFIG_DATEPRINT_SUPPORT = yes
+                                                                # Option1:yes
+            							# Option2:no
