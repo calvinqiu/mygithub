@@ -153,6 +153,7 @@ typedef enum
     NVTEVT_MTK_LENS_POS_CAL_CLOSE = 0x80003015,
     //add end
     NVTEVT_MTK_EMR_VIDEO = 0x80003016,
+    NVTEVT_GENSOR_EMR_VEDIO = 0x80003017,
 #endif
     // wifi event
     NVTEVT_WIFI_EXE_PHOTO_SIZE  = 0x8000e000,         ///< Set Photo size by Wi-Fi App

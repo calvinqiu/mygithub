@@ -605,10 +605,12 @@ extern char EventEMRName[256];
 extern char EventLDWSLName[256];
 extern char EventLDWSRName[256];
 extern char EventFDWSName[256];
+extern char EventGsensorName[256];
 char EventEMRNameString[100] = {0};//qiuhan add 20171027
 char EventLDWSLNameString[100] = {0};//qiuhan add 20171027
 char EventLDWSRNameString[100] = {0};//qiuhan add 20171027
 char EventFDWSNameString[100] = {0};//qiuhan add 20171027
+char EventGsensorNameString[100] = {0};//qiuhan add 20171118
 void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 {
     UINT32 uiSeconds;
@@ -765,7 +767,17 @@ void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 			memset(EventFDWSName, 0, sizeof(EventFDWSName));
 		       MTKComposeCMDRspFrame(0, CMD_ADAS_LDWSR,&uiResqData, 116);  
 			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
-        }
+        }else if(strcmp(EventGsensorName, "Collision-")==0){
+                     strncpy(EventGsensorNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 Collision==%s\r\n",EventGsensorNameString);
+                     strcat(EventGsensorName,EventGsensorNameString);
+			debug_msg("QIUHAN=======================EventEMRName Collision==%s\r\n",EventGsensorName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventGsensorName);
+			memset(EventGsensorName, 0, sizeof(EventGsensorName));
+		       MTKComposeCMDRspFrame(0, CMD_GSENSOR_VEDIO,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+	}
 		
         memset(EventEMRName, 0, sizeof(EventEMRName));
 	 debug_msg("QIUHAN=======================EventEMRName_Last ==%s\r\n",EventEMRName);//add by qiuhan on 20171027

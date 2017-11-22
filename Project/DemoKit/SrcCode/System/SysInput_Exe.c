@@ -442,6 +442,7 @@ void UI_DetCustom1Key(void)
     bGSensorStatus = GSensor_GetStatus(&GS_Data);
     if (bGSensorStatus == TRUE)
 {
+	Ux_PostEvent(NVTEVT_GENSOR_EMR_VEDIO, 0);
 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)  
 	Ux_PostEvent(NVTEVT_GSENSOR_TRIG, 0);
 #else

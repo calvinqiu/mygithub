@@ -74,6 +74,7 @@ extern BOOL FwVersion_Seting_state;
 #define   CMD_ADAS_FCWS           0x26
 #define   CMD_LENS_POS_CAL_ON       0x27//add by qiuhan on 20171030 for   The lens position calibration
 #define   CMD_LENS_POS_CAL_OFF       0x28//add by qiuhan on 20171030 for   The lens position calibration
+#define   CMD_GSENSOR_VEDIO    0x29
 //add end
 #define 	CMD_GSENSOR_TRIG       				0x70
 #define 	CMD_ADAS_RESQ       					0x71

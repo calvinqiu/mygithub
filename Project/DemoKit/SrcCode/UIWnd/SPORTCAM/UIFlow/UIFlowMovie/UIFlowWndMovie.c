@@ -251,6 +251,10 @@ void UIFLowWndMovie_ShowLensPositionCalibration(VControl *pCtrl, UINT32 paramNum
 void UIFLowWndMovie_HideLensPositionCalibration(VControl *pCtrl, UINT32 paramNum, UINT32 * paramArray);
 //add end
 void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+void UIFlowWndMovie_GsensorShortEmrVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
+#endif
+
 #endif
 //#NT#2016/06/23#Niven Cho -begin
 //#NT#Enter calibration by cgi event or command event
@@ -322,6 +326,9 @@ EVENT_ITEM(NVTEVT_CB_DDD_SHOWALARM,UIFlowWndMovie_OnDDDShowAlarm)
 EVENT_ITEM(NVTEVT_TOUCHPANEL_KEY,UIFlowWndMovie_OnTouchPanelKey)
 EVENT_ITEM(NVTEVT_MTK_MENU_SETTING,UIFlowWndMovie_OnMTKMenuSetting)
 EVENT_ITEM(NVTEVT_MTK_GPSINFO,UIFlowWndMovie_OnMTKGpsInfo)
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+EVENT_ITEM(NVTEVT_GENSOR_EMR_VEDIO, UIFlowWndMovie_GsensorShortEmrVideo)
+#endif
 EVENT_ITEM(NVTEVT_GSENSOR_TRIG,UIFlowWndMovie_GsensorTrig)
 EVENT_ITEM(NVTEVT_MTK_STARTREC,UIFlowWndMovie_StartMovieRecord)
 EVENT_ITEM(NVTEVT_MTK_STOPREC,UIFlowWndMovie_StopMovieRecord)
@@ -415,7 +422,35 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
 //add end
 
 char EventEMRName[256] = {0};//qiuhan add 20171027
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+char EventGsensorName[256] = {0};
+#endif
 extern BOOL WndMovieTouchPanelKeyUpdateIcons;
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+void UIFlowWndMovie_GsensorShortEmrVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
+	if(gbGsensorTrig==TRUE){
+		 debug_msg("QIUHAN=====================begin send CUSTOM gbGsensorTrig=%d\r\n",gbGsensorTrig);
+            return NVTEVT_CONSUME;
+	}
+	switch(gMovData.State)
+        {
+        case MOV_ST_REC:
+        case MOV_ST_REC|MOV_ST_ZOOM:
+            if(UI_GetData(FL_GSENSOR) != GSENSOR_OFF)
+            {
+	          memset(EventGsensorName, 0, sizeof(EventGsensorName));//EventEMRName[256]=NULL;
+	          strcat(&EventGsensorName[0], "Collision-");
+	          debug_msg("QIUHAN=====================begin send CUSTOM GENSOR\r\n");//dual record, only support set crash
+		   Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+            }
+	     break;
+		 default:
+		 	break;
+	}
+}
+
+#endif
+
 void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray)
 {
 	         UINT8   uiResqData[16]= {0};
@@ -1268,7 +1303,7 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
     //#NT#2015/07/17#KS Hung -begin
     //#NT#For ADAS
     //add by qiuhan on 20171030 for   The lens position calibration
-    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, TRUE);
+    UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, FALSE);
     //add end
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_Alert_DisplayCtrl, FALSE);
     UxCtrl_SetShow(&UIFlowWndMovie_Panel_Normal_DisplayCtrl, TRUE);
@@ -6000,8 +6035,16 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
 {
     UIScreen ScreenObj = *paramArray;
     //ADAS_APPS_RESULT_INFO *pAdasRlt = MovieExe_GetAdasRltOSD();
+    #if defined(YQCONFIG_PLATFORM_NAME_U15)
+    INT32 Triangle_Top_X=0;
+    INT32 Triangle_Top_Y=0;
+    INT32 Triangle_Left_X=0;
+    INT32 Triangle_Left_Y=0;
+    INT32 Triangle_Right_X=0;
+    INT32 Triangle_Right_Y=0;
+    #endif
 
-	ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasDspRltOSD();
+    ADAS_DSP_RESULT_INFO *pAdasDspRlt = MovieExe_GetAdasDspRltOSD();
 	
     CHAR InfoStr[20] = {0};
     BVALUE LineColor = 0;
@@ -6069,8 +6112,8 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
         #endif
         {
 			
-			//debug_msg("\r\n----DSP_draw_LdwsDspRsltInfo----\r\n");
-            //debug_msg("\r\n----DSP_LdwsDspRsltInfo.DepartureDirVoice = %d----\r\n",pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice);
+		//	debug_msg("\r\n----DSP_draw_LdwsDspRsltInfo----\r\n");
+              //       debug_msg("\r\n----DSP_LdwsDspRsltInfo.DepartureDirVoice = %d----\r\n",pAdasDspRlt->LdwsDspRsltInfo.DepartureDirVoice);
             
             LineColor = (pAdasDspRlt->LdwsDspRsltInfo.DepartureDir == LDWS_DEPARTURE_LEFT)?CLRID_IDX_RED:CLRID_IDX_GREEN;
             GxGfx_SetShapeColor(LineColor, LineColor, NULL);
@@ -6080,7 +6123,24 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
             GxGfx_SetShapeColor(LineColor, LineColor, NULL);
             GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pAdasDspRlt->LdwsDspRsltInfo.uiRx1, pAdasDspRlt->LdwsDspRsltInfo.uiRy1, pAdasDspRlt->LdwsDspRsltInfo.uiRx2, pAdasDspRlt->LdwsDspRsltInfo.uiRy2); // right lane
 
-        }
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+             //draw U15 Triangle 1118
+             Triangle_Top_X = (pAdasDspRlt->LdwsDspRsltInfo.uiRx1 - pAdasDspRlt->LdwsDspRsltInfo.uiLx1)/2+pAdasDspRlt->LdwsDspRsltInfo.uiLx1;
+	      Triangle_Top_Y =  (pAdasDspRlt->LdwsDspRsltInfo.uiLy2 - pAdasDspRlt->LdwsDspRsltInfo.uiLy1)/3+pAdasDspRlt->LdwsDspRsltInfo.uiLy1;
+
+	      Triangle_Left_X =  pAdasDspRlt->LdwsDspRsltInfo.uiLx1;
+	      Triangle_Left_Y = (pAdasDspRlt->LdwsDspRsltInfo.uiLy2 - pAdasDspRlt->LdwsDspRsltInfo.uiLy1)*2/3+pAdasDspRlt->LdwsDspRsltInfo.uiLy1;
+
+	      Triangle_Right_X =  pAdasDspRlt->LdwsDspRsltInfo.uiRx1;
+	      Triangle_Right_Y =  ( pAdasDspRlt->LdwsDspRsltInfo.uiRy2 - pAdasDspRlt->LdwsDspRsltInfo.uiRy1)*2/3+ pAdasDspRlt->LdwsDspRsltInfo.uiRy1;
+
+              GxGfx_SetShapeColor(CLRID_IDX_GREEN, CLRID_IDX_GREEN, NULL);
+              GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], Triangle_Top_X, Triangle_Top_Y, Triangle_Left_X, Triangle_Left_Y);
+			  GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], Triangle_Top_X, Triangle_Top_Y, Triangle_Right_X, Triangle_Right_Y);
+			  GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], Triangle_Left_X, Triangle_Left_Y, Triangle_Right_X, Triangle_Right_Y);
+#endif
+
+	  }
 	}
         // draw car location
 	if (pAdasDspRlt->FcwsDspRsltInfo.Failure == FCWS_FAILURE_FALSE)
@@ -6091,8 +6151,8 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
         if (ADAS_IsAdasDebug())
         #endif
         {
-            //debug_msg("\r\n----DSP_draw_FcwsDspRsltInfo----\r\n");
-            //debug_msg("\r\n----DSP_FcwsDspRsltInfo.FCSoundWarning = %d----\r\n",pAdasDspRlt->FcwsDspRsltInfo.FCSoundWarning);
+            debug_msg("\r\n----DSP_draw_FcwsDspRsltInfo----\r\n");
+            debug_msg("\r\n----DSP_FcwsDspRsltInfo.FCSoundWarning = %d----\r\n",pAdasDspRlt->FcwsDspRsltInfo.FCSoundWarning);
 			LineColor = CLRID_IDX_WHITE;
             
                 //LineColor = (pAdasRlt->FcwsRsltInfo.FCWarning)?CLRID_IDX_RED:CLRID_IDX_GREEN;
@@ -6409,7 +6469,7 @@ INT32 UIFlowWndMovie_FTG_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArr
     DispCord = gMovieOsdDispCord;
     //DBG_DUMP("x=%d, y=%d, w=%d, h=%d\r\n", DispCord.x, DispCord.y, DispCord.w, DispCord.h);
     FTGnumber = ftg_getrsltface(FTGInfo, &DispCord);
-	//DBG_ERR("FTGnumber = %d\r\n", FTGnumber);
+    //DBG_ERR("FTGnumber = %d\r\n", FTGnumber);
 
 #if 1
     GxGfx_SetShapeStroke(LINEBRUSH_SQUARE|LINEWEIGHT(1), FILLSTYLE_FILL);
