@@ -481,7 +481,7 @@ UINT32 DrvEmbMemState(UINT32 StateID, UINT32 Value) // General Properties
     switch(StateID)
     {
 	case STORAGE_STATE_INSERT:
-        rvalue = TRUE; //always inserted
+       // rvalue = TRUE; //always inserted  20171122 modify cdcard always inserted
         break;
     default:
         DBG_ERR("state=0x%02X not support!\r\n", StateID);
