@@ -40,7 +40,7 @@
 #define __DBGFLT__ "*"      //*=All
 #include "DebugModule.h"
 
-#define AE_STAMPLOG  1//0
+#define AE_STAMPLOG  0
 
 extern UINT32 IQS_GetGammaValue(UINT32 Id, UINT32 Data12Bit);
 extern UINT32 IQS_GetInvGammaValue(UINT32 Id, UINT32 Data10Bit);

@@ -97,7 +97,6 @@ AWB_CAINFO AwbPreWhiteElement[AWB_PROC_CNT] =
         4095,       //UINT32 RBGu;((R+B)/G)<<9
         0           //UINT32 RBGl;
     },
-		
     {
         32, 32,
         4095,       //UINT32 RGu; (R/G)<<10
@@ -239,7 +238,6 @@ AWBALG_CT_PARAM AwbCTParam[AWB_PROC_CNT] =
         {AWB_CT1_4000K_RGAIN, 256, AWB_CT1_4000K_BGAIN},   // LCTMaxGain; 4000K
         {AWB_CT1_2000K_RGAIN, 256, AWB_CT1_2000K_BGAIN},   // LCTMinGain; 2300K
     },
-		
     {
         (10<<14),                                         // HCTMaxEV; LV14
         (10<<10),                                         // HCTMinEV; LV8
@@ -259,7 +257,7 @@ AWBALG_POSTPROC_PARAM AwbPostParam[AWB_PROC_CNT] =
         100,  100,                                       // HCTRatio; //100~200
         {AWB_CT1_7000K_RGAIN, 256, AWB_CT1_7000K_BGAIN},   // HCTMaxGain;
         {AWB_CT1_8500K_RGAIN, 256, AWB_CT1_8500K_BGAIN},   // HCTMinGain;
-        110,85,//110,  85,                                        // LCTRatio;  //100~200
+        110,  85,                                        // LCTRatio;  //100~200
         {AWB_CT1_4000K_RGAIN, 256, AWB_CT1_4000K_BGAIN},   // LCTMaxGain; 4500K
         {AWB_CT1_2000K_RGAIN, 256, AWB_CT1_2000K_BGAIN}    // LCTMinGain; 2556K
     },

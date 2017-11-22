@@ -17,6 +17,7 @@
 #include "awb_task.h"
 #include "awb_AR0238CSP_EVB_FF_int.h"
 #include "ae_api.h"
+#include "NOTE.h"
 #include "IPL_AlgInfor.h"
 #include "IPL_Cmd.h"
 #include "iqs_api.h"
@@ -36,6 +37,7 @@ extern UINT32 uiRGain[AWB_ID_MAX_NUM], uiGGain[AWB_ID_MAX_NUM], uiBGain[AWB_ID_M
 extern UINT32 uiAWBUartCmd[AWB_ID_MAX_NUM];
 
 static AWB_APPMODE AwbAppMode = AWB_APPMODE_NORMAL;
+static AWBALG_CT_CALMODE AwbCTCalMode = AWBALG_CT_CAL_RB_GAIN;
 static AWBALG_INFO AwbInfo[AWB_PROC_CNT] = {0};
 static UINT16 AccTab[AWB_PROC_CNT][AWBALG_CH_MAX][AWB_CABUFFER_SIZE];
 static UINT16 AccCnt[AWB_PROC_CNT][AWB_CABUFFER_SIZE];
@@ -43,13 +45,14 @@ static UINT16 CalTab[AWB_PROC_CNT][AWBALG_CH_MAX][AWB_CABUFFER_SIZE];
 static UINT16 WTab[AWB_PROC_CNT][AWB_CABUFFER_SIZE];
 static UINT16 FlagTab[AWB_PROC_CNT][AWB_CABUFFER_SIZE];
 
+static void AWB_GetTabPt(UINT32 id);
 static void AWB_setGain(AWBALG_INFO *Info, UINT32 RG, UINT32 GG, UINT32 BG);
 static void AWB_getCA(UINT32 id, UINT16 *R, UINT16 *G, UINT16 *B, UINT16 *Cnt, UINT32 Size);
-static UINT32 AWB_Intpl(int Index, int LowValue, int HighValue, int MinIndex, int MaxIndex);
-static void AWB_GetCurCT(UINT32 id, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT);
 static AWB_MODE AWB_getMode(UINT32 Idx);
 static void AWB_autoProc(AWBALG_INFO *Info);
 static void AWB_manualProc(AWBALG_INFO *Info, AWB_MODE Idx);
+
+AWB_PARAM_Pr AWB_Table_Ptr[AWB_ID_MAX_NUM] = {0};
 
 ////////////////////////////////////////////////////////
 //
@@ -107,7 +110,7 @@ void AWB_SetInfo(UINT32 Id, AwbSetItem awbItem, AwbSetParam *pAWBSetting)
     }
 
     AWB_MODE Mode = AWB_MODE_AUTO;
-    Mode = AWB_getMode(IPL_AlgGetUIInfo(Id, IPL_SEL_WBMODE));
+    Mode = AWB_getMode(IPL_AlgGetUIInfo((IPL_PROC_ID)Id, IPL_SEL_WBMODE));
 
     switch (awbItem)
     {
@@ -172,7 +175,7 @@ void AWB_GetInfo(UINT32 Id, AwbSetParam *pAWBSetting)
     }
 
     AWB_MODE Mode = AWB_MODE_AUTO;
-    Mode = AWB_getMode(IPL_AlgGetUIInfo(Id, IPL_SEL_WBMODE));
+    Mode = AWB_getMode(IPL_AlgGetUIInfo((IPL_PROC_ID)Id, IPL_SEL_WBMODE));
 
     pAWBSetting->uiConvSpeed = AwbInfo[Id].AwbConvSpeed;
     pAWBSetting->uiConvStep = AwbInfo[Id].AwbConvStep;
@@ -200,7 +203,7 @@ void AWB_GetStatus(UINT32 Id, AWBStatus *pAWBStatus)
     pAWBStatus->ConvStep = AwbInfo[Id].AwbConvStep;
 
     AWB_MODE Mode = AWB_MODE_AUTO;
-    Mode = AWB_getMode(IPL_AlgGetUIInfo(Id, IPL_SEL_WBMODE));
+    Mode = AWB_getMode(IPL_AlgGetUIInfo((IPL_PROC_ID)Id, IPL_SEL_WBMODE));
     if (Mode == AWB_MODE_AUTO)
     {
         pAWBStatus->RGain = AwbInfo[Id].AWBGain.RGain;
@@ -212,12 +215,26 @@ void AWB_GetStatus(UINT32 Id, AWBStatus *pAWBStatus)
         MWB_ReadColorGain(Id, Mode, &pAWBStatus->RGain,&pAWBStatus->GGain,&pAWBStatus->BGain);
     }
 
-    AWB_GetCurCT(Id, AwbInfo[Id].AWBGain.RGain, AwbInfo[Id].AWBGain.BGain, &pAWBStatus->ColorTemperature);
+    AWB_GetCurCT(Id, AwbCTCalMode, AwbInfo[Id].AWBGain.RGain, AwbInfo[Id].AWBGain.BGain, &pAWBStatus->ColorTemperature);
 }
+
+void AWB_GetTabPt(UINT32 id)
+{
+    //#NT#2017/02/15#Wendy Liao -begin
+    //#NT# Get AWB Parameters' Pr
+    AWB_Table_Ptr[id].Now_AWB_Info = &AwbInfo[id];
+    AWB_Table_Ptr[id].Now_CA_Info = &AwbPreWhiteElement[id];
+    AWB_Table_Ptr[id].Now_CT_Tab = &AwbCTTable[id][0];
+    AWB_Table_Ptr[id].Now_W_Tab = &AwbWhiteTAB[id][0];
+    AWB_Table_Ptr[id].Now_CT_Param = &AwbCTParam[id];
+    AWB_Table_Ptr[id].Now_Post_Param = &AwbPostParam[id];
+    AWB_Table_Ptr[id].Now_MWB_Tab = &MwbTAB[id][0][0];
+};
 
 void AWB_Init(UINT32 id, UINT32 CurrentStatus)
 {
     SENSOR_INFO SenInfo = {0};
+    SENSOR_ID SensorID = IPL_UTI_CONV2_SEN_ID(id);
     static BOOL Init_Flag[AWB_PROC_CNT] = {FALSE, FALSE};
     ER rt = E_OK;
 
@@ -227,7 +244,7 @@ void AWB_Init(UINT32 id, UINT32 CurrentStatus)
         return ;
     }
 
-    rt = Sensor_GetStatus(IPL_UTI_CONV2_SEN_ID(id), IPL_AlgGetUIInfo(id, IPL_SEL_PRVSENMODE), &SenInfo);
+    rt = Sensor_GetStatus(SensorID, IPL_AlgGetUIInfo((IPL_PROC_ID)id, IPL_SEL_PRVSENMODE), &SenInfo);
     if (rt != E_OK || SenInfo.Mode == NULL)
         return;
 
@@ -260,7 +277,7 @@ void AWB_Init(UINT32 id, UINT32 CurrentStatus)
     CAL_AWB_FMT* pFmt;
     CAL_DATA_INFO CaldataInfo = {0};
     CaldataInfo.StationID = SEC_AWB;
-    CaldataInfo.SenMode = IPL_AlgGetUIInfo(id, IPL_SEL_CAPSENMODE);
+    CaldataInfo.SenMode = IPL_AlgGetUIInfo((IPL_PROC_ID)id, IPL_SEL_CAPSENMODE);
     CaldataInfo.CalCondition[0] = CAL_CONDITION_DEFAULT;
 
     pTag = GetCalData(id, CaldataInfo);
@@ -284,7 +301,7 @@ void AWB_Init(UINT32 id, UINT32 CurrentStatus)
                 AwbInfo[id].KGainInfo.KGain[0].KBGain = AWB_DEF_KBGAIN;
             }
 
-            DBG_IND("AWB Cal Rg=%d, Bg=%d, SenMode=%d\r\n", pFmt->Rg,pFmt->Bg,IPL_AlgGetUIInfo(id, IPL_SEL_CAPSENMODE));
+            DBG_IND("AWB Cal Rg=%d, Bg=%d, SenMode=%d\r\n", pFmt->Rg,pFmt->Bg,IPL_AlgGetUIInfo((IPL_PROC_ID)id, IPL_SEL_CAPSENMODE));
         }
         else
         {
@@ -369,6 +386,13 @@ void AWB_Init(UINT32 id, UINT32 CurrentStatus)
     AwbInfo[id].AwbWeightEn = TRUE;
 
     AWBALG_Init(&AwbInfo[id]);
+
+    CA_DumpFP(AWB_DumpCAInfo);
+    Flag_DumpFP(AWB_DumpFlagInfo);
+
+    AWB_GetTabPt(id);
+    NOTE_AWB_Init(id, AWB_Table_Ptr[id]);
+    //#NT#2017/01/18#Wendy Liao -end
 }
 
 void AWB_Process(UINT32 id, UINT32 CurrentStatus)
@@ -405,7 +429,7 @@ void AWB_Process(UINT32 id, UINT32 CurrentStatus)
         DBG_IND("AWB_Process in %d  enter in %d\r\n", AwbInfo[id].AWBCnt, AwbInfo[id].AWBEnterCnt);
     }
 
-    Mode = AWB_getMode(IPL_AlgGetUIInfo(id, IPL_SEL_WBMODE));
+    Mode = AWB_getMode(IPL_AlgGetUIInfo((IPL_PROC_ID)id, IPL_SEL_WBMODE));
     // for uart cmd debug
     if ( uiRGain[id]!=0 && uiGGain[id]!=0 && uiBGain[id]!=0 )
     {
@@ -450,6 +474,7 @@ void AWB_SetColorGain(UINT32 id, UINT32 Rg,UINT32 Gg,UINT32 Bg)
 void AWB_GetColorGain(UINT32 id, UINT32 *Rg,UINT32 *Gg,UINT32 *Bg)
 {
     UINT32 AwbId = id;
+    SENSOR_ID SensorID = IPL_UTI_CONV2_SEN_ID(id);
     SENSOR_INFO SenInfo = {0};
     ER rt = E_OK;
 
@@ -472,7 +497,7 @@ void AWB_GetColorGain(UINT32 id, UINT32 *Rg,UINT32 *Gg,UINT32 *Bg)
     }
 
     //for sensor hdr
-    rt = Sensor_GetStatus(IPL_UTI_CONV2_SEN_ID(id), IPL_AlgGetUIInfo(id, IPL_SEL_PRVSENMODE), &SenInfo);
+    rt = Sensor_GetStatus(SensorID, IPL_AlgGetUIInfo((IPL_PROC_ID)id, IPL_SEL_PRVSENMODE), &SenInfo);
     if (rt != E_OK || SenInfo.Mode == NULL)
         return;
     if (SenInfo.Mode->ModeType == SENSOR_MODE_BUILTIN_HDR)
@@ -480,118 +505,6 @@ void AWB_GetColorGain(UINT32 id, UINT32 *Rg,UINT32 *Gg,UINT32 *Bg)
         *Rg = 256;
         *Gg = 256;
         *Bg = 256;
-    }
-}
-
-UINT32 AWB_Intpl(int Index, int LowValue, int HighValue, int MinIndex, int MaxIndex)
-{
-    if ( Index < MinIndex)
-        return LowValue;
-    else if ( Index > MaxIndex)
-        return HighValue;
-    else
-        return LowValue + ((HighValue - LowValue)) * ((Index  - MinIndex)+1) / ((MaxIndex - MinIndex+1));
-}
-
-static void AWB_GetCurCT(UINT32 id, UINT32 CurRgain, UINT32 CurBgain, UINT32 *CT)
-{
-    AWB_CT_RANGE awbCTRange_Rgain = AWB_CT_RANGE_NONE;
-    AWB_CT_RANGE awbCTRange_Bgain = AWB_CT_RANGE_NONE;
-    AWB_CT_RANGE awbCTRange = AWB_CT_RANGE_NONE;
-    UINT32 temp_CTRange_Rgain = 0;
-    UINT32 temp_CTRange_Bgain = 0;
-    UINT32 ctTabCnt;
-
-    /*
-        Through Rgain speculate current color temperature range
-    */
-    for (ctTabCnt = 0; ctTabCnt<(AWB_CT_RANGE_MAX-1); ctTabCnt++)
-    {
-        if(((CurRgain >= AwbCTTable[id][ctTabCnt].Gain.RGain)&&(CurRgain <= AwbCTTable[id][ctTabCnt+1].Gain.RGain))
-            ||((CurRgain <= AwbCTTable[id][ctTabCnt].Gain.RGain)&&(CurRgain >= AwbCTTable[id][ctTabCnt+1].Gain.RGain)))
-        {
-            temp_CTRange_Rgain = 1 << ctTabCnt;
-            awbCTRange_Rgain |= temp_CTRange_Rgain;
-        }
-    }
-    if (awbCTRange_Rgain == AWB_CT_RANGE_NONE)
-    {
-        *CT = 0;
-        DBG_IND("current CT is out of range (Rgain)\r\n");
-        return;
-    }
-
-    /*
-        Through Bgain speculate current color temperature range
-    */
-    for (ctTabCnt = 0; ctTabCnt<(AWB_CT_RANGE_MAX-1); ctTabCnt++)
-    {
-        if(((CurBgain >= AwbCTTable[id][ctTabCnt].Gain.BGain)&&(CurBgain <= AwbCTTable[id][ctTabCnt+1].Gain.BGain))
-            ||((CurBgain <= AwbCTTable[id][ctTabCnt].Gain.BGain)&&(CurBgain >= AwbCTTable[id][ctTabCnt+1].Gain.BGain)))
-        {
-            temp_CTRange_Bgain = 1 << ctTabCnt;
-            awbCTRange_Bgain |= temp_CTRange_Bgain;
-        }
-    }
-    if (awbCTRange_Bgain == AWB_CT_RANGE_NONE)
-    {
-        *CT = 0;
-        DBG_IND("current CT is out of range (Bgain)\r\n");
-        return;
-    }
-
-    /*
-        search Rgain and Bgain overlap color temperature range
-    */
-    // get Rgain & Bgain overlap color temperature range
-    awbCTRange = ((awbCTRange_Bgain)&(awbCTRange_Rgain));
-    if (awbCTRange == AWB_CT_RANGE_NONE)
-    {
-        DBG_WRN("Rgain & Bgain cannot match in the same CT\r\n");
-    }
-    else
-    {
-        for (ctTabCnt = 0; ctTabCnt<(AWB_CT_RANGE_MAX-1); ctTabCnt++)
-        {
-            if (awbCTRange&(AWB_CT_RANGE_1<<ctTabCnt))
-            {
-                // Use within Rgain & Bgain interpolation estimated color temperature
-                UINT32 tempCT_Rgain = 0;
-                UINT32 tempCT_Bgain = 0;
-
-                // Rgain interpolation
-                if (AwbCTTable[id][ctTabCnt].Gain.RGain > AwbCTTable[id][ctTabCnt+1].Gain.RGain)
-                {
-                    tempCT_Rgain = AWB_Intpl((int)CurRgain
-                        , (int)AwbCTTable[id][ctTabCnt+1].Temperature, (int)AwbCTTable[id][ctTabCnt].Temperature
-                        , (int)AwbCTTable[id][ctTabCnt+1].Gain.RGain, (int)AwbCTTable[id][ctTabCnt].Gain.RGain);
-                }
-                else
-                {
-                    tempCT_Rgain = AWB_Intpl((int)CurRgain
-                        , (int)AwbCTTable[id][ctTabCnt].Temperature, (int)AwbCTTable[id][ctTabCnt+1].Temperature
-                        , (int)AwbCTTable[id][ctTabCnt].Gain.RGain, (int)AwbCTTable[id][ctTabCnt+1].Gain.RGain);
-                }
-
-                // Bgain interpolation
-                if (AwbCTTable[id][ctTabCnt].Gain.BGain > AwbCTTable[id][ctTabCnt+1].Gain.BGain)
-                {
-                    tempCT_Bgain = AWB_Intpl((int)CurBgain
-                        , (int)AwbCTTable[id][ctTabCnt+1].Temperature, (int)AwbCTTable[id][ctTabCnt].Temperature
-                        , (int)AwbCTTable[id][ctTabCnt+1].Gain.BGain, (int)AwbCTTable[id][ctTabCnt].Gain.BGain);
-                }
-                else
-                {
-                    tempCT_Bgain = AWB_Intpl((int)CurBgain
-                        , (int)AwbCTTable[id][ctTabCnt].Temperature, (int)AwbCTTable[id][ctTabCnt+1].Temperature
-                        , (int)AwbCTTable[id][ctTabCnt].Gain.BGain, (int)AwbCTTable[id][ctTabCnt+1].Gain.BGain);
-                }
-
-                // average Rgain & Bgain interpolation result
-                *CT = ((UINT32)tempCT_Rgain + (UINT32)tempCT_Bgain)/2;
-                break;
-            }
-        }
     }
 }
 
@@ -856,10 +769,17 @@ UINT32 AWB_SetEmbDebugInfo(UINT32 id, UINT32 *aDebugInfo)
 static void AWB_setGain(AWBALG_INFO *Info, UINT32 RG, UINT32 GG, UINT32 BG)
 {
     SENSOR_INFO SenInfo = {0};
+    SENSOR_ID SensorID = IPL_UTI_CONV2_SEN_ID(Info->Id);
     ER rt = E_OK;
 
+    if( Sensor_IsOpen(Info->Id)==0 )
+    {
+        DBG_ERR("Sensor %d is not open!!!!\r\n",Info->Id);
+        return;
+    }
+
     //for sensor hdr
-    rt = Sensor_GetStatus(IPL_UTI_CONV2_SEN_ID(Info->Id), IPL_AlgGetUIInfo(Info->Id, IPL_SEL_PRVSENMODE), &SenInfo);
+    rt = Sensor_GetStatus(SensorID, IPL_AlgGetUIInfo((IPL_PROC_ID)Info->Id, IPL_SEL_PRVSENMODE), &SenInfo);
 
     if (rt != E_OK || SenInfo.Mode == NULL)
         return;
@@ -918,6 +838,7 @@ static void AWB_getCA(UINT32 id, UINT16 *R, UINT16 *G, UINT16 *B, UINT16 *Cnt, U
     UINT32 AWB_WIN_Y = AwbInfo[id].WinNumY;
     UINT32 AWB_WIN_TOTAL = AWB_WIN_X * AWB_WIN_Y;
     SENSOR_INFO SenInfo = {0};
+    SENSOR_ID SensorID = IPL_UTI_CONV2_SEN_ID(id);
     ER rt = E_OK;
 
     if ( AwbAppMode == AWB_APPMODE_NORMAL )
@@ -939,7 +860,7 @@ static void AWB_getCA(UINT32 id, UINT16 *R, UINT16 *G, UINT16 *B, UINT16 *Cnt, U
         }
 
         //for sensor hdr
-        rt = Sensor_GetStatus(IPL_UTI_CONV2_SEN_ID(id), IPL_AlgGetUIInfo(id, IPL_SEL_PRVSENMODE), &SenInfo);
+        rt = Sensor_GetStatus(SensorID, IPL_AlgGetUIInfo((IPL_PROC_ID)id, IPL_SEL_PRVSENMODE), &SenInfo);
         if (rt != E_OK || SenInfo.Mode == NULL)
             return;
 
