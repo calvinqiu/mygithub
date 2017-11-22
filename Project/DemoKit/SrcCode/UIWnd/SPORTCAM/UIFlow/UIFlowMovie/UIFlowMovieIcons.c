@@ -643,6 +643,9 @@ void FlowMovie_IconDrawTouchButton(BOOL Show)
     }
 }
 #endif
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+extern BOOL set_lens_calibration;
+#endif
 void FlowMovie_UpdateIcons(BOOL bShow)
 {
     /* modify begin by ZMD, 2017-02-14 */
@@ -756,12 +759,18 @@ void FlowMovie_UpdateIcons(BOOL bShow)
             FlowMovie_IconHideLDWS();
             FlowMovie_IconDrawADAS();
             FlowMovie_IconDrawTouchButton(TRUE);
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+	 if(!set_lens_calibration){
+#endif
             FlowMovie_IconDrawSpeed();
             #if _ADAS_FUNC_
             FlowMovie_IconDrawDistance();
             #else
             UxCtrl_SetShow(&UIFlowWndMovie_Static_DistanceCtrl, FALSE);
             #endif
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+	 }
+#endif
             //UxCtrl_SetShow(&UIFlowWndMovie_Panel_SecondPipviewCtrl, FALSE);
             //UxCtrl_SetShow(&UIFlowWndMovie_Panel_SecondPipview2Ctrl, FALSE);
             FlowMovie_IconDrawReverse();
