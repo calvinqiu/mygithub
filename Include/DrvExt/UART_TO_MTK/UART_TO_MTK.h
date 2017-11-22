@@ -84,8 +84,11 @@ extern BOOL FwVersion_Seting_state;
 #define 	CMD_SYSTEM_REBOOT_REQ       		0x75
 #define   CMD_FWVERSION                                    0x76  ///* add begin by ZMD, 2016-10-28, 原因: */
 #define   CMD_AUDIO_SWITCH                     0x77 ///* add begin by ZMD, 2016-10-28, 原因: */
-
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+#define MENU_SETTING_MAX    10//9for water mark//8//pgl 20160628 add for audio_record_switch
+#else
 #define MENU_SETTING_MAX    9//8//pgl 20160628 add for audio_record_switch
+#endif
 extern UINT8 guiMTKMenuSetting[MENU_SETTING_MAX];
 
 #define  SENSORMODE_REVERSE     1

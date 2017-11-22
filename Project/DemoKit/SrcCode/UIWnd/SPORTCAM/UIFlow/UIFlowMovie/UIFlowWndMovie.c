@@ -494,13 +494,14 @@ void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 *
 
 
 }
-
-
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+BOOL set_lens_calibration = FALSE;
  //add by qiuhan on 20171030 for   The lens position calibration
 void UIFLowWndMovie_ShowLensPositionCalibration(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
     FlowMovie_IconHideSpeed();
     FlowMovie_IconHideDistance();
     FlowMovie_IconHideDateTime();
+	set_lens_calibration = TRUE;
     //add by qiuhan on 20171030 for   The lens position calibration
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, TRUE);
     //add end
@@ -512,13 +513,14 @@ void UIFLowWndMovie_HideLensPositionCalibration(VControl * pCtrl, UINT32 paramNu
     //add by qiuhan on 20171030 for   The lens position calibration
     UxCtrl_SetShow(&UIFlowWndMovie_ADAS_LineCtrl, FALSE);
     //add end
+    set_lens_calibration = FALSE;
     FlowMovie_IconDrawSpeed();
     FlowMovie_IconDrawDistance();
     FlowMovie_IconDrawDateTime();
 }
 //add end
 
-
+#endif
 
 BOOL UIFlowwndDeleteFWFile(void)
 {
@@ -734,6 +736,7 @@ void FlowMovie_OnExcuseMtkMenuItem(BOOL Flag)
 //********************************NT96663 movie parking mode  end********************************
 
 //********************************NT96663 movie adas  begin********************************
+#if defined(YQCONFIG_ADAS_FUNC_SUPPORT)
     if((MTKMenuSetting[MENU_MOVIE_ADAS]>=0)&&(MTKMenuSetting[MENU_MOVIE_ADAS]<2))
     {
         if(MTKMenuSetting[MENU_MOVIE_ADAS]==MOVIE_ADAS_CAL_ON)
@@ -758,6 +761,7 @@ void FlowMovie_OnExcuseMtkMenuItem(BOOL Flag)
     {
         UI_SetData(FL_MOVIE_ADAS_CAL,DEFAULT_ADAS);
     }
+#endif
 //********************************NT96663 movie adas  end********************************
     #if defined(AUDIO_MIC_SWITCH_SUPPORT) && (AUDIO_MIC_SWITCH_SUPPORT==ENABLE)
 
@@ -781,6 +785,35 @@ void FlowMovie_OnExcuseMtkMenuItem(BOOL Flag)
     }
 //pgl 20160628 add for movie audio recorder switch settings end
     #endif
+//qiuhan modify for dataimprint
+//********************************NT96663 watermark  beg********************************
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+//lsy 20170610 add forwatermark switch settings beg
+    if((MTKMenuSetting[MENU_WATERMARK_SWITCH]>=0)&&(MTKMenuSetting[MENU_WATERMARK_SWITCH]<2))
+    {
+        if(MTKMenuSetting[MENU_WATERMARK_SWITCH]==1)
+        {
+            SysSetFlag(FL_MOVIE_DATEIMPRINT, MOVIE_DATEIMPRINT_ON);
+            debug_msg("^G---MOVIE_WATERMARK_ON---\r\n");
+        }
+        else
+        {
+            SysSetFlag(FL_MOVIE_DATEIMPRINT, MOVIE_DATEIMPRINT_OFF);
+            debug_msg("^G---MOVIE_WATERMARK_OFF---\r\n");
+        }
+    }
+    else
+    {
+        SysSetFlag(FL_MOVIE_DATEIMPRINT, DEFAULT_MOVIE_DATEIMPRINT);
+    }
+
+	
+//lsy 20170610 add forwatermark switch settings end
+
+//********************************NT96663 watermark  end********************************
+
+#endif
+
     Save_MenuInfo();
 
     if (gUIMotionDetTimerID!=NULL_TIMER)
@@ -805,6 +838,10 @@ void FlowMovie_OnExcuseMtkMenuItem(BOOL Flag)
     #if defined(AUDIO_MIC_SWITCH_SUPPORT) && (AUDIO_MIC_SWITCH_SUPPORT==ENABLE)
     MTKMenuSettingTmp[MENU_AUDIO_RECORD_SWITCH]=UI_GetData(FL_MOVIE_AUDIO) ;
     #endif
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+//qiuhan modify for dataimprint
+    MTKMenuSettingTmp[MENU_WATERMARK_SWITCH]=UI_GetData(FL_MOVIE_DATEIMPRINT) ;
+#endif
     if(Flag==TRUE)
     {
         gbMovieRecordingFlag=TRUE;
@@ -814,7 +851,8 @@ void FlowMovie_OnExcuseMtkMenuItem(BOOL Flag)
     debug_msg("====>Flag: %d ,%d ,%d ,%d ,%d ,%d ,%d ,%d\r\n",UI_GetData(FL_MOVIE_SIZE),UI_GetData(FL_MOVIE_CYCLIC_REC),\
               UI_GetData(FL_MOVIE_WDR),UI_GetData(FL_MOVIE_MOTION_DET),\
               UI_GetData(FL_GSENSOR),UI_GetData(FL_MOVIE_PARKING),\
-              UI_GetData(FL_MOVIE_ADAS_CAL),UI_GetData(FL_MOVIE_AUDIO));
+              UI_GetData(FL_MOVIE_ADAS_CAL),UI_GetData(FL_MOVIE_AUDIO),\
+              UI_GetData(FL_MOVIE_DATEIMPRINT));//qiuhan modify for dataimprint
 
     /* add begin by ZMD, 2016-08-25, ?-??им????им??: ?a???им22?????*/
     // Ux_PostEvent(NVTEVT_SYSTEM_MODE, 1, System_GetState(SYS_STATE_CURRMODE));
@@ -837,6 +875,10 @@ void FlowMovie_OnCheckMtkMenuItem()
         #if defined(AUDIO_MIC_SWITCH_SUPPORT) && (AUDIO_MIC_SWITCH_SUPPORT==ENABLE)
             ||(UI_GetData(FL_MOVIE_AUDIO) != MTKMenuSettingTmp[MENU_AUDIO_RECORD_SWITCH])
         #endif
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+	    //LSY add 20170610
+	     ||(UI_GetData(FL_MOVIE_DATEIMPRINT) != MTKMenuSettingTmp[MENU_WATERMARK_SWITCH])//qiuhan modify for dataimprint
+#endif
       )//pgl 20160628 add for audio recorder switch
     {
 
@@ -875,8 +917,15 @@ void FlowMovie_OnCheckMtkMenuItem()
             debug_msg("^G MENU_AUDIO_RECORD_SWITCH--%d--%d--\r\n",UI_GetData(FL_MOVIE_AUDIO),MTKMenuSettingTmp[MENU_AUDIO_RECORD_SWITCH]);
         }
         #endif
-
-
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+		//qiuhan modify for dataimprint
+	//LSY add 20170610:beg	
+        if((UI_GetData(FL_MOVIE_DATEIMPRINT) != MTKMenuSettingTmp[MENU_WATERMARK_SWITCH]))
+        {
+            debug_msg("^G MENU_WATERMARK_SWITCH--%d--%d--\r\n",UI_GetData(FL_MOVIE_DATEIMPRINT),MTKMenuSettingTmp[MENU_WATERMARK_SWITCH]);
+        }
+        //LSY add 20170610:end	
+#endif
         CounterTemp++;
         if(CounterTemp>=5)
         {
@@ -1106,6 +1155,16 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
                 Ux_FlushEventByRange(NVTEVT_KEY_EVT_START,NVTEVT_KEY_EVT_END);
                 Input_SetKeyMask(KEY_PRESS, FLGKEY_KEY_MASK_NULL);
                 FlowMovie_StopRec();
+
+		   /* modify begin by ZMD, 2017-02-15 *///add by qiuhan on 20171121 for test bug
+                #if defined(YQCONFIG_GSENSOR_SUPPORT) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+                if(gbGsensorTrig==TRUE)
+                {
+                    gbGsensorTrig=FALSE;
+                }
+
+                #endif
+                /* modify end by ZMD, 2017-02-15 */
 
                 // update ui window icon
                 FlowMovie_UpdateIcons(TRUE);
@@ -1410,6 +1469,11 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
     #if defined(AUDIO_MIC_SWITCH_SUPPORT) && (AUDIO_MIC_SWITCH_SUPPORT==ENABLE)
     MTKMenuSettingTmp[MENU_AUDIO_RECORD_SWITCH]=UI_GetData(FL_MOVIE_AUDIO) ;
     #endif
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+    //LSY add @20170610
+     MTKMenuSettingTmp[MENU_WATERMARK_SWITCH]=UI_GetData(FL_MOVIE_DATEIMPRINT) ; //qiuhan modify for dataimprint
+#endif
+
     if((GxSystem_GetPowerOnSource() == GX_PWRON_SRC_PWR_VBAT))
     {
         if(gbParkingModeTrigFlag==TRUE)
@@ -2126,6 +2190,7 @@ INT32 UIFlowWndMovie_OnMovieOneSec(VControl *pCtrl, UINT32 paramNum, UINT32 *par
 }
 INT32 UIFlowWndMovie_OnMovieFull(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
+	debug_msg("QIUHAN==================UIFlowWndMovie_OnMovieFull\r\n");
     return UIFlowWndMovie_OnLoopRecFull(pCtrl,paramNum,paramArray);
 }
 INT32 UIFlowWndMovie_OnMovieWrError(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
@@ -2185,7 +2250,13 @@ INT32 UIFlowWndMovie_OnLoopRecFull(VControl *pCtrl, UINT32 paramNum, UINT32 *par
     KeyScan_EnableMisc(TRUE);
     //gMovData.State = MOV_ST_VIEW;
     gMovData.State= MOV_ST_WARNING_MENU;
-    Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_CARD_FULL,FLOWWRNMSG_TIMER_2SEC);
+    debug_msg("QIUHAN==========================fullfffffffffffffffffffffgggggggggggUI_GetData(FL_CardStatus)=%d\r\n",UI_GetData(FL_CardStatus));
+ if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
+ {
+     Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
+ }else{
+     Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_CARD_FULL,FLOWWRNMSG_TIMER_2SEC);
+ }
     FlowMovie_IconDrawMaxRecTime(&UIFlowWndMovie_Static_maxtimeCtrl);
     return NVTEVT_CONSUME;
 }
@@ -2513,8 +2584,15 @@ INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
         g_GPSStatus=XmodemGetSpeed(&g_CurSpeed);
 
        // debug_msg("onTimer g_CurSpeed=%d,%f  ", (UINT32)g_CurSpeed, g_CurSpeed);
+   #if defined(YQCONFIG_PLATFORM_NAME_U15)
+      if(!set_lens_calibration){
+   #endif
         FlowMovie_IconDrawSpeed();
         FlowMovie_IconDrawDistance();
+   #if defined(YQCONFIG_PLATFORM_NAME_U15)
+      }
+   #endif
+   
         #endif
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
         
@@ -2911,28 +2989,28 @@ debug_msg("QIUHAN=====================pAdasDspRlt->LdwsDspRsltInfo.DepartureDirV
 			
             switch (DepartureDirVoice_Temp)
             {
-            case LDWS_DEPARTURE_LEFT:
-		 memset(EventLDWSLName, 0, sizeof(EventLDWSLName));
-                strcat(EventLDWSLName, "LDWSL-");
-                uiResqData[0]=(LDWS_LEFT_|WORKING_MODE);
-                uiResqData[1] = 0;
-                // debug_msg("^GZMD---CMD_ADAS_RESQ1---\r\n");
-                MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2); //0x71==CMD_ADAS_RESQ
-                debug_msg("QIUHAN=====================LDWS_DEPARTURE_LEFT=%d \r\n",uiResqData[0]);
-                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
-                break;
-            case LDWS_DEPARTURE_RIGHT:
-		 memset(EventLDWSRName, 0, sizeof(EventLDWSRName)); 
-                strcat(EventLDWSRName, "LDWSR-");
-                uiResqData[0]=(LDWS_RIGHT_|WORKING_MODE);
-                uiResqData[1] = 0;
-                // debug_msg("^GZMD---CMD_ADAS_RESQ2---\r\n");
-                MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2);
-                debug_msg("QIUHAN=====================LDWS_DEPARTURE_RIGHT=%d \r\n",uiResqData[0]);
-                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
-                break;
-            default:
-                break;
+	            case LDWS_DEPARTURE_LEFT:
+			 memset(EventLDWSLName, 0, sizeof(EventLDWSLName));
+	                strcat(EventLDWSLName, "LDWSL-");
+	                uiResqData[0]=(LDWS_LEFT_|WORKING_MODE);
+	                uiResqData[1] = 0;
+	                // debug_msg("^GZMD---CMD_ADAS_RESQ1---\r\n");
+	                MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2); //0x71==CMD_ADAS_RESQ
+	                debug_msg("QIUHAN=====================LDWS_DEPARTURE_LEFT=%d \r\n",uiResqData[0]);
+	                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+	                break;
+	            case LDWS_DEPARTURE_RIGHT:
+			 memset(EventLDWSRName, 0, sizeof(EventLDWSRName)); 
+	                strcat(EventLDWSRName, "LDWSR-");
+	                uiResqData[0]=(LDWS_RIGHT_|WORKING_MODE);
+	                uiResqData[1] = 0;
+	                // debug_msg("^GZMD---CMD_ADAS_RESQ2---\r\n");
+	                MTKComposeCMDRspFrame(0, CMD_ADAS_RESQ,(UINT8 *)&uiResqData, 2);
+	                debug_msg("QIUHAN=====================LDWS_DEPARTURE_RIGHT=%d \r\n",uiResqData[0]);
+	                UxState_SetData(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl, STATE_CURITEM, UIFlowWndMovie_StatusICN_LDWS_Alert_ICON_LDWS_LEFT_ALERT);
+	                break;
+	            default:
+	                break;
             }
 //        }
 		#else
@@ -3764,6 +3842,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
 
 	     if (UI_GetData(FL_CardStatus) == CARD_REMOVED)
             {
+				 debug_msg("QIUHAN=====================Touch_RECCtrl...\r\n");
                 Ux_OpenWindow(&UIFlowWndWrnMsgCtrl,2,UIFlowWndWrnMsg_StatusTXT_Msg_STRID_PLEASE_INSERT_SD,FLOWWRNMSG_TIMER_2SEC);
                 uiResqData[0]=0x03;
                 MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 1);
@@ -3808,13 +3887,13 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
             case MOV_ST_VIEW:
             case MOV_ST_VIEW|MOV_ST_ZOOM:
 
-          /*      Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_PHOTO);
+                Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_PHOTO);
                 gbTrigUartTransmitFile=FALSE;
 
                 uiResqData[0]=0x02;
                 uiResqData[1]=0x04;
                 MTKComposeCMDRspFrame(FrameID, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
-           */
+           
                 break;
             case MOV_ST_REC:
             case MOV_ST_REC|MOV_ST_ZOOM:
@@ -4152,6 +4231,9 @@ INT32 UIFlowWndMovie_OnMTKMenuSetting(VControl *pCtrl, UINT32 paramNum, UINT32 *
     debug_msg("Parking :      	%s\r\n",(MTKMenuSetting[MENU_MOVIE_PARKINGMODE]==PARKINGMODE_ON)?"ON":"OFF");
     debug_msg("ADAS :        	%s\r\n",(MTKMenuSetting[MENU_MOVIE_ADAS]==MOVIE_ADAS_CAL_ON)?"ON":"OFF");
     debug_msg("SpeedLimit : 	%d\r\n",MTKMenuSetting[MENU_ADAS_SPEED_TRR]);
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+    debug_msg("WATER_MARK: 	%s\r\n",(MTKMenuSetting[MENU_WATERMARK_SWITCH]==MOVIE_DATEIMPRINT_ON)?"ON":"OFF");
+#endif
     debug_msg("=================================================\r\n");
     #endif
 
@@ -4280,6 +4362,24 @@ INT32 UIFlowWndMovie_OnMTKMenuSetting(VControl *pCtrl, UINT32 paramNum, UINT32 *
 //********************************NT96663 movie audio record end********************************
 //pgl 20160628 add end
     #endif
+
+#if defined(YQCONFIG_DATEPRINT_SUPPORT)
+//lsy 20170610 add beg
+//********************************NT96663 watermark begin********************************
+
+    if((MTKMenuSetting[MENU_WATERMARK_SWITCH]>=0)&&(MTKMenuSetting[MENU_WATERMARK_SWITCH]<2))
+    {
+        uiResqData[MENU_WATERMARK_SWITCH]=MTK_MENU_RESQ_SUCCESS;
+    }
+    else
+    {
+        uiResqData[MENU_WATERMARK_SWITCH]=MTK_MENU_RESQ_FAIL;
+    }
+    
+//********************************NT96663 watermark end********************************
+//lsy 20170610 add end
+#endif
+	
 //********************************NT96663 movie FW  version begin********************************
 
 
@@ -6168,7 +6268,18 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
 			GxGfx_Line( ((DC**)ScreenObj)[GxGfx_OSD], ltPtx, ltPty, rbPtx, ltPty );
 			GxGfx_Line( ((DC**)ScreenObj)[GxGfx_OSD], rbPtx, ltPty, rbPtx, rbPty );
 			GxGfx_Line( ((DC**)ScreenObj)[GxGfx_OSD], ltPtx, rbPty, rbPtx, rbPty );
-            
+
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+				#if (!(GPS_FUNCTION == ENABLE)&&(_DRAW_LDFCINFO_ON_OSD_ == ENABLE))
+				  debug_msg("QIUHAN====================_DRAW_LDFCINFO_ON_OSD_\r\n");
+                              sprintf(InfoStr ,"%dm",ADASDsp_GetFcwsCurrentDist());
+                   	       #else
+                       	  sprintf(InfoStr ,"%dkm",(UINT32)g_CurSpeed);
+                   	       #endif
+ 					debug_msg("QIUHAN====================draw_Text_dist\r\n");
+                               GxGfx_SetTextStroke((const FONT*)&gDemoKit_Font, FONTEFFECT_HIGHLIGHT2, SCALE_1X);
+                               GxGfx_Text(((DC**)ScreenObj)[GxGfx_OSD], ltPtx , ltPty-30, (CHAR *)InfoStr);
+     #endif       
         }
     }
 
