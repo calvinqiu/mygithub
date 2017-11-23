@@ -178,5 +178,8 @@ YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION = yes
             							# Option1:yes
             							# Option2:no    
 YQCONFIG_DATEPRINT_SUPPORT = yes
-                                                                # Option1:yes
+                                                        # Option1:yes
             							# Option2:no
+YQCONFIG_HAVE_GPS_OR_NOT=no
+                                                        #Option1:yes
+                                                        #Option2:no

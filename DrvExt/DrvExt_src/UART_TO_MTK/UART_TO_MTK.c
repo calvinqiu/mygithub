@@ -1367,26 +1367,26 @@ void XmodemSetMTKHeartBeatRes(BOOL En)
 
 BOOL XmodemGetSpeed(FLOAT *Speed)
 {
-    #if 1
-    if((g_mtk_gps.lat!=0)&&(g_mtk_gps.lng!=0))
-    {
-        *Speed= (UINT32)guiMTKSpeed;
-        return TRUE;
-    }
-    else
-    {
-        *Speed= 0;
-        return FALSE;
-    }
-	#else //test
-	guiMTKSpeed =90;
+    #if defined(YQCONFIG_HAVE_GPS_OR_NOT)
+		    if((g_mtk_gps.lat!=0)&&(g_mtk_gps.lng!=0))
+		    {
+		        *Speed= (UINT32)guiMTKSpeed;
+		        return TRUE;
+		    }
+		    else
+		    {
+		        *Speed= 0;
+		        return FALSE;
+		    }
+    #else //test
+		guiMTKSpeed =90;
 
-  //  debug_msg("\r\n**********XmodemGetSpeed  guiMTKSpeed = %f, %d**************\r\n",(FLOAT)guiMTKSpeed, guiMTKSpeed);
-    
-    *Speed= (FLOAT)guiMTKSpeed;
- //   debug_msg("\r\n**********XmodemGetSpeed  g_CurSpeed = %f, %d, %u,%03d, km/h**************\r\n",*Speed, (UINT32)(*Speed),(UINT32)(*Speed),(UINT32)(*Speed));
-    
-    return TRUE;
+	  //  debug_msg("\r\n**********XmodemGetSpeed  guiMTKSpeed = %f, %d**************\r\n",(FLOAT)guiMTKSpeed, guiMTKSpeed);
+	    
+	    *Speed= (FLOAT)guiMTKSpeed;
+	 //   debug_msg("\r\n**********XmodemGetSpeed  g_CurSpeed = %f, %d, %u,%03d, km/h**************\r\n",*Speed, (UINT32)(*Speed),(UINT32)(*Speed),(UINT32)(*Speed));
+	    
+	    return TRUE;
 
     #endif
 }
