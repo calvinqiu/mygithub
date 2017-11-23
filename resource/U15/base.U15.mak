@@ -10,7 +10,7 @@ YQCONFIG_AWB_CUST = AWB_AR0238CSP_EVB_FF
             							# Option1:AWB_OV4689_IMX322LQJ_EVB_FF
             							# Option2:AWB_SAMPLE             							   							
 
-YQCONFIG_IPP_CUST = IPL_AR0238CSP_IMX322LQJ_EVB_FF
+YQCONFIG_IPP_CUST = IPL_AR0238CSP_EVB_FF
             							#IPL_IMX291M_IMX322LQJ_EVB_FF      
             							# Option1:IPL_OV4689_IMX322LQJ_EVB_FF
             							# Option2:IPL_FAKE  
@@ -26,7 +26,7 @@ YQCONFIG_SENSOR_2_CUST = OFF
 YQCONFIG_LCD_CUST = Disp_IFDSI_LCD1_XJ040WV1402C_R61408      
             							# Option1:Disp_IFDSI_LCD1_TWJ50IP008_ILI9806E
             							# Option2:OFF
-YQCONFIG_LCD_WIDTH_CUST = 864    
+YQCONFIG_LCD_WIDTH_CUST = 800    
 								# Option1:1280
 								#Option2:864 
 								
@@ -152,7 +152,7 @@ YQCONFIG_LED_FUNCTION_SUPPORT = no
             							# Option1:yes
             							# Option2:no   
 
-YQCONFIG_PIP_VIEW_LR_SUPPORT = yes	    
+YQCONFIG_PIP_VIEW_LR_SUPPORT = yes 
             							# Option1:yes
             							# Option2:no    
 
