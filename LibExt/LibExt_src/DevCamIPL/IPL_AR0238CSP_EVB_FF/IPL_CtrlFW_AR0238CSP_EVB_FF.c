@@ -443,7 +443,7 @@ void IPL_CtrlInitIpcInfoFlowC(UINT32 Id, IPC_INFO *IpcInfo)
         IPL_CtrlInitIpc_SIEBurstLength(Id, &SenInfo, &IpcInfo->ICF_FC.BaseInfo.BurstLength);
         IPL_CtrlInitIpc_SIEAct(Id, &SenInfo, &IpcInfo->ICF_FC.BaseInfo.SIE_Act);
         IPL_CtrlInitIpc_SIEIn(Id, &SenInfo, &IpcInfo->ICF_FC.BaseInfo.SIE_IN);
-        IPL_CtrlInitIpc_SIESignal(Id, TRUE, FALSE, _RISING, _RISING, _RISING, &IpcInfo->ICF_FC.BaseInfo.SenSorIn);
+        IPL_CtrlInitIpc_SIESignal(Id, TRUE, TRUE, _RISING, _RISING, _RISING, &IpcInfo->ICF_FC.BaseInfo.SenSorIn);//qiuhan 20171123
 
         if (IPL_CtrlGetInfor(Id, IPLCTRL_SIE_CH0_RAW_EN) == ENABLE)
         {

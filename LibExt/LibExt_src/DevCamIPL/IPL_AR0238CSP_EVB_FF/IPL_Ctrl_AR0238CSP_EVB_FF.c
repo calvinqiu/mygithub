@@ -494,7 +494,7 @@ void IPL_CtrlInitIpc_SIEIn(UINT32 Id, SENSOR_INFO *SenInfo, SIE_WINDOW *Win)
     }
     else
     {
-        Win->Act.StartPix.x = SenInfo->Mode->TransHD[0].DataStart;
+        Win->Act.StartPix.x = SenInfo->Mode->TransHD[0].DataStart;//qiuhan 20171123
         Win->Act.StartPix.y = SenInfo->Mode->TransVD[0].DataStart;
 
         Win->Act.SizeH = SenInfo->Mode->TransHD[0].DataSize;
