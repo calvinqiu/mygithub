@@ -589,16 +589,16 @@ void FlowMovie_IconDrawTouchButton(BOOL Show)
         UxState_SetData(&UIFlowWndMovie_Status_Touch_RERTURNCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_RERTURN_ICON_TP_RETURN);
         UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_RERTURNCtrl, TRUE);
 
-        #if(1)//(PHOTO_FUNCTION==ENABLE)
-	// if(MovRec_IsRecording()){
+        //#if(1)//(PHOTO_FUNCTION==ENABLE)
+	 if(MovRec_IsRecording()){
           UxState_SetData(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
           UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, TRUE);
-	// }else{
-	// UxState_SetData(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
-      //    UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, FALSE);
+	 }else{
+	   UxState_SetData(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
+          UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_SnapeShotCtrl, FALSE);
 
-	// }
-        #endif
+	 }
+  //      #endif
         if(1==DrvSensor_DetPlugIn(SENSOR_ID_2))//if(ImageUnit_GetParam(&ISF_ImagePipe, IMAGEPIPE_PARAM_SENSORCOUNT)>=2)
         {
             UxState_SetData(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
