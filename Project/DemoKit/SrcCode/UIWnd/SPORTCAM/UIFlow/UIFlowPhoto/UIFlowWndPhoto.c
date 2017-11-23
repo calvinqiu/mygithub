@@ -139,7 +139,8 @@ EVENT_ITEM(NVTEVT_KEY_MENU,UIFlowWndPhoto_OnKeyMenu)
 EVENT_ITEM(NVTEVT_KEY_NEXT,UIFlowWndPhoto_OnKeyShutter2)     // Down Key
 #endif
 EVENT_ITEM(NVTEVT_KEY_SELECT,UIFlowWndPhoto_OnKeyNext)     // OK Key
-EVENT_ITEM(NVTEVT_KEY_SHUTTER2,UIFlowWndPhoto_OnKeySelect)    // REC key
+//repeat event for zmd
+//EVENT_ITEM(NVTEVT_KEY_SHUTTER2,UIFlowWndPhoto_OnKeySelect)    // REC key
 #else
 EVENT_ITEM(NVTEVT_KEY_NEXT,UIFlowWndPhoto_OnKeyNext)        // Right Key
 EVENT_ITEM(NVTEVT_KEY_SELECT,UIFlowWndPhoto_OnKeySelect)    // Enter key
@@ -311,6 +312,9 @@ static INT32 UIFlowWndPhoto_OnExeCapture(VControl *pCtrl, UINT32 paramNum, UINT3
                 {
                     debug_err(("UIFlowWndPhoto_OnKeyShutter2: Card or memory full!\r\n"));
                     gPhotoData.State= PHOTO_ST_WARNING_MENU;
+                #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+                Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_MOVIE);
+                #endif
                     return NVTEVT_CONSUME;
                 }
                 if (GetBatteryLevel() == BATTERY_EXHAUSTED)
@@ -556,7 +560,14 @@ INT32 UIFlowWndPhoto_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
 
     gPhotoData.SysTimeCount = 0;
     /* Update window info */
+    /* modify begin by ZMD, 2017-02-15 new version management*/
+    #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+    FlowPhoto_UpdateIcons(FALSE);
+    Ux_PostEvent(NVTEVT_KEY_SHUTTER2 , 1, NVTEVT_KEY_PRESS); //caputure
+    #else
     FlowPhoto_UpdateIcons(TRUE);
+    #endif
+    /* modify end by ZMD, 2017-02-15 */
     /* set FD/SD feature */
     FlowPhoto_SetFdSdProc(TRUE);
 
@@ -633,6 +644,7 @@ INT32 UIFlowWndPhoto_OnUpdateInfo(VControl * pCtrl, UINT32 paramNum, UINT32 * pa
             // unlock AE/AWB
             //FlowPhoto_InitStartupFuncs();
             UIFlowWndPhoto_BackPreviewHandle();
+            Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_MOVIE);
         break;
 
        case UIAPPPHOTO_CB_FDEND:
