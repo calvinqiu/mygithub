@@ -1948,7 +1948,7 @@ void IPL_CtrlInitCapIpcInfo(IPL_GET_CAP_RAW_DATA *CapInfo, IPC_SIE_Info *Info, I
             ExtInfo->Param[0] = CapInfo->res[0];
             //#NT#2016/10/12#Harry Tsai -end
 
-            IPL_CtrlInitIpc_SIESignal_Cap(CapInfo->Id, &Info->sieUpdate, FALSE, FALSE, _RISING, _RISING, _RISING, &Info->psie->Sie_Signal);
+            IPL_CtrlInitIpc_SIESignal_Cap(CapInfo->Id, &Info->sieUpdate, TRUE, TRUE, _RISING, _RISING, _RISING, &Info->psie->Sie_Signal);//modify by qiuhan for 0238 photo color is purple on 20171124
 			//#NT#2017/04/12#Bowen Li -begin
 			//#NT# fix CCIR cap crash issue
             SenObj = DrvSensor_GetObj(IPL_UTI_CONV2_SEN_ID(CapInfo->Id));
@@ -2090,7 +2090,7 @@ void IPL_CtrlInitCapIpcInfo(IPL_GET_CAP_RAW_DATA *CapInfo, IPC_SIE_Info *Info, I
             }
 
             IPL_SIESetDP_FCB(CapInfo->Id, &Info->psie->pSubFunc->sieFuncEn, &Info->psie->pSubFunc->InteEn, &Info->sieUpdate, Info->psie->pSubFunc);
-            IPL_CtrlInitIpc_SIESignal_Cap(CapInfo->Id, &Info->sieUpdate, FALSE, FALSE, _RISING, _RISING, _RISING, &Info->psie->Sie_Signal);
+            IPL_CtrlInitIpc_SIESignal_Cap(CapInfo->Id, &Info->sieUpdate, TRUE, TRUE, _RISING, _RISING, _RISING, &Info->psie->Sie_Signal);//modify by qiuhan for 0238 photo color is purple on 20171124
             IPL_CtrlInitIpc_SIEAct_Cap(CapInfo->Id, &Info->sieUpdate, &Info->psie->ActMode);
             IPL_CtrlInitIpc_SIECh0PPB_Cap(CapInfo->Id, &Info->sieUpdate, &Info->psie->CH0.Out, &Ch0HSize, &Ch0VSize);
             IPL_CtrlInitIpc_SIECh3PPB_Cap(CapInfo->Id, &Info->sieUpdate, &Info->psie->CH3.Out, &Info->psie->DmaOutSizeH, &Info->psie->DmaOutSizeV);
