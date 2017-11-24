@@ -183,3 +183,7 @@ YQCONFIG_DATEPRINT_SUPPORT = yes
 YQCONFIG_HAVE_GPS_OR_NOT=no
                                                         #Option1:yes
                                                         #Option2:no
+YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR=no
+                                                        #Option1:yes
+                                                        #Option2:no
+

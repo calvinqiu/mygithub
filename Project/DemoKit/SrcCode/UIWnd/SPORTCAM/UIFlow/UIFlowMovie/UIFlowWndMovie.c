@@ -6135,7 +6135,7 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
 {
     UIScreen ScreenObj = *paramArray;
     //ADAS_APPS_RESULT_INFO *pAdasRlt = MovieExe_GetAdasRltOSD();
-    #if defined(YQCONFIG_PLATFORM_NAME_U15)
+    #if defined(YQCONFIG_PLATFORM_NAME_U15)&& defined(YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR)
     INT32 Triangle_Top_X=0;
     INT32 Triangle_Top_Y=0;
     INT32 Triangle_Left_X=0;
@@ -6223,7 +6223,7 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
             GxGfx_SetShapeColor(LineColor, LineColor, NULL);
             GxGfx_Line(((DC**)ScreenObj)[GxGfx_OSD], pAdasDspRlt->LdwsDspRsltInfo.uiRx1, pAdasDspRlt->LdwsDspRsltInfo.uiRy1, pAdasDspRlt->LdwsDspRsltInfo.uiRx2, pAdasDspRlt->LdwsDspRsltInfo.uiRy2); // right lane
 
-#if defined(YQCONFIG_PLATFORM_NAME_U15)
+#if defined(YQCONFIG_PLATFORM_NAME_U15)&& defined(YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR)//add by qiuhan FCWS_DISTANCE_SHOW_ON_CAR
              //draw U15 Triangle 1118
              Triangle_Top_X = (pAdasDspRlt->LdwsDspRsltInfo.uiRx1 - pAdasDspRlt->LdwsDspRsltInfo.uiLx1)/2+pAdasDspRlt->LdwsDspRsltInfo.uiLx1;
 	      Triangle_Top_Y =  (pAdasDspRlt->LdwsDspRsltInfo.uiLy2 - pAdasDspRlt->LdwsDspRsltInfo.uiLy1)/3+pAdasDspRlt->LdwsDspRsltInfo.uiLy1;
