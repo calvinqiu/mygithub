@@ -5889,7 +5889,7 @@ INT32 MovieExe_OnProtectAuto(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
             //#NT#2016/08/09#Niven Cho -begin
             //#NT#LINUX-CARDV, Protect memory is not enough
             #if (_ADAS_FUNC_ == ENABLE || _CPU2_TYPE_==_CPU2_LINUX_)
-            MovRec_SetMaxStopFlashSec(2); // 10 seconds
+            MovRec_SetMaxStopFlashSec(4); // 10 seconds
             MovRec_SetMaxKeepSec(3);
             #else
             MovRec_SetMaxStopFlashSec(30); // 30 seconds
@@ -5941,7 +5941,7 @@ INT32 MovieExe_OnProtectManual(VControl *pCtrl, UINT32 paramNum, UINT32 *paramAr
             //#NT#LINUX-CARDV, Protect memory is not enough
             #if (_ADAS_FUNC_ == ENABLE || _CPU2_TYPE_==_CPU2_LINUX_)
 			debug_msg("QIUHAN=======================MovieExe_OnProtectManual(5)\r\n");
-            MovRec_SetMaxStopFlashSec(2); // 10 seconds
+            MovRec_SetMaxStopFlashSec(4); // 10 seconds
             MovRec_SetMaxKeepSec(3);
             #else
             MovRec_SetMaxStopFlashSec(30); // 30 seconds
