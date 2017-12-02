@@ -180,10 +180,13 @@ YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION = yes
 YQCONFIG_DATEPRINT_SUPPORT = yes
                                                         # Option1:yes
             							# Option2:no
-YQCONFIG_HAVE_GPS_OR_NOT=no
+YQCONFIG_HAVE_GPS_OR_NOT=yes
                                                         #Option1:yes
                                                         #Option2:no
 YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR=no
+                                                        #Option1:yes
+                                                        #Option2:no
+YQCONFIG_CHANGE_NEW_LCD_OR_NOT=no
                                                         #Option1:yes
                                                         #Option2:no
 
