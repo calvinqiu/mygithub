@@ -253,6 +253,7 @@ void UIFLowWndMovie_HideLensPositionCalibration(VControl *pCtrl, UINT32 paramNum
 void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
 void UIFlowWndMovie_GsensorShortEmrVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
+void UIFlowWndMovie_UserSaveSharpTurnVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
 #endif
 
 #endif
@@ -345,6 +346,7 @@ EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_OPEN, UIFLowWndMovie_ShowLensPositionCalibrat
 EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_CLOSE, UIFLowWndMovie_HideLensPositionCalibration)
 //add end
 EVENT_ITEM(NVTEVT_MTK_EMR_VIDEO, UIFlowWndMovie_UserSaveEMRVideo)
+EVENT_ITEM(NVTEVT_SHARP_TURN_VEDIO, UIFlowWndMovie_UserSaveSharpTurnVideo)
 #endif
 EVENT_END
 
@@ -424,6 +426,7 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
 char EventEMRName[256] = {0};//qiuhan add 20171027
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
 char EventGsensorName[256] = {0};
+char EventSharpTurnName[256] = {0};
 #endif
 extern BOOL WndMovieTouchPanelKeyUpdateIcons;
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
@@ -449,6 +452,27 @@ void UIFlowWndMovie_GsensorShortEmrVideo(VControl * pCtrl, UINT32 paramNum, UINT
 	}
 }
 
+
+
+void UIFlowWndMovie_UserSaveSharpTurnVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray)
+{
+        switch(gMovData.State)
+        {
+        case MOV_ST_REC:
+        case MOV_ST_REC|MOV_ST_ZOOM:
+            if(UI_GetData(FL_GSENSOR) != GSENSOR_OFF)
+            {
+	          memset(EventSharpTurnName, 0, sizeof(EventSharpTurnName));//EventEMRName[256]=NULL;
+	          strcat(&EventSharpTurnName[0], "Sharpturn-");
+	          debug_msg("QIUHAN=====================begin send CUSTOM GENSOR\r\n");//dual record, only support set crash
+		   Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+            }
+	     break;
+		 default:
+		 	break;
+         }
+	
+}
 #endif
 
 void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray)

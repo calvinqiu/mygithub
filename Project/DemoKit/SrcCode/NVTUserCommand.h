@@ -154,6 +154,7 @@ typedef enum
     //add end
     NVTEVT_MTK_EMR_VIDEO = 0x80003016,
     NVTEVT_GENSOR_EMR_VEDIO = 0x80003017,
+    NVTEVT_SHARP_TURN_VEDIO = 0x80003018,
 #endif
     // wifi event
     NVTEVT_WIFI_EXE_PHOTO_SIZE  = 0x8000e000,         ///< Set Photo size by Wi-Fi App
