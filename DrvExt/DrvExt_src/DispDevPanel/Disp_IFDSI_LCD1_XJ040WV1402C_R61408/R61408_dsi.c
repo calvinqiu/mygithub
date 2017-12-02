@@ -70,10 +70,10 @@
 #endif
 
 #define HVALIDST    0x39  //uiHSyncBackPorch(HPB) -> 53
-#define VVALIDST    0x06//0x15  //uiVSyncBackPorchOdd/Even
+#define VVALIDST    0x15//0x15  //uiVSyncBackPorchOdd/Even
 
-#define HSYNCT      0x02
-#define VSYNCT      0x02
+#define HSYNCT      0x0a
+#define VSYNCT      0x05
 
 /*
     Panel Parameters for TCON HX8379C
@@ -585,7 +585,7 @@ const tLCD_PARAM tModeDSI[] =
             _IDE_fDCLK,                             //!< fDCLK
             (0xF0+PANEL_WIDTH),             //!< uiHSyncTotalPeriod(HTOTAL)
             PANEL_WIDTH,                    //!< uiHSyncActivePeriod(HACT)
-            0x06,                           //!< uiHSyncBackPorch(HBP)
+            0x20,//0x60,                           //!< uiHSyncBackPorch(HBP)
             0x52 + PANEL_HEIGHT,            //!< uiVSyncTotalPeriod(VTOTAL)
             PANEL_HEIGHT,                           //!< uiVSyncActivePeriod
             VVALIDST,                       //!< uiVSyncBackPorchOdd
@@ -597,7 +597,7 @@ const tLCD_PARAM tModeDSI[] =
             FALSE,                           //!< bYCbCrFormat
             /* New added parameters */
             HSYNCT,                         //!< uiHSyncSYNCwidth
-            HSYNCT                          //!< uiVSyncSYNCwidth
+            VSYNCT                          //!< uiVSyncSYNCwidth
         },
 
         // tIDE_PARAM
