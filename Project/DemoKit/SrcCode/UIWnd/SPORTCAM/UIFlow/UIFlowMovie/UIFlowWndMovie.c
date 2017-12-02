@@ -254,6 +254,7 @@ void UIFlowWndMovie_UserSaveEMRVideo(VControl * pCtrl, UINT32 paramNum, UINT32 *
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
 void UIFlowWndMovie_GsensorShortEmrVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
 void UIFlowWndMovie_UserSaveSharpTurnVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
+void UIFlowWndMovie_UserSaveRushVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray);
 #endif
 
 #endif
@@ -347,6 +348,7 @@ EVENT_ITEM(NVTEVT_MTK_LENS_POS_CAL_CLOSE, UIFLowWndMovie_HideLensPositionCalibra
 //add end
 EVENT_ITEM(NVTEVT_MTK_EMR_VIDEO, UIFlowWndMovie_UserSaveEMRVideo)
 EVENT_ITEM(NVTEVT_SHARP_TURN_VEDIO, UIFlowWndMovie_UserSaveSharpTurnVideo)
+EVENT_ITEM(NVTEVT_RUSH_VEDIO, UIFlowWndMovie_UserSaveRushVideo)
 #endif
 EVENT_END
 
@@ -427,6 +429,7 @@ char EventEMRName[256] = {0};//qiuhan add 20171027
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
 char EventGsensorName[256] = {0};
 char EventSharpTurnName[256] = {0};
+char EventRushName[256] = {0};
 #endif
 extern BOOL WndMovieTouchPanelKeyUpdateIcons;
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
@@ -464,6 +467,27 @@ void UIFlowWndMovie_UserSaveSharpTurnVideo(VControl * pCtrl, UINT32 paramNum, UI
             {
 	          memset(EventSharpTurnName, 0, sizeof(EventSharpTurnName));//EventEMRName[256]=NULL;
 	          strcat(&EventSharpTurnName[0], "Sharpturn-");
+	          debug_msg("QIUHAN=====================begin send CUSTOM GENSOR\r\n");//dual record, only support set crash
+		   Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
+            }
+	     break;
+		 default:
+		 	break;
+         }
+	
+}
+
+
+void UIFlowWndMovie_UserSaveRushVideo(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray)
+{
+        switch(gMovData.State)
+        {
+        case MOV_ST_REC:
+        case MOV_ST_REC|MOV_ST_ZOOM:
+            if(UI_GetData(FL_GSENSOR) != GSENSOR_OFF)
+            {
+	          memset(EventRushName, 0, sizeof(EventRushName));//EventEMRName[256]=NULL;
+	          strcat(&EventRushName[0], "Rush-");
 	          debug_msg("QIUHAN=====================begin send CUSTOM GENSOR\r\n");//dual record, only support set crash
 		   Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
             }

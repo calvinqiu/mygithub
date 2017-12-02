@@ -824,6 +824,10 @@ void UART_TO_MTKRecTsk(void)
 				 debug_msg("======= CMD_SHARP_TURN_VEDIO========%s====\r\n",RecSentence_read);
 				 Ux_PostEvent(NVTEVT_SHARP_TURN_VEDIO, 1, FrameID);
 				 break;
+		      case CMD_RUSH_VEDIO:
+				 debug_msg("======= CMD_RUSH_VEDIO========%s====\r\n",RecSentence_read);
+				 Ux_PostEvent(NVTEVT_RUSH_VEDIO, 1, FrameID);
+				 break;
                     case CMD_EMR_VEDIO:
 				 debug_msg("=======CMD_EMR_VEDIO=========%s===\r\n",RecSentence_read);
 				 Ux_PostEvent(NVTEVT_MTK_EMR_VIDEO, 1, FrameID);

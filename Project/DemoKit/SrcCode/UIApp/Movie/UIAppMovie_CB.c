@@ -607,12 +607,14 @@ extern char EventLDWSRName[256];
 extern char EventFDWSName[256];
 extern char EventGsensorName[256];
 extern char EventSharpTurnName[256];
+extern char EventRushName[256];
 char EventEMRNameString[100] = {0};//qiuhan add 20171027
 char EventLDWSLNameString[100] = {0};//qiuhan add 20171027
 char EventLDWSRNameString[100] = {0};//qiuhan add 20171027
 char EventFDWSNameString[100] = {0};//qiuhan add 20171027
 char EventGsensorNameString[100] = {0};//qiuhan add 20171118
 char EventSharpTurnNameString[100] = {0};//qiuhan add 20171202
+char EventRushNameString[100] = {0};//qiuhan add 20171202
 void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 {
     UINT32 uiSeconds;
@@ -788,6 +790,16 @@ void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 	              strcat(&uiResqData[1],EventSharpTurnName);
 			memset(EventSharpTurnName, 0, sizeof(EventSharpTurnName));
 		       MTKComposeCMDRspFrame(0, CMD_SHARP_TURN_VEDIO,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+	}else  if(strcmp(EventRushName, "Rush-")==0){
+                     strncpy(EventRushNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 Rush==%s\r\n",EventRushNameString);
+                     strcat(EventRushName,EventRushNameString);
+			debug_msg("QIUHAN=======================EventEMRName Rush==%s\r\n",EventRushName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventRushName);
+			memset(EventRushName, 0, sizeof(EventRushName));
+		       MTKComposeCMDRspFrame(0, CMD_RUSH_VEDIO,&uiResqData, 116);  
 			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
 	}
 		
