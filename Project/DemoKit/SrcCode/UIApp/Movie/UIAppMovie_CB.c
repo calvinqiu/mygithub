@@ -608,6 +608,7 @@ extern char EventFDWSName[256];
 extern char EventGsensorName[256];
 extern char EventSharpTurnName[256];
 extern char EventRushName[256];
+extern char EventNastyBrakeName[256];//qiuhan add 20171202
 char EventEMRNameString[100] = {0};//qiuhan add 20171027
 char EventLDWSLNameString[100] = {0};//qiuhan add 20171027
 char EventLDWSRNameString[100] = {0};//qiuhan add 20171027
@@ -615,6 +616,7 @@ char EventFDWSNameString[100] = {0};//qiuhan add 20171027
 char EventGsensorNameString[100] = {0};//qiuhan add 20171118
 char EventSharpTurnNameString[100] = {0};//qiuhan add 20171202
 char EventRushNameString[100] = {0};//qiuhan add 20171202
+char EventNastyBrakeNameString[100] = {0};//qiuhan add 20171202
 void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 {
     UINT32 uiSeconds;
@@ -800,6 +802,16 @@ void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 	              strcat(&uiResqData[1],EventRushName);
 			memset(EventRushName, 0, sizeof(EventRushName));
 		       MTKComposeCMDRspFrame(0, CMD_RUSH_VEDIO,&uiResqData, 116);  
+			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
+	}else  if(strcmp(EventNastyBrakeName, "Rush-")==0){
+                     strncpy(EventNastyBrakeNameString, m_cmd_at_last_video_path+19,25);
+			debug_msg("QIUHAN=======================lase_video_path00 Nasty Brake==%s\r\n",EventNastyBrakeNameString);
+                     strcat(EventNastyBrakeName,EventNastyBrakeNameString);
+			debug_msg("QIUHAN=======================EventEMRName Nasty Brake==%s\r\n",EventNastyBrakeName);
+			uiResqData[0]=0x02; 
+	              strcat(&uiResqData[1],EventNastyBrakeName);
+			memset(EventNastyBrakeName, 0, sizeof(EventNastyBrakeName));
+		       MTKComposeCMDRspFrame(0, CMD_NASTY_BRAKE_VEDIO,&uiResqData, 116);  
 			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
 	}
 		
