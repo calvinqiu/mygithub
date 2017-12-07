@@ -272,3 +272,95 @@ void FlowMovie_OnTimer1SecIndex(void)
     }
 }
 
+
+#if defined(YQCONFIG_START_RECORDING_DELETE_OLD_FILE)
+#if USE_FILEDB
+#include "FileDB.h"
+#include "NameRule_FileDB.h"
+#endif
+
+void UIFlowWndMovie_OnDeleteOld(void)
+{
+    UINT32 filenum=0,sec=0;
+    UINT32 index = 0;
+    PFILEDB_FILE_ATTR  pfile;
+    UINT32 reserveSpace = 0;
+    UINT32 deleteFilenum = 0;
+
+    debug_msg("\n\r UIFlowWndMovie_OnDeleteOld start \n\r");
+    // delete old file and start recording again
+    if (1)//(SysGetFlag(FL_MOVIE_CYCLIC_REC)!=MOVIE_CYCLICREC_OFF)
+    {
+        switch(SysGetFlag(FL_MOVIE_CYCLIC_REC))
+        {
+    /*    case MOVIE_CYCLICREC_1MIN:
+            sec=60;
+            break;
+        case MOVIE_CYCLICREC_2MIN:
+            sec=120;
+            break;
+            */
+        case MOVIE_CYCLICREC_3MIN:
+            sec=180;
+            break;
+        }
+
+        reserveSpace =  180 * 4;  // ?????????????????,Harvey@20160530
+
+        if(MovieExe_GetMaxRecSec()>(reserveSpace))
+        {
+            return;
+        }
+
+        FileDB_SortBy(0,FILEDB_SORT_BY_MODDATE,FALSE);
+        FileDB_Refresh(0);
+        filenum = FileDB_GetTotalFileNum(0);
+        //debug_msg("UIFlowWndMovie_OnDeleteOld Total File :%d..\r\n",filenum);
+        /*
+        while(filenum--)
+        {
+            pfile = FileDB_SearhFile2(0,index);
+          debug_msg("pfile->filePath:%s..\r\n",pfile->filePath);
+            index++;
+        }*/
+
+        index =0;
+        // filenum = FileDB_GetTotalFileNum(0);
+
+        while(filenum--)
+        {
+            pfile = FileDB_SearhFile2(0,index);
+            //debug_msg("pfile->filePath:%s..\r\n",pfile->filePath);
+
+            if(!M_IsReadOnly(pfile->attrib))
+            {
+                // if (MovieExe_GetMaxRecSec()>(sec+20))
+                //     break;
+
+                //???????????
+                deleteFilenum++;
+                //debug_msg("deleteFilenum = %d, delete pfile->filePath:%s..\r\n",deleteFilenum,pfile->filePath);
+                
+                FileSys_DeleteFile(pfile->filePath);
+                FileDB_DeleteFile(0,index);
+
+                if (MovieExe_GetMaxRecSec()>(reserveSpace) && (deleteFilenum%2 == 0))
+                {
+                    break;
+                }
+
+            }
+            else
+            {
+                index++;
+            }
+        }
+
+        FileDB_Refresh(0);
+    }
+
+    debug_msg("\n\r UIFlowWndMovie_OnDeleteOld end \n\r");
+
+}
+#endif
+

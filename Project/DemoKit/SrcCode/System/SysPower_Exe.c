@@ -64,9 +64,16 @@ int SX_TIMER_DET_BATT_ID = -1;
 int SX_TIMER_DET_CHARGE_ID = -1;
 int SX_TIMER_DET_SHOWADC = -1;
 int SX_TIMER_DET_BATTINS_ID = -1;
+#if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+int SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT = -1;
+#endif
 #if defined(YQCONFIG_COMB_DET_LCD_SWITCH_BY_GPIO)||defined(YQCONFIG_COMB_DET_LCD_SWITCH_BY_UART)
 int SX_TIMER_DET_LCDSWITCH_ID = -1;
 #endif
+#if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)//add by qiuhan on 20170816
+void UI_ScreenInMTKORNot(void);
+#endif
+
 void UI_DetAutoSleep(void);
 void UI_DetAutoPoweroff(void);
 void UI_DetBattery(void);
@@ -117,9 +124,12 @@ SX_TIMER_ITEM(UI_BackCarDet, UI_BackCarDet, 5, TRUE)
 SX_TIMER_ITEM(UI_SDCardSwitchDet, UI_SDCardSwitchDet, 5, FALSE)
 #endif
 #if defined(YQCONFIG_NTK2MCU_STATUS_SUPPORT)
-
 SX_TIMER_ITEM(UI_NTK2MCU_Watchdog_Switch, UI_NTK2MCU_Watchdog_Switch, 100, TRUE)
 #endif
+#if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)//add by qiuhan on 20170816
+SX_TIMER_ITEM(UI_ScreenInMTKORNot, UI_ScreenInMTKORNot, 150, FALSE)
+#endif
+
 UINT32 DxPower_CB(UINT32 event, UINT32 param1, UINT32 param2)
 {
     #if LENS_FUNCTION
@@ -250,6 +260,10 @@ void System_OnPowerInit(void)
 			
     #if (USB_CHARGE_FUNCTION == ENABLE)
     SX_TIMER_DET_BATTINS_ID = SxTimer_AddItem(&Timer_GxPower_DetBatteryIns);
+    #endif
+
+    #if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)//add by qiuhan on 20170816
+       SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT = SxTimer_AddItem(&Timer_UI_ScreenInMTKORNot);
     #endif
     }
 }
@@ -555,6 +569,37 @@ void UI_DetLcdSwitch(void)
 	}
 }
 #endif
+
+//add by qiuhan on 20170817
+#if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
+void UI_ScreenInMTKORNot(void)
+{
+       BOOL currentStatus;
+	static BOOL lasttStatus = FALSE;
+	static UINT32 counter=0;
+	DX_OBJECT* devLCDObj;
+	UINT8   uiResqData[16]={0};
+	extern UINT8 MapLcdSwitchFlag;
+
+	currentStatus = GPIO_MapDetLcdSwitch();
+	     debug_msg("QIUHAN=================================UI_ScreenInNTK????\r\n");
+       if(currentStatus==TRUE)
+	{
+	     uiResqData[0]=0x02;
+            uiResqData[1]=0x01;
+            MTKComposeCMDRspFrame(0, CMD_TOUCH,(UINT8 *)&uiResqData, 2);
+	     debug_msg("QIUHAN=================================UI_ScreenInNTK_Still!!!\r\n");
+
+        }else{
+            SxTimer_SetFuncActive(SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT, FALSE);//add by qiuhan on 20170816
+            debug_msg("QIUHAN=================================UI_ScreenInMTK_rightNow!!!\r\n");
+	 }
+}
+#endif
+
+//add end
+
+
 #if defined(YQCONFIG_SDCARD_SWITCH_DETECT_SUPPORT)
 void Start_SDCardSwitchDet(void)
 {

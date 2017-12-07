@@ -406,6 +406,7 @@ void UIFlowWndMovie_LockFile(void)
     return NVTEVT_CONSUME;
 }
 //add by qiuhan on 20171028 for U15 begin
+extern int  SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT;
 void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
            UINT32 FrameId;
 	    UINT8   uiResqData[16]= {0};
@@ -419,6 +420,9 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
 		  Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
 		  uiResqData[0]=0x01;
 		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+		  #if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT) 
+	               SxTimer_SetFuncActive(SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT, TRUE);//add by qiuhan on 20170816
+	         #endif
            }else{
                 uiResqData[0]=0x00;
 		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);  
@@ -1606,7 +1610,9 @@ INT32 UIFlowWndMovie_OnOpen(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray
         //UIFlowWndMovie_OnDeleteOld();
     }
     #endif
-   
+       #if defined(YQCONFIG_START_RECORDING_DELETE_OLD_FILE)
+		UIFlowWndMovie_OnDeleteOld();
+	#endif
     return NVTEVT_CONSUME;
 }
 INT32 UIFlowWndMovie_OnClose(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
@@ -2161,6 +2167,10 @@ INT32 UIFlowWndMovie_OnMovieFinish(VControl *pCtrl, UINT32 paramNum, UINT32 *par
             UxState_SetData(&UIFlowWndMovie_Status_RECCtrl,STATE_CURITEM,UIFlowWndMovie_Status_REC_ICON_REC_TRANSPAENT);
 
             //if (FlowMovie_ChkDrawStoreFullFolderFull() == FALSE)
+            #if defined(YQCONFIG_START_RECORDING_DELETE_OLD_FILE)
+		       debug_msg("=========3333================UIFlowWndMovie_OnDeleteOld Total File .\r\n");	
+			UIFlowWndMovie_OnDeleteOld();
+		#endif
             if (SysGetFlag(FL_MOVIE_CYCLIC_REC) == MOVIE_CYCLICREC_OFF)
             {
                 CheckStorageErr = FlowMovie_IsStorageErr(TRUE);
@@ -2335,7 +2345,8 @@ INT32 UIFlowWndMovie_OnLoopRecFull(VControl *pCtrl, UINT32 paramNum, UINT32 *par
     FlowMovie_IconDrawMaxRecTime(&UIFlowWndMovie_Static_maxtimeCtrl);
     return NVTEVT_CONSUME;
 }
-static BOOL showLockButton = FALSE;
+
+BOOL showLockButton = TRUE;
 INT32 UIFlowWndMovie_OnEMRCompleted(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UINT32  uiPathId = 0;
@@ -4101,6 +4112,7 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                      debug_msg("QIUHAN=====================begin send CUSTOM1\r\n");//dual record, only support set crash
 			Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
                      UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, FALSE);
+			showLockButton=FALSE;
                            #if 0
 				  for( i = 0; i<=1; i++){
 					GPIOMap_TurnOnLCDBeep();
@@ -4217,7 +4229,11 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
             }
             #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
-            if(MovRec_IsRecording()&&(gbGsensorTrig==FALSE))
+		#if defined(YQCONFIG_PLATFORM_NAME_U15)
+                if(MovRec_IsRecording()&&showLockButton)//(gbGsensorTrig==FALSE))//add by qiuhan on 20171204
+              #else
+                if(MovRec_IsRecording()&&gbGsensorTrig==FALSE))
+	       #endif
             {
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
                 UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);

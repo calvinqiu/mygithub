@@ -538,6 +538,8 @@ void FlowMovie_IconHideReverse(void)
     UxCtrl_SetShow(&UIFlowWndMovie_Static_ReverseCtrl, FALSE);
 }
 
+extern BOOL showLockButton;
+
 void FlowMovie_IconDrawTouchButton(BOOL Show)
 {
     if(Show==FALSE)
@@ -613,7 +615,7 @@ void FlowMovie_IconDrawTouchButton(BOOL Show)
         /* modify begin by ZMD, 2017-02-15 new version management*/
         #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
 		#if defined(YQCONFIG_PLATFORM_NAME_U15)
-        if(MovRec_IsRecording())//&&(gbGsensorTrig==FALSE))
+        if(MovRec_IsRecording())//&&showLockButton)//&&(gbGsensorTrig==FALSE))
               #else
         if(MovRec_IsRecording()&&(gbGsensorTrig==FALSE))
 		#endif
