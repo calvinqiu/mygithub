@@ -803,7 +803,7 @@ void Movie_RecordCB(UINT32 uiEventID, UINT32 param)
 			memset(EventRushName, 0, sizeof(EventRushName));
 		       MTKComposeCMDRspFrame(0, CMD_RUSH_VEDIO,&uiResqData, 116);  
 			debug_msg("QIUHAN=======================uiResqData ==%s\r\n",uiResqData);
-	}else  if(strcmp(EventNastyBrakeName, "Rush-")==0){
+	}else  if(strcmp(EventNastyBrakeName, "NastyBrake-")==0){
                      strncpy(EventNastyBrakeNameString, m_cmd_at_last_video_path+19,25);
 			debug_msg("QIUHAN=======================lase_video_path00 Nasty Brake==%s\r\n",EventNastyBrakeNameString);
                      strcat(EventNastyBrakeName,EventNastyBrakeNameString);
