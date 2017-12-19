@@ -108,7 +108,7 @@ static MOVIE_REC_ITEM g_MovieRecSizeTable[MOVIE_SIZE_ID_MAX] = {
  //#NT#2016/05/24#Charlie Chang -end
     [MOVIE_SIZE_FRONT_1920x1080P30] = {
         MOVIE_REC_TYPE_FRONT,
-        {1920,  1080,   30,     1800*1024,  VIDENC_DAR_DEFAULT, IMAGERATIO_16_9},
+        {1920,  1080,   30,     1250*1024,  VIDENC_DAR_DEFAULT, IMAGERATIO_16_9},//qiuhan modify 1800*1024 20171213
         {0},
     },
 
