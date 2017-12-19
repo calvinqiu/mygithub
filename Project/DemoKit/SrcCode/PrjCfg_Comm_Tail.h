@@ -546,4 +546,7 @@
 #endif
 //#NT#2017/04/21#Niven Cho -end
 
+#ifndef AUDIO_NS_FUNC
+#define AUDIO_NS_FUNC 						ENABLE
+#endif
 #endif //_PRJCFG_COMM_TAIL_H_

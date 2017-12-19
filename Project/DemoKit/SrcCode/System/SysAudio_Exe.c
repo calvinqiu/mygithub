@@ -40,6 +40,11 @@
 //#NT#2016/12/22#HM Tseng -end
 #endif
 
+#if AUDIO_NS_FUNC
+#include "Aec.h"
+#include "AudFilterAPI.h"
+#endif
+
 //global debug level: PRJ_DBG_LVL
 #include "PrjCfg.h"
 //local debug level: THIS_DBGLVL
@@ -91,10 +96,19 @@ extern DX_HANDLE gDevHDMIObj;
 #endif
 #endif
 
+#if AUDIO_NS_FUNC
+AUDFILTER_NS_CB AudNs_CB(UINT32 p1, UINT32 p2, UINT32 p3);
+BOOL gDevNsEn = FALSE;
+#endif
+
 //#NT#2016/05/23#HM Tseng -begin
 //#NT#Support audio push function
 BOOL System_SetDataCB(PAUDIO_BUF_QUEUE pAudBufQue, UINT32 id);
 //#NT#2016/05/23#HM Tseng -end
+
+#if AUDIO_NS_FUNC
+void System_SetAudNsEnable(BOOL enable);
+#endif
 
 static AUDIO_SETTING gProjCommDxSndSet = {0};
 static AUDIO_DEVICE_OBJ gProjCommDxSndDev = {0};
@@ -197,6 +211,11 @@ void System_OnAudioInit(void)
         }
         //#NT#2016/08/30#Jeah Yen -end
 #endif
+		#if AUDIO_NS_FUNC
+		System_SetAudNsEnable(ENABLE);
+		AudFilterTsk_RegNsCB((AUDFILTER_NS_CB)AudNs_CB);
+		AudNS_Open();
+		#endif
     }
     //    aud_setTotalVolLevel(AUDIO_VOL_LEVEL8);
     TM_BOOT_END("audio","init");
@@ -220,6 +239,9 @@ void System_OnAudioExit(void)
             WavStudio_Close();
             DBG_MSG("^GAudPlay Close - end\r\n");
         }
+		#if AUDIO_NS_FUNC
+		AudNS_Close();
+		#endif
 #endif
     }
     //PHASE-1 : Close Drv or DrvExt
@@ -479,9 +501,9 @@ BOOL UserAudio_LoadCB(PAUDIO_BUF_QUEUE pAudBufQue, UINT32 id)
 #endif
 #endif
 
-#if (AUDIO_PLAY_FUNCTION == ENABLE)
 void System_SetAudioParam(UINT32 DevID, UINT32 audSR, UINT32 audCh, UINT32 bitPerSamp)
 {
+#if (AUDIO_PLAY_FUNCTION == ENABLE)
     PWAVSTUD_AUD_INFO pCodec = &gAudInfo;
     if(pCodec)
     {
@@ -506,8 +528,8 @@ void System_SetAudioParam(UINT32 DevID, UINT32 audSR, UINT32 audCh, UINT32 bitPe
     }
     #endif
     //#NT#2016/12/22#HM Tseng -end
-}
 #endif
+}
 
 //#NT#2016/05/23#HM Tseng -begin
 //#NT#Support audio push function
@@ -685,5 +707,12 @@ void System_SetAecEnable(BOOL enable)
     gDevAecEn = enable;
 #endif
 }
+
+#if AUDIO_NS_FUNC
+void System_SetAudNsEnable(BOOL enable)
+{
+	gDevNsEn = enable;
+}
+#endif
 //#NT#2016/12/22#HM Tseng -end
 

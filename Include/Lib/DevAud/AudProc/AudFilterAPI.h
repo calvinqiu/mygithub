@@ -54,6 +54,8 @@ extern void AudFilter_InstallID(void) _SECTION(".kercfg_text");
 */
 typedef void (*AUDFILTER_FILTER_CB)(void);
 
+typedef void (*AUDFILTER_NS_CB)(UINT32 p1, UINT32 p2, UINT32 p3);
+
 /**
     Setup specified audio filter set.
 
@@ -245,6 +247,8 @@ extern UINT32  AudFilter_GetApplyAddr(void);
     @return void
 */
 extern UINT32  AudFilter_GetApplySize(void);
+
+extern void AudFilterTsk_RegNsCB(AUDFILTER_NS_CB fpAudNsCallBack);
 
 //@}
 //@}

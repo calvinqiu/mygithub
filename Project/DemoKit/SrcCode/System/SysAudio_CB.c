@@ -37,6 +37,10 @@
 #include "WavStudioTsk.h"
 #endif
 
+#if AUDIO_NS_FUNC
+#include "Aec.h"
+#endif
+
 //global debug level: PRJ_DBG_LVL
 #include "PrjCfg.h"
 //local debug level: THIS_DBGLVL
@@ -51,6 +55,9 @@
 
 int SX_TIMER_DET_AUDIODEV_ID = -1;
 extern BOOL g_bIsInitSystemFinish;
+#if AUDIO_NS_FUNC
+extern BOOL gDevNsEn;
+#endif
 
 UINT32 guiSndRepeat = FALSE;
 
@@ -161,5 +168,22 @@ void WavRecv_CB(WAVSTUD_ACT act, UINT32 p1, UINT32 p2)
     }
 }
 //#NT#2016/09/07#HM Tseng -end
+#endif
+
+#if AUDIO_NS_FUNC
+void AudNs_CB(UINT32 p1, UINT32 p2, UINT32 p3)
+{
+	if (!gDevNsEn)
+		return;
+
+	AUDNS_BITSTREAM AudNSIO;
+	UINT32 addr = p1;
+	UINT32 size = p3;
+
+	AudNSIO.uiBsAddrIn        = addr;
+    AudNSIO.uiBsAddrOut       = addr;
+    AudNSIO.uiBsLength        = size >> 1;
+    AudNS_Run(&AudNSIO);
+}
 #endif
 

@@ -162,6 +162,10 @@ BOOL gb3DNROut = FALSE;
 #include "ADAS_DSP_Lib.h"
 #endif
 
+#if AUDIO_NS_FUNC
+#include "Aec.h"
+#endif
+
 extern void System_DispSourceByTarget(ISIZE* pImgSize, USIZE* pAspectRatio);
 extern UINT32 System_GetEnableDisp(void);
 extern UINT32 System_GetEnableSensor(void);
@@ -5286,6 +5290,15 @@ INT32 MovieExe_OnRecStart(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
         DisDsp_START();
 #endif
 //#NT#2016/05/20#Yang Jin -end
+
+#if AUDIO_NS_FUNC
+	UINT32 uiAudSampleRate, uiAudChannelType;
+	uiAudSampleRate     = Movie_GetAudSampleRate();
+    uiAudChannelType    = Movie_GetAudChannel();
+	AudNS_SetConfig(AUDNS_CONFIG_ID_CHANNEL_NO, (INT32)((uiAudChannelType == MOVREC_AUDTYPE_STEREO)?2:1));
+	AudNS_SetConfig(AUDNS_CONFIG_ID_SAMPLERATE, (INT32)uiAudSampleRate);
+	AudNS_Init();
+#endif
 
     // send command to UIMovieRecObj to start movie recording
     //Ux_SendEvent(&UIMovieRecObjCtrl, NVTEVT_START_REC_MOVIE, 0);
