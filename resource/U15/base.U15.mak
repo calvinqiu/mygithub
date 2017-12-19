@@ -83,7 +83,7 @@ YQCONFIG_COMB_SENSOR_2_ROTATE_OPTION = FLIP
             							# Option2:FLIP
             							# Option3:MIRROR            							           							
             							
-YQCONFIG_COMB_UIFILETYPE_OPTION = TS  
+YQCONFIG_COMB_UIFILETYPE_OPTION = TS
             							# Option1:TS
             							# Option2:MOV
             							# Option3:AVI
