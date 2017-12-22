@@ -186,7 +186,7 @@ YQCONFIG_HAVE_GPS_OR_NOT=yes
 YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR=no
                                                         #Option1:yes
                                                         #Option2:no
-YQCONFIG_CHANGE_NEW_LCD_OR_NOT=no
+YQCONFIG_CHANGE_NEW_LCD_OR_NOT=yes
                                                         #Option1:yes
                                                         #Option2:no
 YQCONFIG_START_RECORDING_DELETE_OLD_FILE=yes

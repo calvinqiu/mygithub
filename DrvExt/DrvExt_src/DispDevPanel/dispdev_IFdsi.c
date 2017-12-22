@@ -20,8 +20,6 @@
 #include "dispdev_panlcomn.h"
 
 #define PORCH_ALIGN  20
-#define PORCH_ALIGN     10
-#define BPORCH_ALIGN    10
 static BOOL ubTEON = FALSE;
 static BOOL ubTEExtPin = FALSE;
 
@@ -68,7 +66,7 @@ static UINT32   gDispDev_SrcFreq = 0;
 
 #define _CFG_USE_LP_ 1
 #if _CFG_USE_LP_
-static UINT8 testPat2[200];
+static UINT8 testPat2[210];
 static UINT32 EccPoly[6] = {0xF12CB7,0xF2555B,0x749A6D,0xB8E38E,0xDF03F0,0xEFFC00};
 
 static UINT32 dsi_GenECC(UINT32 uiPktHdr)
@@ -136,11 +134,7 @@ static ER dsi_LPWriteCmd(DSI_LANESEL uiDataLane, UINT32 uiDCSCmd, UINT8 * param,
     UINT32 uiECCCode;
 
     DBG_DUMP("[%d]Low power Cmd => 0x%02x\r\n", pktType, uiDCSCmd);
-#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-    if (0)//(uiDCSCmd == 0x11 || uiDCSCmd == 0x29 || uiDCSCmd == 0x36 || uiDCSCmd == 0x3A)//(pktType == DSI_SHORT_PACKET)
-#else
     if(pktType == DSI_SHORT_PACKET)
-#endif
     {
         if(paramNo >= 2)
         {
@@ -152,7 +146,6 @@ static ER dsi_LPWriteCmd(DSI_LANESEL uiDataLane, UINT32 uiDCSCmd, UINT8 * param,
             uiPKTHD = DATA_TYPE_SHORT_WRITE_NO_PARAM;
         else
             uiPKTHD = DATA_TYPE_SHORT_WRITE_1_PARAM;
-
 #if (DISPDEV_IFDSI_TYPE==DISPDEV_IFDSI_NT35410)
         if(uiDCSCmd == 0x32)
             uiPKTHD = 0x32;
@@ -204,16 +197,6 @@ static ER dsi_LPWriteCmd(DSI_LANESEL uiDataLane, UINT32 uiDCSCmd, UINT8 * param,
     else
     {
         uiPKTHD = DATA_TYPE_LONG_WRITE;
-	#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-		if (uiDCSCmd < 0xB0)
-		{
-			uiPKTHD = 0x39;
-		}
-		else
-		{
-			uiPKTHD = 0x29;
-		}
-	#endif
         uiPKTHD |= ((paramNo + 1)<<8);
         uiECCCode = (dsi_GenECC(uiPKTHD) & 0xFF);
 
@@ -287,10 +270,8 @@ static void DispDeviceInit(tLCD_PARAM *pMode)
     dcsContext.ubBTAOnly = FALSE;
     pDispDevControl(DISPDEV_IOCTRL_GET_PANEL_ADJUST, &DevIOCtrl);
 
-	#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-	#else
     dcsCtrlContext.uiParamCnt = 0;
-	#endif
+
     if(DevIOCtrl.SEL.GET_PANEL_ADJUST.pfpAdjust != NULL)
     {
         DevIOCtrl.SEL.GET_PANEL_ADJUST.pfpAdjust();
@@ -316,10 +297,8 @@ static void DispDeviceInit(tLCD_PARAM *pMode)
                 dcsContext.ubBTAOnly = TRUE;
                 dcsContext.uiCmdNo = 1;
                 dcsContext.uiSramOfs = 0x80;
-				#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-				#else
                 dcsContext.ubEOTEN = FALSE;
-				#endif	
+
                 dcsCtrlContext.uiDataType = DATA_TYPE_SHORT_READ_NO_PARAM;
                 dcsCtrlContext.uiPacketType = DSI_SHORT_PACKET;
                 dcsCtrlContext.uiVirtualChannel = 0;
@@ -369,8 +348,6 @@ static void DispDeviceInit(tLCD_PARAM *pMode)
                 }
                 i++;
             }
-			#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-			#else
             else if (pMode->pCmdQueue[i].uiAddress == CMDTEONEACHFRAMERTY)
             {
                 if(dsi_setConfig(DSI_CONFIG_ID_SYNC_WITH_SETTEON_RTY, (BOOL)pMode->pCmdQueue[i].uiValue) != E_OK)
@@ -383,7 +360,6 @@ static void DispDeviceInit(tLCD_PARAM *pMode)
                 }
                 i++;
             }
-			#endif
             else
             {
                 if(pMode->pCmdQueue[i].uiAddress == DSICMD_CMD)
@@ -411,14 +387,6 @@ static void DispDeviceInit(tLCD_PARAM *pMode)
                             {
                                 DSI_CFG_MSG("  [Data%02d]=[0x%02x]\r\n", (dataCnt - (i+1)), pMode->pCmdQueue[dataCnt].uiValue);
                             }
-							#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-							dsiCmdParam[dcsCtrlContext.uiParamCnt] = pMode->pCmdQueue[dataCnt].uiValue;
-                            dcsCtrlContext.uiParamCnt++;
-                            if(dcsCtrlContext.uiParamCnt > MAX_DSI_CMD)
-                            {
-                                DSI_ERR_MSG("DSI data exceed [%03d] %03d\r\n", MAX_DSI_CMD, dcsCtrlContext.uiParamCnt);
-                            }
-							#else
                             if(dcsCtrlContext.uiParamCnt > (MAX_DSI_CMD-1))
                             {
                                 DSI_ERR_MSG("DSI data exceed [%03d] %03d\r\n", MAX_DSI_CMD, dcsCtrlContext.uiParamCnt);
@@ -426,7 +394,6 @@ static void DispDeviceInit(tLCD_PARAM *pMode)
                             }
                             dsiCmdParam[dcsCtrlContext.uiParamCnt] = pMode->pCmdQueue[dataCnt].uiValue;
                             dcsCtrlContext.uiParamCnt++;
-							#endif
                         }
                         else
                         {
@@ -663,8 +630,7 @@ static ER dispdev_openIFDsi(void)
         dsi_setConfig(DSI_CONFIG_ID_DATALANE_NO, DSI_DATA_LANE_1);
         uiLaneCnt = 2;
     }
-	#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-	#else
+
     if((pMode->Panel.LCDMode >= PINMUX_DSI_4_LANE_CMD_MODE_RGB565) && (pMode->Panel.LCDMode <= PINMUX_DSI_4_LANE_VDO_SYNC_EVENT_RGB888))
     {
         if(pMode->Panel.LCDMode <= PINMUX_DSI_4_LANE_CMD_MODE_RGB888)
@@ -681,7 +647,7 @@ static ER dispdev_openIFDsi(void)
         dsi_setConfig(DSI_CONFIG_ID_DATALANE_NO, DSI_DATA_LANE_3);
         uiLaneCnt = 4;
     }
-	#endif
+
     switch(pMode->Panel.LCDMode)
     {
         case PINMUX_DSI_1_LANE_CMD_MODE_RGB565:
@@ -948,16 +914,12 @@ static ER dispdev_openIFDsi(void)
 
     else
     {
-		#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-		if ( 1 )		
-		#else		
         if ((pMode->Panel.LCDMode >= PINMUX_DSI_4_LANE_VDO_SYNC_PULSE_RGB565) &&
            ((pMode->Panel.LCDMode <= PINMUX_DSI_4_LANE_VDO_SYNC_EVENT_RGB888)))
         {
             dsi_setConfig(DSI_CONFIG_ID_BLANK_CTRL, TRUE);
         }
         else
-		#endif
         {
             dsi_setConfig(DSI_CONFIG_ID_BLANK_CTRL, FALSE);
         }
@@ -1037,10 +999,9 @@ static ER dispdev_openIFDsi(void)
         else
         {
             UINT32 uiHBPHFPSum;
-			#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-            UINT32 X = 5;
-            UINT32 Y = 0;
-			#endif
+            //UINT32 X = 5;
+            //UINT32 Y = 0;
+
             //*********************************************************************************************************
             //((Htotal + X) * DSI_CLK)/IDE_CLK = (22+HBP+HFP+HACT)/2
             //((uiHSyncTotalPeriod + X) * DSI_CLK)/IDE_CLK * LANENUM - 22 - HACT(byteCount) = HBP+HFP
@@ -1049,31 +1010,28 @@ static ER dispdev_openIFDsi(void)
             //DSI_VIDEOPKT_TYPE_SYNC_EVENT
             uiHactByteCount = pMode->Panel.uiHSyncActivePeriod * 3;             //HACT
 
-			#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-            uiHBPHFPSum = (((pMode->Panel.uiHSyncTotalPeriod + X) * 3) / 2) * uiLaneCnt - 22 - uiHactByteCount;
-			#else
-            uiHBPHFPSum = ((pMode->Panel.uiHSyncTotalPeriod) * 3) - uiHactByteCount - 22;
-			#endif
+
+            //uiHBPHFPSum = (((pMode->Panel.uiHSyncTotalPeriod + X) * 3) / 2) * uiLaneCnt - 22 - uiHactByteCount;
+
+//#YouQing#2017/11/23 10:3:33#Chenying#	-start
+//#YouQing#
+            //uiHBPHFPSum = ((pMode->Panel.uiHSyncTotalPeriod) * 3) - uiHactByteCount - 22;
+          	uiHBPHFPSum = ((pMode->Panel.uiHSyncTotalPeriod) * 3) - uiHactByteCount;
+//#YouQing#2017/11/23 10:3:33#Chenying#	-end
+
             DSI_CFG_MSG("uiHSyncTotalPeriod = %d\r\n", pMode->Panel.uiHSyncTotalPeriod * 3);
             DSI_CFG_MSG("uiHactByteCount= %d, uiHBPHFPSum = %d\r\n", uiHactByteCount, uiHBPHFPSum);
-			
+
             if(uiHBPHFPSum%2)
             {
                 DBG_ERR("uiHBPHFPSum = %d MUST be even number\r\n", uiHBPHFPSum);
-				#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-                return E_SYS; //??Shirley remove for NT35410
-				#endif
+                //??return E_SYS; //??Shirley remove for NT35410
             }
-			#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-			else
-            {
-                uiHBPByteCount = (uiHBPHFPSum >> 1) - 10;
-                uiHFPByteCount = (uiHBPHFPSum >> 1) + 10;
-            }
-			#else
-
+            //else
+            //{
             uiHBPByteCount = (uiHBPHFPSum >> 1) /*- 10*/;
             uiHFPByteCount = (uiHBPHFPSum >> 1) /*+ 10*/;
+            //}
 
             if (uiHBPByteCount%4)
             {
@@ -1081,7 +1039,7 @@ static ER dispdev_openIFDsi(void)
                 uiHBPByteCount = (uiHBPByteCount >> 2) << 2;
                 uiHFPByteCount = (uiHFPByteCount >> 2) << 2;
             }
-			#endif
+
             //Calculate LP timing
             THS_TRAIL           = dsi_getConfig(DSI_CONFIG_ID_THS_TRAIL) + 1;
             THS_EXIT            = dsi_getConfig(DSI_CONFIG_ID_THS_EXIT) + 1;
@@ -1114,12 +1072,11 @@ static ER dispdev_openIFDsi(void)
             uiVtotal_Sub_Vactive= pMode->Panel.uiVSyncTotalPeriod - pMode->Panel.uiVSyncActivePeriod;
 //          uiVIDEData = (Vtotal - VACT       ) * Htotal                          * DSI_CLK/IDE_CLK
             uiVIDEData = (uiVtotal_Sub_Vactive) * pMode->Panel.uiHSyncTotalPeriod * 3 / 2;
-			#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-            uiBllPByteCount = (((uiVIDEData - TLP_TOTAL - Y -3) * uiLaneCnt) / (uiVtotal_Sub_Vactive)) - 10;
-			#else
+
+            //uiBllPByteCount = (((uiVIDEData - TLP_TOTAL - Y -3) * uiLaneCnt) / (uiVtotal_Sub_Vactive)) - 10;
             //uiBllPByteCount = (((uiVIDEData - TLP_TOTAL -3) * uiLaneCnt) / (uiVtotal_Sub_Vactive)) - 10;
             uiBllPByteCount = uiHBPByteCount + uiHFPByteCount + uiHactByteCount + 22 - 10;
-			#endif
+
 
             //DBG_DUMP("uiHFPByteCount = 0x%08x\r\n", uiHFPByteCount);
             //DBG_DUMP("uiBllPByteCount = 0x%08x LP = %d\r\n", uiBllPByteCount, TLP_TOTAL);
@@ -1128,8 +1085,7 @@ static ER dispdev_openIFDsi(void)
 
             if(uiVideoSyncMode == DSI_VIDEOPKT_TYPE_SYNC_PULSE)
             {
-				#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-                if(uiHBPByteCount % 2 != 0)
+                /*if(uiHBPByteCount % 2 != 0)
                 {
                     uiHSA = uiHBPByteCount / 2;
                     uiHBPByteCount = uiHBPByteCount / 2 + 1;
@@ -1138,11 +1094,9 @@ static ER dispdev_openIFDsi(void)
                 {
                     uiHSA = uiHBPByteCount / 2;
                     uiHBPByteCount = uiHBPByteCount / 2;
-                }
-				#else
+                }*/
                 uiHSA = uiHBPByteCount / 2;
                 uiHBPByteCount = uiHBPByteCount - uiHSA - 10;
-				#endif
             }
 
 
@@ -1168,8 +1122,6 @@ static ER dispdev_openIFDsi(void)
                     DSI_CFG_MSG(" Configure pixel packet header success [0x%02x]\r\n", DATA_TYPE_PACKET_STREAM_RGB_888_PACKED);
                 }
             }
-			#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-			#else
             if ((pMode->Panel.LCDMode >= PINMUX_DSI_4_LANE_VDO_SYNC_EVENT_RGB565) &&
                ((pMode->Panel.LCDMode <= PINMUX_DSI_4_LANE_VDO_SYNC_EVENT_RGB888)))
             {
@@ -1183,7 +1135,6 @@ static ER dispdev_openIFDsi(void)
                 //DBG_DUMP("2.uiBllPByteCount = 0x%08x LP = %d\r\n", uiBllPByteCount, TLP_TOTAL);
                 //DBG_DUMP("2.uiBHBPByteCount = 0x%08x\r\n", uiHBPByteCount);
             }
-			#endif
         }
 
         if(dsi_setConfig(DSI_CONFIG_ID_VTOTAL, pMode->Panel.uiVSyncTotalPeriod)!= E_OK)
@@ -1403,11 +1354,9 @@ static ER dispdev_openIFDsi(void)
     if(SrcPLL != PLL_ID_1)
     {
         DBG_IND("Original SrcClk(%d)Mhz\r\n",CurFreq);
-		#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-        pll_setPLLEn(SrcPLL,    FALSE);
-        pll_setPLL(SrcPLL,      IDE_SRC_CLK_480);
-        pll_setPLLEn(SrcPLL,    TRUE);
-		#endif
+        //pll_setPLLEn(SrcPLL,    FALSE);
+        //pll_setPLL(SrcPLL,      IDE_SRC_CLK_480);
+        //pll_setPLLEn(SrcPLL,    TRUE);
         gDispDev_SrcFreq = CurFreq;
         DBG_IND("DEVDSI: Chg PLL%d to(%d)Mhz\r\n",(SrcPLL+1),pll_getPLLFreq(SrcPLL)/1000000);
     }
@@ -1418,10 +1367,8 @@ static ER dispdev_openIFDsi(void)
     }
 
     //enable PLL for DSI (PLL11)
-	#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-	#else
     pll_setPLLEn(PLL_ID_11,    TRUE);
-	#endif
+
     // Config & Enable Display physical engine (IDE engine)
     dispdev_setDisplay(pDispDevControl, tLCD_INF_MIPI_DSI, pMode, PinFuncID);
 
@@ -1429,20 +1376,12 @@ static ER dispdev_openIFDsi(void)
     {
         //switch PINMUX
         UINT32 uiReg;
-		#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
 
-        uiReg = *(UINT32 *)0xb0010008;
-        uiReg &= ~(0x400000F);
-        uiReg = 0x4000008;
-
-        *(UINT32 *)0xb0010008 = uiReg;
-		#else
         uiReg = *(UINT32 *)0xC0010008;
         uiReg &= ~(0x400000F);
         uiReg |= 0x4000008;
 
         *(UINT32 *)0xC0010008 = uiReg;
-		#endif
     }
 
     dsi_setTXEN(TRUE, TRUE);
@@ -1499,8 +1438,7 @@ static ER dispdev_closeIFDsi(void)
     dispanl_debug(("^GcloseIFDsi START\r\n"));
 
     DevIOCtrl.SEL.SET_ENABLE.bEn = FALSE;
-	#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-    if(dsi_getConfig(DSI_CONFIG_ID_PIXPKT_MODE) == DSI_PIXMODE_VIDEO_MODE)
+/*    if(dsi_getConfig(DSI_CONFIG_ID_PIXPKT_MODE) == DSI_PIXMODE_VIDEO_MODE)
     {
         pDispDevControl(DISPDEV_IOCTRL_WAIT_FRAMEEND, NULL);
         pDispDevControl(DISPDEV_IOCTRL_SET_ENABLE, &DevIOCtrl); //Disable IDE
@@ -1508,24 +1446,15 @@ static ER dispdev_closeIFDsi(void)
         dsi_setTXEN(FALSE, TRUE);                               //Disable DSI
     }
     else
-    /*{
+    {
         dsi_waitFrameEnd();
         pDispDevControl(DISPDEV_IOCTRL_SET_ENABLE, &DevIOCtrl); //Disable IDE
         dsi_setTXEN(FALSE, TRUE);
         pDispDevControl(DISPDEV_IOCTRL_WAIT_FRAMEEND, NULL);
         pDispDevControl(DISPDEV_IOCTRL_WAIT_FRAMEEND, NULL);
     }*/
-	#endif
-    {        
-		#if (_LCDTYPE_ == _LCDTYPE_XJ040WV1402C_R61408_)
-		dsi_waitFrameEnd();
-	    Delay_DelayMs(50);//100
-        pDispDevControl(DISPDEV_IOCTRL_SET_ENABLE, &DevIOCtrl); //Disable IDE
-        dsi_setTXEN(FALSE, TRUE);
-        pDispDevControl(DISPDEV_IOCTRL_WAIT_FRAMEEND, NULL);
-        pDispDevControl(DISPDEV_IOCTRL_WAIT_FRAMEEND, NULL);		
-		#else
-		dsi_waitFrameEnd();
+    {
+        dsi_waitFrameEnd();
         loc_cpu();
         pDispDevControl(DISPDEV_IOCTRL_SET_ENABLE, &DevIOCtrl); //Disable IDE
         dsi_setTXEN(FALSE, FALSE);                              //Disable DSI
@@ -1535,12 +1464,37 @@ static ER dispdev_closeIFDsi(void)
 
         DevIOCtrl.SEL.SET_DEVICE.DispDevType = DISPDEV_TYPE_RGB_SERIAL; //switch to display format 0
         pDispDevControl(DISPDEV_IOCTRL_SET_DEVICE, &DevIOCtrl);
-		#endif
+
     }
     #if   (DISPLCDSEL_IFDSI_TYPE == DISPLCDSEL_IFDSI_LCD1)
     DevIOCtrl.SEL.SET_CLK_EN.bClkEn = FALSE;
     pDispDevControl(DISPDEV_IOCTRL_SET_CLK_EN, &DevIOCtrl);
     #endif
+
+    //#patch for clk_lp_ctrl = 0 -begin
+    if (dsi_getConfig(DSI_CONFIG_ID_CLK_LP_CTRL) == 0)
+    {
+        if(dsi_setConfig(DSI_CONFIG_ID_MODE, DSI_MODE_MANUAL_MODE) != E_OK)
+        {
+            DSI_ERR_MSG("^R Configure manual mode fail\r\n");
+        }
+        dcsCtrlContext.uiParamCnt = 0;
+        dcsContext.ubBTAEN = FALSE;
+        dcsContext.ubBTAOnly = FALSE;
+        dcsContext.uiCmdNo = 1;
+        dcsContext.ubEOTEN = FALSE;
+        dcsContext.uiSramOfs = 128;
+
+        dcsCtrlContext.uiVirtualChannel = 0;
+        dcsCtrlContext.uiDCSCmd = 0;
+        dcsCtrlContext.uiPacketType = DSI_SHORT_PACKET;
+        dcsCtrlContext.uiDataType = 0;
+        dcsCtrlContext.uiParam = NULL;
+        dcsContext.pDSICmdCtx = &dcsCtrlContext;
+        dsi_setHSDcsCommand(&dcsContext);
+        dsi_setTXEN(FALSE, FALSE);
+    }
+    //#patch for clk_lp_ctrl = 0 -end
 
     pStandby = dispdev_getStandbyCmdDSI(&CmdNumber);
 
