@@ -23,6 +23,7 @@ INT32 UIFlowWndUSB_OnStorageChange(VControl *, UINT32, UINT32 *);
 #if defined(YQCONFIG_UART_TO_MTK_SUPPORT)
 INT32 UIFlowWndUSB_OnMTKGpsInfo(VControl *, UINT32, UINT32 *);
 INT32 UIFlowWndUSB_OnChangeMode(VControl *, UINT32, UINT32 *);
+INT32 UIFlowWndUSB_OnGetCurStatus(VControl *, UINT32, UINT32 *);
 #endif
 EVENT_BEGIN(UIFlowWndUSB)
 EVENT_ITEM(NVTEVT_OPEN_WINDOW,UIFlowWndUSB_OnOpen)
@@ -35,6 +36,7 @@ EVENT_ITEM(NVTEVT_STORAGE_CHANGE,UIFlowWndUSB_OnStorageChange)
 #if defined(YQCONFIG_UART_TO_MTK_SUPPORT)
 EVENT_ITEM(NVTEVT_MTK_GPSINFO,UIFlowWndUSB_OnMTKGpsInfo)
 EVENT_ITEM(NVTEVT_MTK_CHANGE_MODE,UIFlowWndUSB_OnChangeMode)
+EVENT_ITEM(NVTEVT_MTK_OTG_TO_MTK, UIFlowWndUSB_OnGetCurStatus)
 #endif
 EVENT_END
 
@@ -111,6 +113,17 @@ INT32 UIFlowWndUSB_OnChangeMode(VControl *pCtrl, UINT32 paramNum, UINT32 *paramA
     Ux_SendEvent(&UISetupObjCtrl,NVTEVT_EXE_CHANGEDSCMODE,1,DSCMODE_CHGTO_NEXT);
 
     return NVTEVT_CONSUME;
+}
+
+
+INT32 UIFlowWndUSB_OnGetCurStatus(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray){
+   UINT8   uiResqData[16]= {0};
+    UINT32 FrameID;
+    if(paramNum>0)
+        FrameID=paramArray[0];
+   uiResqData[0]=0x00;
+   MTKComposeCMDRspFrame(FrameID, CMD_OTG_TO_MTK,&uiResqData, 1);
+   return NVTEVT_CONSUME;
 }
 #endif
 //----------------------UIFlowWndMSDC_StaticTxt_MassStorageCtrl Event---------------------------
