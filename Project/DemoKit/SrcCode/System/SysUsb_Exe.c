@@ -92,7 +92,7 @@ void System_OnUsbInit(void)
     //PHASE-2 : Init & Open Lib or LibExt
     {
     #if (USBINSERT_FUNCTION == ENABLE)
-    SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
+    SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);	//TRUE
     #endif
     }
 

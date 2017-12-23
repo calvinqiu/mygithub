@@ -578,7 +578,7 @@ INT32 System_OnUartTransmitBegin(VControl *pCtrl, UINT32 paramNum, UINT32 *param
     UINT32 bufferAddr;
     extern IMG_CAP_DATA  Capdata;
     debug_msg("===>System_OnUartTransmitBegin:\r\n");
-    SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
+    SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);	//TRUE
     bufferAddr=OS_GetMempoolAddr(POOL_ID_DISP_VDO2TEMP);
     debug_msg("===>System_OnUartTransmitBegin address:%x..\r\n",bufferAddr);
     XmodeStartSendFirstToMTK(bufferAddr, Capdata.ScrBS_Size);

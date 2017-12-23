@@ -496,7 +496,7 @@ void KeyScan_EnableMisc(BOOL bEn)
         GxPower_SetControl(GXPWR_CTRL_AUTOPOWEROFF_RESET,0);
         GxPower_SetControl(GXPWR_CTRL_SLEEP_RESET,0);
         SxTimer_SetFuncActive(SX_TIMER_DET_AUTOPOWEROFF_ID,FALSE);
-        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
+        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);	//TRUE
         //UISound_EnableKey(FALSE); // 660 is full-duplex for audio
     } else {
         // enable auto power off/USB detect timer
@@ -505,7 +505,7 @@ void KeyScan_EnableMisc(BOOL bEn)
         //#NT#Fix Mantis Issue 0113246
         SxTimer_SetFuncActive(SX_TIMER_DET_AUTOPOWEROFF_ID,TRUE);
         //#NT#2016/11/21#Adam Su -end
-        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
+        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);	//TRUE
         //UISound_EnableKey(TRUE); // 660 is full-duplex for audio
     }
 }
