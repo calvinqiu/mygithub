@@ -310,7 +310,9 @@ extern BOOL     GPIOMap_DetPoweroff(void);
 #define GPIO_FOCUS_LED              x_GPIO_x  //FPGA
 #define PAD_FOCUS_LED               PAD_PIN_xGPIOx
 #define PWMID_FOCUS_LED             PWMID_x //FPGA
-
+#if defined(YQCONFIG_PLATFORM_NAME_U15)||defined(YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE)
+#define GPIO_U15RED_LED               C_GPIO_9 //FPGA
+#endif
 
 #define INPUT_UVC_SET_IO			P_GPIO_14	//P_GPIO_3
 #define PAD_INPUT_UVC_SET_IO   		PAD_PIN_PGPIO14	//PAD_PIN_PGPIO3
@@ -527,6 +529,10 @@ extern BOOL GPIO_MapBackUpSwitch(void);
 
 extern void InPut_UVC_Set_IO (void);
 extern void OutPut_UVC_Clear_IO (void);
+
+#if defined(YQCONFIG_PLATFORM_NAME_U15)||defined(YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE)
+extern void GPIO_Set_REDLIGHT_Status(BOOL en);
+#endif
 
 #if defined(YQCONFIG_BACKCAR_DET_SUPPORT)
 BOOL GPIO_GetBackcar_Status(void);

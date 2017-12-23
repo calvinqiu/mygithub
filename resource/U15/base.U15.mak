@@ -192,3 +192,6 @@ YQCONFIG_CHANGE_NEW_LCD_OR_NOT=yes
 YQCONFIG_START_RECORDING_DELETE_OLD_FILE=yes
                                                          #Option1:yes
                                                          #Option2:no
+YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE = yes
+                                                         #Option1:yes
+                                                         #Option2:no

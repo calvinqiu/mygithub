@@ -67,6 +67,9 @@ GPIO_INIT_OBJ uiGPIOMapInitTab[] = {
     {  GPIO_GREEN_LED,         GPIO_DIR_OUTPUT,     GPIO_SET_OUTPUT_LOW,     GPIO_SET_NONE       },
     {  GPIO_BLUE_LED,          GPIO_DIR_OUTPUT,     GPIO_SET_OUTPUT_LOW,    GPIO_SET_NONE       },
 #else
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+    {  GPIO_U15RED_LED,          GPIO_DIR_OUTPUT,     GPIO_SET_OUTPUT_LOW,    GPIO_SET_NONE       },
+#endif
     {  GPIO_SENSOR_STANDBY,    GPIO_DIR_OUTPUT,    GPIO_SET_OUTPUT_HI,   PAD_PIN_NOT_EXIST      },
     {  GPIO_SENSOR_RESET,      GPIO_DIR_OUTPUT,    GPIO_SET_OUTPUT_HI,   PAD_PIN_NOT_EXIST      },
     {  GPIO_KEY_SHUTTER2,      GPIO_DIR_INPUT,     PAD_PULLUP,           PAD_KEY_SHUTTER2       },
@@ -353,6 +356,24 @@ BOOL GPIO_GetGsensor_Status(void)
     return (gpio_getPin(GPIO_MCU2NTK_GSENSOR_STATUS)?TRUE:FALSE);
 }
 #endif
+
+
+#if defined(YQCONFIG_PLATFORM_NAME_U15)||defined(YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE)
+void GPIO_Set_REDLIGHT_Status(BOOL en)
+{
+    if (en)
+    {
+        gpio_setPin(GPIO_U15RED_LED);
+	
+    }
+    else
+    {
+        gpio_clearPin(GPIO_U15RED_LED);
+    }
+}
+#endif
+
+
 
 #if defined(YQCONFIG_NTK2MCU_STATUS_SUPPORT)
 void GPIO_SetNTK2MCU_Watchdog_Status(BOOL en)
