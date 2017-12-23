@@ -109,6 +109,8 @@
 #include "GxUSB.h"
 #include "UsbDevDef.h"
 #endif
+
+//#include "IOCfg.h"
 //#NT#2016/09/29#KCHong -begin
 //#NT#The GPS related variables should not depend on ADAS.
 #if 1//(GPS_FUNCTION == ENABLE)
@@ -416,13 +418,18 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
 
            if (System_GetState(SYS_STATE_CURRMODE)!=PRIMARY_MODE_USBMSDC)
            {
-                debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
-		  Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
-		  uiResqData[0]=0x01;
-		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
-		  #if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT) 
-	               SxTimer_SetFuncActive(SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT, TRUE);//add by qiuhan on 20170816
-	         #endif
+		 if (UI_GetData(FL_CardStatus) != CARD_REMOVED){
+	                debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
+			  Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
+			  uiResqData[0]=0x01;
+			  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+			  #if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT) 
+		               SxTimer_SetFuncActive(SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT, TRUE);//add by qiuhan on 20170816
+		         #endif
+		 }else{
+                       uiResqData[0]=0x02;
+			  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+		 }
            }else{
                 uiResqData[0]=0x00;
 		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);  
@@ -437,6 +444,9 @@ char EventGsensorName[256] = {0};
 char EventSharpTurnName[256] = {0};
 char EventRushName[256] = {0};
 char EventNastyBrakeName[256] = {0};
+BOOL bFCWLevel01 = FALSE;
+BOOL bFCWLevel02 = FALSE;
+BOOL bFCWLevel03 = FALSE;
 #endif
 extern BOOL WndMovieTouchPanelKeyUpdateIcons;
 #if defined(YQCONFIG_PLATFORM_NAME_U15)
@@ -1164,13 +1174,19 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
             //#NT#2016/09/20#Bob Huang -begin
             //#NT#Support HDMI Display with 3DNR Out
             #if (_3DNROUT_FUNC == ENABLE)
-            if (MovRec_GetStatus() == MOVREC_STATUS_OPENED_NOT_RECORD || gb3DNROut)
+                  if (MovRec_GetStatus() == MOVREC_STATUS_OPENED_NOT_RECORD || gb3DNROut)
             #else
-            if (MovRec_GetStatus() == MOVREC_STATUS_OPENED_NOT_RECORD)
+                  if (MovRec_GetStatus() == MOVREC_STATUS_OPENED_NOT_RECORD)
             #endif
             //#NT#2016/09/20#Bob Huang -end
             {
-                gMovData.State= MOV_ST_REC;
+               /* modify begin by ZMD, 2017-02-15 state change need update  in FlowMovie_StartRec();*/
+                 gMovData.State= MOV_ST_REC;
+                /* modify end by ZMD, 2017-02-15 */
+			  //  #if defined(YQCONFIG_START_RECORDING_DELETE_OLD_FILE)
+			//	debug_msg("=========2222================UIFlowWndMovie_OnDeleteOld Total File .\r\n");	
+			//	UIFlowWndMovie_OnDeleteOld();
+			 //   #endif
                 if(System_GetState(SYS_STATE_POWERON) == SYSTEM_POWERON_SAFE)
                 {
                     //#NT#2015/08/05#KS Hung -begin
@@ -1217,7 +1233,7 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
 
                 // start USB detect timer again
                 if (g_ACPlug == TRUE)
-                    SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
+                    SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);	//TRUE
                 }
             break;
         case MOV_ST_REC:
@@ -1234,7 +1250,9 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
                 Ux_FlushEventByRange(NVTEVT_KEY_EVT_START,NVTEVT_KEY_EVT_END);
                 Input_SetKeyMask(KEY_PRESS, FLGKEY_KEY_MASK_NULL);
                 FlowMovie_StopRec();
-
+#if defined(YQCONFIG_PLATFORM_NAME_U15)
+				GPIO_Set_REDLIGHT_Status(TRUE);
+#endif
 		   /* modify begin by ZMD, 2017-02-15 *///add by qiuhan on 20171121 for test bug
                 #if defined(YQCONFIG_GSENSOR_SUPPORT) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
                 if(gbGsensorTrig==TRUE)
@@ -2217,6 +2235,10 @@ INT32 UIFlowWndMovie_OnMovieFinish(VControl *pCtrl, UINT32 paramNum, UINT32 *par
 }
 INT32 UIFlowWndMovie_OnMovieOneSec(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
+	#if defined(YQCONFIG_PLATFORM_NAME_U15) || defined(YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE)//add by qiuhan on 20171223
+   	static int led_flag=0;
+	#endif
+	
     switch (gMovData.State)
     {
     case MOV_ST_REC:
@@ -2253,10 +2275,26 @@ INT32 UIFlowWndMovie_OnMovieOneSec(VControl *pCtrl, UINT32 paramNum, UINT32 *par
             }
             #endif
             /* modify end by ZMD, 2017-02-15 */
+
+#if defined(YQCONFIG_PLATFORM_NAME_U15) || defined(YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE)//add by qiuhan on 20171223 for rec red light twinkle
+	if ( led_flag== 0){
+		debug_msg("QIUHAN==================GPIO_Set_REDLIGHT_Status true\r\n");
+            GPIO_Set_REDLIGHT_Status(TRUE);
+	     led_flag=1;
+	}
+        else if(led_flag==1)
+        {
+		debug_msg("QIUHAN==================GPIO_Set_REDLIGHT_Status false\r\n");
+            GPIO_Set_REDLIGHT_Status(FALSE);
+	     led_flag=0;
+        }
+#endif
         }
 //        FlowMovie_IconDrawRecTime(&UIFlowWndMovie_Static_timeCtrl);
         if (UxCtrl_IsShow(&UIFlowWndMovie_StaticIcon_PIMCCtrl))
             FlowMovie_DrawPIM(FALSE);
+
+
 
         // For PM Demo, snap shot per one second.
         #if(_PM_DEMO_)
@@ -2269,10 +2307,15 @@ INT32 UIFlowWndMovie_OnMovieOneSec(VControl *pCtrl, UINT32 paramNum, UINT32 *par
         else
             LED_TurnOnLED(GPIOMAP_LED_FCS);
         #endif
+
+
+		
         break;
     }
     return NVTEVT_CONSUME;
 }
+
+	
 INT32 UIFlowWndMovie_OnMovieFull(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
 	debug_msg("QIUHAN==================UIFlowWndMovie_OnMovieFull\r\n");
@@ -2346,7 +2389,7 @@ INT32 UIFlowWndMovie_OnLoopRecFull(VControl *pCtrl, UINT32 paramNum, UINT32 *par
     return NVTEVT_CONSUME;
 }
 
-BOOL showLockButton = TRUE;
+BOOL showLockButton = FALSE;
 INT32 UIFlowWndMovie_OnEMRCompleted(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UINT32  uiPathId = 0;
@@ -2738,7 +2781,7 @@ INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
         }
 
 
-        if(showLockButton){
+        if(showLockButton && UxCtrl_IsShow(&UIFlowWndMovie_Status_Touch_RECCtrl)){//判断当前的录像按键是否显示从而确定紧急锁定按钮是否显示
             UxState_SetData(&UIFlowWndMovie_Status_Touch_LockFileCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_LockFile_ICON_LOCK_RELEASE);
             UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_LockFileCtrl, TRUE);
 	     showLockButton=FALSE;
@@ -3106,10 +3149,12 @@ debug_msg("QIUHAN=====================pAdasDspRlt->LdwsDspRsltInfo.DepartureDirV
 
     case ADAS_ALARM_FC:
         g_uiAdasAlertSecCnt = 0;
-//        if(paramNum>1)
-//        {
-//            DepartureDirVoice_Temp = paramArray[1];
-//        }
+   #if defined(YQCONFIG_PLATFORM_NAME_U15)
+        if(paramNum>1)
+        {
+            DepartureDirVoice_Temp = paramArray[1];
+        }
+   #endif
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
 		                     for( i = 0; i<=1; i++){
 					GPIOMap_TurnOnLCDBeep();
@@ -3141,11 +3186,31 @@ debug_msg("QIUHAN=====================pAdasDspRlt->LdwsDspRsltInfo.DepartureDirV
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_LDWS_AlertCtrl,FALSE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_FCWS_AlertCtrl,TRUE);
                 UxCtrl_SetShow(&UIFlowWndMovie_StatusICN_SNG_AlertCtrl,FALSE);
+	#if defined(YQCONFIG_PLATFORM_NAME_U15)
+		if(DepartureDirVoice_Temp<30&&DepartureDirVoice_Temp>=18){
+			if(bFCWLevel01==FALSE){
+	                       bFCWLevel01=TRUE;
+				  bFCWLevel02=FALSE;
+				  bFCWLevel03=FALSE;
+			}
+		}else if(DepartureDirVoice_Temp<18&&DepartureDirVoice_Temp>10){
+                     if(bFCWLevel02==FALSE){
+	                       bFCWLevel01=FALSE;
+				  bFCWLevel02=TRUE;
+				  bFCWLevel03=FALSE;
+			}
+		}else if(DepartureDirVoice_Temp<=10&&DepartureDirVoice_Temp>=5){
+                      if(bFCWLevel03==FALSE){
+	                       bFCWLevel01=FALSE;
+				  bFCWLevel02=FALSE;
+				  bFCWLevel03=TRUE;
+			}
+		
 		  memset(EventFDWSName, 0, sizeof(EventFDWSName));
-                 strcat(EventFDWSName, "FCWS-");
+                strcat(EventFDWSName, "FCWS-");
 		  debug_msg("QIUHAN=====================FC begin send CUSTOM2\r\n");//dual record, only support set crash
 		  Ux_PostEvent(NVTEVT_KEY_CUSTOM1, 1, NVTEVT_KEY_PRESS);//add by qiuhan on 20171024 for adas 5seconds Ro record
-
+      #endif
                 uiResqData[0]=(FCW_WARNING|WORKING_MODE);
                 uiResqData[1]= 0;
                 //debug_msg("^GZMD---CMD_ADAS_RESQ3---\r\n");
@@ -3157,6 +3222,14 @@ debug_msg("QIUHAN=====================pAdasDspRlt->LdwsDspRsltInfo.DepartureDirV
 //                }
             //}
         //}
+        #if defined(YQCONFIG_PLATFORM_NAME_U15)
+	      }else{
+                              bFCWLevel01=FALSE;
+				  bFCWLevel02=FALSE;
+				  bFCWLevel03=FALSE;
+      
+             }
+	 #endif
 		#else
         UISound_Play(DEMOSOUND_SOUND_FCS_TONE);
         #endif
@@ -4228,9 +4301,9 @@ INT32 UIFlowWndMovie_OnTouchPanelKey(VControl *pCtrl, UINT32 paramNum, UINT32 *p
                 UxState_SetData(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl,STATE_CURITEM,UIFlowWndMovie_Status_Touch_SnapeShot_ICON_SHOT_RELEASE);
                 UxCtrl_SetShow(&UIFlowWndMovie_Status_Touch_Change_DisplayModeCtrl, FALSE);
             }
-            #if defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
+            #if 0//defined(YQCONFIG_TOUCH_LOCKFILE_OPTION)
 		#if defined(YQCONFIG_PLATFORM_NAME_U15)
-                if(MovRec_IsRecording()&&showLockButton)//(gbGsensorTrig==FALSE))//add by qiuhan on 20171204
+                if(MovRec_IsRecording()&&!showLockButton)//(gbGsensorTrig==FALSE))//add by qiuhan on 20171204
               #else
                 if(MovRec_IsRecording()&&gbGsensorTrig==FALSE))
 	       #endif
@@ -4271,6 +4344,9 @@ INT32 UIFlowWndMovie_OnMTKMenuSetting(VControl *pCtrl, UINT32 paramNum, UINT32 *
         FrameID=paramArray[0];
 
     XmodemGetMTKMenuSetting(MTKMenuSetting);
+
+    if(SxTimer_GetFuncActive(SX_TIMER_DET_USB_ID)== FALSE)
+        SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, TRUE);
 
 
     debug_msg("get menu setting :");
@@ -6360,7 +6436,7 @@ INT32 UIFlowWndMovie_ADASDsp_Draw(VControl *pCtrl, UINT32 paramNum, UINT32 *para
 			GxGfx_Line( ((DC**)ScreenObj)[GxGfx_OSD], rbPtx, ltPty, rbPtx, rbPty );
 			GxGfx_Line( ((DC**)ScreenObj)[GxGfx_OSD], ltPtx, rbPty, rbPtx, rbPty );
 
-#if defined(YQCONFIG_PLATFORM_NAME_U15)
+     #if defined(YQCONFIG_PLATFORM_NAME_U15)
 				#if (!(GPS_FUNCTION == ENABLE)&&(_DRAW_LDFCINFO_ON_OSD_ == ENABLE))
 				  debug_msg("QIUHAN====================_DRAW_LDFCINFO_ON_OSD_\r\n");
                               sprintf(InfoStr ,"%dm",ADASDsp_GetFcwsCurrentDist());
