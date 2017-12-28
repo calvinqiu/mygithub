@@ -38,7 +38,7 @@ char gFWExternalVersion[33]=FW_VERSION_NUM;
 /* modify begin by ZMD, 2017-02-15 new version management*/
 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
 //#define FW_VER_NUM   ".R0001"
-#define FW_VER_NUM   ".R0006"
+#define FW_VER_NUM   ".R0002"
 
 #if defined(YQCONFIG_CUSTOM_VERSION_NAME)
 #define PRJ_NAME    YQCONFIG_PLATFORM_NAME  
@@ -55,6 +55,8 @@ char gFWExternalVersion[33]=FW_VERSION_NUM;
 	#define SENSOR_TYPE_NUM    "4689"
 #elif ((_SENSORLIB_ == _SENSORLIB_CMOS_AR0238CSP_) && (_SENSORLIB2_ == _SENSORLIB2_CMOS_IMX322LQJVX1_))
        #define SENSOR_TYPE_NUM    "0238"
+#elif ((_SENSORLIB_ == _SENSORLIB_CMOS_AR0238CSP_) && (_SENSORLIB2_ == _SENSORLIB2_OFF_))
+       #define SENSOR_TYPE_NUM    "0238"
 #else
 	#define SENSOR_TYPE_NUM    "ERR"
 #endif
@@ -62,10 +64,11 @@ char gFWExternalVersion[33]=FW_VERSION_NUM;
 //#define PRJ_NAME     "U01"
 //#define SERVER_NAME  ".amx"
 //#define SENSOR_TYPE_NUM    ".4689"
-#define CODE_TYPE_NUM  ".0119"
+//#define CODE_TYPE_NUM  ".0119"
 //#define CODE_TYPE_NUM  ".1013"
 //#define FW_VER_NUM   ".T0001"
 //#define DATE_NUM  ".161028"
+#define CODE_TYPE_NUM  ".0524"
 
 
 
