@@ -803,7 +803,7 @@ void UART_TO_MTKRecTsk(void)
                             data=1;
                             MTKComposeCMDRspFrame(FrameID, CMD_OTG_TO_MTK,&data, 1);
                         }*/
-                        Ux_PostEvent(NVTEVT_MTK_OTG_TO_MTK, 1, FrameID);
+                        Ux_PostEvent(NVTEVT_MTK_OTG_TO_MTK, 2, FrameID, 9);
 			  // data=1;
                       //      MTKComposeCMDRspFrame(FrameID, CMD_OTG_TO_MTK,&data, 1);
 			   

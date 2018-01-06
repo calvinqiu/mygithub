@@ -409,16 +409,25 @@ void UIFlowWndMovie_LockFile(void)
 }
 //add by qiuhan on 20171028 for U15 begin
 extern int  SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT;
+extern INT32 UIFlowWndMovie_OnExeRecord(pCtrl,paramNum,paramArray);
+
 void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * paramArray){
-           UINT32 FrameId;
+
+	 return UIFlowWndMovie_OnExeRecord(pCtrl,paramNum,paramArray);
+  /*         UINT32 FrameId;
 	    UINT8   uiResqData[16]= {0};
 	    if(paramNum==1){
                 FrameId = paramArray[0];
-	     }
+	     }*/
+/*	switch(gMovData.State)
+        {
+        case MOV_ST_REC:
+        case MOV_ST_REC|MOV_ST_ZOOM:*/
 
-           if (System_GetState(SYS_STATE_CURRMODE)!=PRIMARY_MODE_USBMSDC)
+   /*        if (System_GetState(SYS_STATE_CURRMODE)!=PRIMARY_MODE_USBMSDC)
            {
 		 if (UI_GetData(FL_CardStatus) != CARD_REMOVED){
+		 	
 	                debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
 			  Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
 			  uiResqData[0]=0x01;
@@ -433,7 +442,8 @@ void UIFlowWndMovie_ChangeOtgToMtk(VControl * pCtrl, UINT32 paramNum, UINT32 * p
            }else{
                 uiResqData[0]=0x00;
 		  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);  
-           }
+           }*/
+//	}
 
 }
 //add end
@@ -1105,9 +1115,20 @@ static void UIFlowWndMovie_DeleteEmptyFolder(void)
 INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     UINT32 uiKeyAct;
+	UINT32 needSwitchOtg;
     UINT32 uiState;
+     UINT32 FrameId;
+	    UINT8   uiResqData[16]= {0};
+	    if(paramNum==1){
+                FrameId = paramArray[0];
+	     }
+	
     BOOL   CheckStorageErr = FALSE;
-
+	
+if(paramNum==2)
+{
+    needSwitchOtg = paramArray[1];
+}
 
     // flush key event first
     Ux_FlushEventByRange(NVTEVT_KEY_EVT_START,NVTEVT_KEY_EVT_END);
@@ -1173,6 +1194,7 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
         case MOV_ST_VIEW:
             //#NT#2016/09/20#Bob Huang -begin
             //#NT#Support HDMI Display with 3DNR Out
+          if(needSwitchOtg!=9){  
             #if (_3DNROUT_FUNC == ENABLE)
                   if (MovRec_GetStatus() == MOVREC_STATUS_OPENED_NOT_RECORD || gb3DNROut)
             #else
@@ -1235,6 +1257,25 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
                 if (g_ACPlug == TRUE)
                     SxTimer_SetFuncActive(SX_TIMER_DET_USB_ID, FALSE);	//TRUE
                 }
+           }
+	    else
+	   {
+            //  if (System_GetState(SYS_STATE_CURRMODE)!=PRIMARY_MODE_USBMSDC)
+            //  {
+		    if (UI_GetData(FL_CardStatus) != CARD_REMOVED){
+		 	
+	                debug_msg("==============PRIMARY_MODE_USBMSDC=============\r\n");
+			  Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
+			  uiResqData[0]=0x01;
+			  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+			  #if defined(YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE) && defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT) 
+		               SxTimer_SetFuncActive(SX_TIMER_WATCH_SCREEN_IN_MTK_OR_NOT, TRUE);//add by qiuhan on 20170816
+		         #endif
+		    }else{
+                       uiResqData[0]=0x02;
+			  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+		    }
+	   }
             break;
         case MOV_ST_REC:
         case MOV_ST_REC|MOV_ST_ZOOM:
@@ -1301,6 +1342,12 @@ INT32 UIFlowWndMovie_OnExeRecord(VControl *pCtrl, UINT32 paramNum, UINT32 *param
     #else
     Ux_DefaultEvent(pCtrl,NVTEVT_KEY_SELECT,paramNum,paramArray);
     #endif
+		if(needSwitchOtg==9)
+		{
+		     Ux_SendEvent(0, NVTEVT_SYSTEM_MODE, 1, PRIMARY_MODE_USBMSDC);
+					  uiResqData[0]=0x01;
+					  MTKComposeCMDRspFrame(FrameId, CMD_OTG_TO_MTK,&uiResqData, 1);
+		}	
     return NVTEVT_CONSUME;
 }
 
@@ -2277,14 +2324,14 @@ INT32 UIFlowWndMovie_OnMovieOneSec(VControl *pCtrl, UINT32 paramNum, UINT32 *par
             /* modify end by ZMD, 2017-02-15 */
 
 #if defined(YQCONFIG_PLATFORM_NAME_U15) || defined(YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE)//add by qiuhan on 20171223 for rec red light twinkle
-	if ( led_flag== 0){
-		debug_msg("QIUHAN==================GPIO_Set_REDLIGHT_Status true\r\n");
+	 if ( led_flag== 0){
+		//debug_msg("QIUHAN==================GPIO_Set_REDLIGHT_Status true\r\n");
             GPIO_Set_REDLIGHT_Status(TRUE);
 	     led_flag=1;
-	}
+	 }
         else if(led_flag==1)
         {
-		debug_msg("QIUHAN==================GPIO_Set_REDLIGHT_Status false\r\n");
+		//debug_msg("QIUHAN==================GPIO_Set_REDLIGHT_Status false\r\n");
             GPIO_Set_REDLIGHT_Status(FALSE);
 	     led_flag=0;
         }
@@ -2627,7 +2674,14 @@ extern BOOL WndMovieTouchPanelKeyUpdateIcons;
 
 extern void UIFlowWndMovie_OnTouchPanelKeyUpdateIcons(BOOL UpdateShow);
 
+BOOL setBRTflag = FALSE;
+
+extern BOOL Lcd_State_Flag;
+
 #endif
+
+
+
 INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArray)
 {
     //#NT#2016/03/07#KCHong -begin
@@ -2716,12 +2770,28 @@ INT32 UIFlowWndMovie_OnTimer(VControl *pCtrl, UINT32 paramNum, UINT32 *paramArra
    #if defined(YQCONFIG_PLATFORM_NAME_U15)
       if(!set_lens_calibration){
    #endif
+        FlowMovie_IconDrawDateTime();
         FlowMovie_IconDrawSpeed();
         FlowMovie_IconDrawDistance();
    #if defined(YQCONFIG_PLATFORM_NAME_U15)
       }
+	  else{
+             FlowMovie_IconHideDateTime();
+	  }
    #endif
-   
+#if 0//defined(YQCONFIG_PLATFORM_NAME_U15)
+   if(Lcd_State_Flag && !setBRTflag)
+   {
+   	debug_msg( "qiuhan=================Lcd_State_Flag_in_NTK\r\n");
+       UI_SetData(FL_LCD_BRIGHTNESS,2);
+	setBRTflag = TRUE;
+   }
+   else
+   {
+   	debug_msg("qiuhan=================Lcd_State_Flag02_IN_MTK\r\n");
+       setBRTflag = FALSE;
+   }
+#endif 
         #endif
         #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
         
