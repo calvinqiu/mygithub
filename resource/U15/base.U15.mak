@@ -195,3 +195,6 @@ YQCONFIG_START_RECORDING_DELETE_OLD_FILE=yes
 YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE = yes
                                                          #Option1:yes
                                                          #Option2:no
+YQCONFIG_COMB_LANGUAGE_CHOOSE = SC
+                                                                 #Option1:yes
+                                                                 #Option2:no

@@ -48,10 +48,10 @@ YQCONFIG_AWB_CUST := AWB_AR0238CSP_EVB_FF
 
 
 #[YQCONFIG_IPP_CUST]=start=======================================================================================
-YQCONFIG_IPP_CUST := IPL_AR0238CSP_IMX322LQJ_EVB_FF
+YQCONFIG_IPP_CUST := IPL_AR0238CSP_EVB_FF
 #
-#./resource/U15/base.U15.mak redefined value=IPL_AR0238CSP_IMX322LQJ_EVB_FF
-#./resource/U15/base.U15.mak redefined value=IPL_AR0238CSP_IMX322LQJ_EVB_FF
+#./resource/U15/base.U15.mak redefined value=IPL_AR0238CSP_EVB_FF
+#./resource/U15/base.U15.mak redefined value=IPL_AR0238CSP_EVB_FF
 #./resource/common_makefile/features.mak defined value=IPL_OV4689_IMX322LQJ_EVB_FF
 # end ========================================================================================
 
@@ -66,10 +66,10 @@ YQCONFIG_SENSOR_CUST := CMOS_AR0238CSP
 
 
 #[YQCONFIG_SENSOR_2_CUST]=start=======================================================================================
-YQCONFIG_SENSOR_2_CUST := CMOS_IMX322LQJVX1
+YQCONFIG_SENSOR_2_CUST := OFF
 #
-#./resource/U15/base.U15.mak redefined value=CMOS_IMX322LQJVX1
-#./resource/U15/base.U15.mak redefined value=CMOS_IMX322LQJVX1
+#./resource/U15/base.U15.mak redefined value=OFF
+#./resource/U15/base.U15.mak redefined value=OFF
 #./resource/common_makefile/features.mak defined value=CMOS_IMX322LQJVX1
 # end ========================================================================================
 
@@ -84,10 +84,10 @@ YQCONFIG_LCD_CUST := Disp_IFDSI_LCD1_XJ040WV1402C_R61408
 
 
 #[YQCONFIG_LCD_WIDTH_CUST]=start=======================================================================================
-YQCONFIG_LCD_WIDTH_CUST := 864
+YQCONFIG_LCD_WIDTH_CUST := 800
 #
-#./resource/U15/base.U15.mak redefined value=864
-#./resource/U15/base.U15.mak redefined value=864
+#./resource/U15/base.U15.mak redefined value=800
+#./resource/U15/base.U15.mak redefined value=800
 #./resource/common_makefile/features.mak defined value=1280
 # end ========================================================================================
 
@@ -561,10 +561,10 @@ YQCONFIG_LED_FUNCTION_SUPPORT := false
 
 
 #[YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT]=start=======================================================================================
-YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT := false
+YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT := true
 #
-#./resource/U15/base.U15.mak redefined value=no
-#./resource/U15/base.U15.mak redefined value=no
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak redefined value=yes
 #./resource/common_makefile/features.mak defined value=no
 # end ========================================================================================
 
@@ -624,10 +624,10 @@ YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE := true
 
 
 #[YQCONFIG_TOUCH_LOCKFILE_OPTION]=start=======================================================================================
-YQCONFIG_TOUCH_LOCKFILE_OPTION := false
+YQCONFIG_TOUCH_LOCKFILE_OPTION := true
 #
-#./resource/U15/base.U15.mak redefined value=no
-#./resource/U15/base.U15.mak redefined value=no
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak redefined value=yes
 #./resource/common_makefile/features.mak defined value=no
 # end ========================================================================================
 
@@ -794,6 +794,78 @@ YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION := true
 # end ========================================================================================
 
 
+#[YQCONFIG_DATEPRINT_SUPPORT]=start=======================================================================================
+YQCONFIG_DATEPRINT_SUPPORT := true
+#
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak defined value=yes
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_HAVE_GPS_OR_NOT]=start=======================================================================================
+YQCONFIG_HAVE_GPS_OR_NOT := true
+#
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak defined value=yes
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR]=start=======================================================================================
+YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR := false
+#
+#./resource/U15/base.U15.mak redefined value=no
+#./resource/U15/base.U15.mak defined value=no
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_CHANGE_NEW_LCD_OR_NOT]=start=======================================================================================
+YQCONFIG_CHANGE_NEW_LCD_OR_NOT := true
+#
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak defined value=yes
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_START_RECORDING_DELETE_OLD_FILE]=start=======================================================================================
+YQCONFIG_START_RECORDING_DELETE_OLD_FILE := true
+#
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak defined value=yes
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE]=start=======================================================================================
+YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE := true
+#
+#./resource/U15/base.U15.mak redefined value=yes
+#./resource/U15/base.U15.mak defined value=yes
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_COMB_LANGUAGE_CHOOSE]=start=======================================================================================
+YQCONFIG_COMB_LANGUAGE_CHOOSE := SC
+#
+#./resource/U15/base.U15.mak redefined YQCONFIG_COMB_LANGUAGE_CHOOSE=SC
+#./resource/U15/base.U15.mak defined YQCONFIG_COMB_LANGUAGE_CHOOSE=SC
+#
+# end ========================================================================================
+
+
+#[YQCONFIG_COMB_LANGUAGE_CHOOSE_SC]=start=======================================================================================
+YQCONFIG_COMB_LANGUAGE_CHOOSE_SC := true
+#
+#./resource/U15/base.U15.mak redefined comb marco=YQCONFIG_COMB_LANGUAGE_CHOOSE_SC=1
+#./resource/U15/base.U15.mak defined comb marco=YQCONFIG_COMB_LANGUAGE_CHOOSE_SC=1
+#
+# end ========================================================================================
+
+
 #[YQCONFIG_PLAT_VERSION]=start=======================================================================================
 YQCONFIG_PLAT_VERSION := ALPS.MT6753.L1C.MP3.V2.62_P1
 #
@@ -814,7 +886,7 @@ YQCONFIG_SW_ENGINEER_BUILD_VERSION := ..ALPS.MT6753.L1C.MP3.V2.62_P1
 
 
 
-YQ_AUTO_ADD_GLOBAL_DEFINE_BY_NAME := YQCONFIG_PLATFORM_NAME_U15 YQCONFIG_LCD_ROTATE_180_SUPPORT YQCONFIG_OSD_USE_ROTATE_BUFFER_SUPPORT YQCONFIG_VDO_USE_ROTATE_BUFFER_SUPPORT YQCONFIG_VDO2_USE_ROTATE_BUFFER_SUPPORT YQCONFIG_GSENSOR_SUPPORT YQCONFIG_GPIO_GSENSOR_POWERON_ANDROID_SUPPORT YQCONFIG_GYRO_SUPPORT YQCONFIG_GPS_SUPPORT YQCONFIG_WIFI_SUPPORT YQCONFIG_COMB_LCDMODE_MIPI YQCONFIG_COMB_SENSOR_ROTATE_OPTION_NONE YQCONFIG_COMB_SENSOR_DISPLAY_FLIP_OPTION_FLIP_NONE YQCONFIG_COMB_SENSOR_2_ROTATE_OPTION_FLIP YQCONFIG_COMB_UIFILETYPE_OPTION_TS YQCONFIG_USE_FIX_PROJECT_SUPPORT YQCONFIG_ANDROID_SYSTEM_SUPPORT YQCONFIG_DRIVE_EVENT_SUPPORT YQCONFIG_UART_TO_MTK_SUPPORT YQCONFIG_UART_TO_MCU_SUPPORT YQCONFIG_SDHOTPLUG_FUNCTION_SUPPORT YQCONFIG_POWERLOGO_FUNCTION_SUPPORT YQCONFIG_POWERSOUND_FUNCTION_SUPPORT YQCONFIG_PWRLEVEL_FUNCTION_SUPPORT YQCONFIG_LONG_STARTUP_SUPPORT YQCONFIG_MOVIE_AUTOREC_ACPLUG_SUPPORT YQCONFIG_COMB_AUDIO_OUTPUT_PATH_LINE YQCONFIG_COMB_MOVIE_LIVEVIEW_RTSP_LIVEVIEW YQCONFIG_COMB_DET_BACKCAR_BY_NONE YQCONFIG_COMB_DET_LCD_SWITCH_BY_GPIO YQCONFIG_PARKING_MODE_SUPPORT YQCONFIG_CHECK_SENSOR_2_PLUGIN_SUPPORT YQCONFIG_ADAS_FUNC_SUPPORT YQCONFIG_LED_FUNCTION_SUPPORT YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT YQCONFIG_TP_EVENT_LOCK_SUPPORT YQCONFIG_DEBUG_MESSAGE_SUPPORT YQCONFIG_PIP_VIEW_LR_SUPPORT YQCONFIG_CUSTOM_NAMING_RULE_SUPPORT YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE YQCONFIG_TOUCH_LOCKFILE_OPTION YQCONFIG_TOUCH_AUDIOSWITCH_OPTION YQCONFIG_COMB_PLAYMODE_ITEMS_ONE_PAGE_OPTION_BIGSCREEN YQCONFIG_COMB_RAM_SIZE_2G YQCONFIG_LCD_RESET_REVERSE_SUPPORT YQCONFIG_UCTRL_CUSTOM_SUPPORT YQCONFIG_ADC2_FOR_KPD_SUPPORT YQCONFIG_YUANEDOG_SUPPORT YQCONFIG_SDCARD_SWITCH_DETECT_SUPPORT YQCONFIG_POWER_KEY_SWITCH_LCD_TV_SUPPORT YQCONFIG_BACKCAR_DET_SUPPORT YQCONFIG_PWRKEY_LONGPRESS_PWROFF_SUPPORT YQCONFIG_NTK2MCU_STATUS_SUPPORT YQCONFIG_COMB_CUST_PROJECT_NAME_U15_BASE YQCONFIG_TOUCH_SETUP_OPTION YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION
+YQ_AUTO_ADD_GLOBAL_DEFINE_BY_NAME := YQCONFIG_PLATFORM_NAME_U15 YQCONFIG_LCD_ROTATE_180_SUPPORT YQCONFIG_OSD_USE_ROTATE_BUFFER_SUPPORT YQCONFIG_VDO_USE_ROTATE_BUFFER_SUPPORT YQCONFIG_VDO2_USE_ROTATE_BUFFER_SUPPORT YQCONFIG_GSENSOR_SUPPORT YQCONFIG_GPIO_GSENSOR_POWERON_ANDROID_SUPPORT YQCONFIG_GYRO_SUPPORT YQCONFIG_GPS_SUPPORT YQCONFIG_WIFI_SUPPORT YQCONFIG_COMB_LCDMODE_MIPI YQCONFIG_COMB_SENSOR_ROTATE_OPTION_NONE YQCONFIG_COMB_SENSOR_DISPLAY_FLIP_OPTION_FLIP_NONE YQCONFIG_COMB_SENSOR_2_ROTATE_OPTION_FLIP YQCONFIG_COMB_UIFILETYPE_OPTION_TS YQCONFIG_USE_FIX_PROJECT_SUPPORT YQCONFIG_ANDROID_SYSTEM_SUPPORT YQCONFIG_DRIVE_EVENT_SUPPORT YQCONFIG_UART_TO_MTK_SUPPORT YQCONFIG_UART_TO_MCU_SUPPORT YQCONFIG_SDHOTPLUG_FUNCTION_SUPPORT YQCONFIG_POWERLOGO_FUNCTION_SUPPORT YQCONFIG_POWERSOUND_FUNCTION_SUPPORT YQCONFIG_PWRLEVEL_FUNCTION_SUPPORT YQCONFIG_LONG_STARTUP_SUPPORT YQCONFIG_MOVIE_AUTOREC_ACPLUG_SUPPORT YQCONFIG_COMB_AUDIO_OUTPUT_PATH_LINE YQCONFIG_COMB_MOVIE_LIVEVIEW_RTSP_LIVEVIEW YQCONFIG_COMB_DET_BACKCAR_BY_NONE YQCONFIG_COMB_DET_LCD_SWITCH_BY_GPIO YQCONFIG_PARKING_MODE_SUPPORT YQCONFIG_CHECK_SENSOR_2_PLUGIN_SUPPORT YQCONFIG_ADAS_FUNC_SUPPORT YQCONFIG_LED_FUNCTION_SUPPORT YQCONFIG_AUDIO_MIC_SWITCH_SUPPORT YQCONFIG_TP_EVENT_LOCK_SUPPORT YQCONFIG_DEBUG_MESSAGE_SUPPORT YQCONFIG_PIP_VIEW_LR_SUPPORT YQCONFIG_CUSTOM_NAMING_RULE_SUPPORT YQCONFIG_COMB_PLAYMODE_OPTION_USBMSDCMODE YQCONFIG_TOUCH_LOCKFILE_OPTION YQCONFIG_TOUCH_AUDIOSWITCH_OPTION YQCONFIG_COMB_PLAYMODE_ITEMS_ONE_PAGE_OPTION_BIGSCREEN YQCONFIG_COMB_RAM_SIZE_2G YQCONFIG_LCD_RESET_REVERSE_SUPPORT YQCONFIG_UCTRL_CUSTOM_SUPPORT YQCONFIG_ADC2_FOR_KPD_SUPPORT YQCONFIG_YUANEDOG_SUPPORT YQCONFIG_SDCARD_SWITCH_DETECT_SUPPORT YQCONFIG_POWER_KEY_SWITCH_LCD_TV_SUPPORT YQCONFIG_BACKCAR_DET_SUPPORT YQCONFIG_PWRKEY_LONGPRESS_PWROFF_SUPPORT YQCONFIG_NTK2MCU_STATUS_SUPPORT YQCONFIG_COMB_CUST_PROJECT_NAME_U15_BASE YQCONFIG_TOUCH_SETUP_OPTION YQCONFIG_TOUCH_TO_MTK_PLAYSOUND_OPTION YQCONFIG_DATEPRINT_SUPPORT YQCONFIG_HAVE_GPS_OR_NOT YQCONFIG_FCWS_DISTANCE_SHOW_ON_CAR YQCONFIG_CHANGE_NEW_LCD_OR_NOT YQCONFIG_START_RECORDING_DELETE_OLD_FILE YQCONFIG_SET_RECORD_REDLIGHT_TWINKLE YQCONFIG_COMB_LANGUAGE_CHOOSE_SC
 
 YQ_AUTO_ADD_GLOBAL_DEFINE_BY_NUMBER := YQCONFIG_LCD_WIDTH_CUST YQCONFIG_LCD_HEIGHT_CUST
 

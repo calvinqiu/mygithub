@@ -149,8 +149,16 @@
 #define DEFAULT_LCD_OFF                 LCDOFF_ON
 #define DEFAULT_BEEP                    BEEP_ON
 #if defined(YQCONFIG_ANDROID_SYSTEM_SUPPORT)
-#define DEFAULT_LANGUAGE                LANG_SC
-#define DEFAULT_FREQUENCY               FREQUENCY_50HZ
+    #if defined(YQCONFIG_COMB_LANGUAGE_CHOOSE_EN)
+	      #define DEFAULT_LANGUAGE                LANG_EN
+          #define DEFAULT_FREQUENCY               FREQUENCY_60HZ
+
+    #elif defined(YQCONFIG_COMB_LANGUAGE_CHOOSE_SC)
+	       #define DEFAULT_LANGUAGE                LANG_SC
+          #define DEFAULT_FREQUENCY               FREQUENCY_50HZ
+
+   #endif
+
 #else
 #define DEFAULT_LANGUAGE                LANG_EN
 #define DEFAULT_FREQUENCY               FREQUENCY_60HZ
